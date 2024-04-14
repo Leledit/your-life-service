@@ -25,7 +25,7 @@ public class YourLifeApplication {
 
 	@PostConstruct
 	public void initApplication() {
-		LOG.info("Running with Spring profile(s) : {}", Arrays.toString(env.getActiveProfiles()));
+		LOG.info(" Running with Spring profile(s) : {}", Arrays.toString(env.getActiveProfiles()));
 		Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
 		if (activeProfiles.contains(Constants.SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(Constants.SPRING_PROFILE_PRODUCTION)) {
 			LOG.error("You have misconfigured your application! It should not run " +
@@ -46,5 +46,6 @@ public class YourLifeApplication {
 				InetAddress.getLocalHost().getHostAddress(),
 				env.getProperty("server.port"));
 	}
+
 
 }
