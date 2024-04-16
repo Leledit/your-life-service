@@ -17,6 +17,9 @@ spring:
       port: 27017
       database: your-life
 
+service:
+    jwt: 22132024
+
 server:
   port: 8080
 
@@ -25,6 +28,7 @@ logging:
     console: "%d %-5level %logger : %msg%n"
     file: "%d %-5level [%thread] %logger : %msg%n"
   level:
-    br:
-      com:
-        luvik: DEBUG
+    com:
+      yourlife:
+        your:
+          life: DEBUG
