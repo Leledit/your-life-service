@@ -6,12 +6,13 @@ public class PasswordUtil {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    private static final String SALT = "yourLife";
+
     public static String encodePassword(String password) {
-        return encoder.encode(password);
+        return encoder.encode(password + SALT);
     }
 
-    // Método para verificar se uma senha sem hash corresponde a um hash BCrypt
     public static boolean matches(String rawPassword, String encodedPassword) {
-        return encoder.matches(rawPassword, encodedPassword);
+        return encoder.matches(rawPassword + SALT, encodedPassword);
     }
 }

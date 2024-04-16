@@ -26,7 +26,8 @@ public class Security {
             "/webjars/**","/swagger-ui/**", "/v3/api-docs/**",
             "/api-docs/",
             "/api-docs/**",
-            "/service/api/v1/user"
+            "/service/api/v1/user/register",
+            "/service/api/v1/user/login"
     };
 
     @Autowired

@@ -11,6 +11,7 @@ import javax.swing.text.Style;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 
 @Service
 public class TokenUtils {
@@ -19,7 +20,6 @@ public class TokenUtils {
 
     public String generateToken(String id){
         try {
-
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("API your.life")
