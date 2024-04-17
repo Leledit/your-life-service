@@ -4,6 +4,7 @@ import com.yourlife.your.life.model.dto.finance.FinanceFixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.model.entity.user.UserAuth;
+import com.yourlife.your.life.model.vo.finance.FinanceChangingFixedAccountVO;
 import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
 import com.yourlife.your.life.service.finance.FinanceService;
 import com.yourlife.your.life.utils.Logger;
@@ -48,6 +49,15 @@ public class FinanceController {
     public ResponseEntity<FinanceFixedAccountDTO> returningAFixedAccount(@PathVariable String id){
 
         FinanceFixedAccountDTO fixedAccount = financeService.returningAFixedAccountById(id);
+
+        return ResponseEntity.ok(fixedAccount);
+    }
+
+    @PutMapping(value = "/accounts/fixed",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<FinanceFixedAccountDTO> changingDataOnAFixedAccount(@RequestBody @Valid FinanceChangingFixedAccountVO financeChangingFixedAccountVO){
+
+        FinanceFixedAccountDTO fixedAccount = financeService.changingFixedAccount(financeChangingFixedAccountVO);
 
         return ResponseEntity.ok(fixedAccount);
     }

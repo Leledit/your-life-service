@@ -4,10 +4,13 @@ import com.yourlife.your.life.model.dto.finance.FinanceFixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.model.entity.user.UserAuth;
+import com.yourlife.your.life.model.vo.finance.FinanceChangingFixedAccountVO;
 import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
 import com.yourlife.your.life.repository.finance.FinanceFixedAccountRepository;
 import com.yourlife.your.life.service.finance.FinanceService;
 import com.yourlife.your.life.utils.Logger;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +75,38 @@ public class FinanceServiceImpl implements FinanceService {
         }
 
         return modelMapper.map(fixedAccount.get(),FinanceFixedAccountDTO.class);
+    }
+
+    @Override
+    public FinanceFixedAccountDTO changingFixedAccount(FinanceChangingFixedAccountVO financeChangingFixedAccountVO) {
+
+        Optional<FixedAccount> fixedAccountOptional = financeFixedAccountRepository.findById(financeChangingFixedAccountVO.getId());
+
+        if(fixedAccountOptional.isEmpty()){
+            throw new RuntimeException("O id informado é invalido");
+        }
+
+        FixedAccount fixedAccount = fixedAccountOptional.get();
+
+        if(StringUtils.isNotBlank(financeChangingFixedAccountVO.getName())){
+            fixedAccount.setName(financeChangingFixedAccountVO.getName());
+        }
+
+        if(financeChangingFixedAccountVO.getValue() != null && financeChangingFixedAccountVO.getValue().intValue() != 0) {
+            fixedAccount.setValue(financeChangingFixedAccountVO.getValue());
+        }
+
+        if(StringUtils.isNotBlank(financeChangingFixedAccountVO.getDescription())){
+            fixedAccount.setDescription(financeChangingFixedAccountVO.getDescription());
+        }
+
+        if(financeChangingFixedAccountVO.getDueDate() != null &&financeChangingFixedAccountVO.getDueDate().intValue() != 0 ){
+            fixedAccount.setDueDate(financeChangingFixedAccountVO.getDueDate());
+        }
+
+        FixedAccount fixedAccountSalved = financeFixedAccountRepository.save(fixedAccount);
+
+        return modelMapper.map(fixedAccountSalved,FinanceFixedAccountDTO.class);
     }
 
     private User returnUserCorrespondingToTheRequest(){
