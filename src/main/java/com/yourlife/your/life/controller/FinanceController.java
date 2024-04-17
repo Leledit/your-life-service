@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.stream.events.EntityReference;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/service/api/v1")
@@ -34,4 +35,13 @@ public class FinanceController {
 
         return  ResponseEntity.ok(fixedAccounts);
     }
+
+    @GetMapping(value = "/accounts/fixed",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ArrayList<FinanceFixedAccountDTO>>  returnAllRegisteredFixedAccounts(){
+
+        ArrayList<FinanceFixedAccountDTO> fixedAccount = financeService.returnRegisteredFixedAccounts();
+
+        return ResponseEntity.ok(fixedAccount);
+    }
+
 }

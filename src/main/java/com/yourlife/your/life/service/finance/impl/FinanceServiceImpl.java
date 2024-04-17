@@ -15,6 +15,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class FinanceServiceImpl implements FinanceService {
 
@@ -36,6 +40,25 @@ public class FinanceServiceImpl implements FinanceService {
         FixedAccount fixedAccountSalve =  financeFixedAccountRepository.save(fixedAccount);
 
         return  modelMapper.map(fixedAccountSalve,FinanceFixedAccountDTO.class);
+    }
+
+    @Override
+    public ArrayList<FinanceFixedAccountDTO> returnRegisteredFixedAccounts() {
+
+        User user = returnUserCorrespondingToTheRequest();
+
+        Optional<ArrayList<FixedAccount>> fixedAccountOptional = financeFixedAccountRepository.findAllByUser_Id(user.getId());
+
+        List<FixedAccount> listFixedAccount = new ArrayList<>();
+
+        fixedAccountOptional.ifPresent(listFixedAccount::addAll);
+
+        ArrayList<FinanceFixedAccountDTO> financeFixedAccountDTOS = new ArrayList<>();
+        listFixedAccount.forEach(fixedAccount ->
+            financeFixedAccountDTOS.add(modelMapper.map(fixedAccount,FinanceFixedAccountDTO.class))
+        );
+
+        return financeFixedAccountDTOS;
     }
 
     private User returnUserCorrespondingToTheRequest(){
