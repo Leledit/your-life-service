@@ -9,8 +9,6 @@ public interface UserService {
 
     UserDTO createUser(UserRegistertRequestVO userPostRequestVO);
 
-    UserDTO findByLogin(User user);
-
     UserDTO loginUser(UserLoginRequestVO userLoginRequestVO);
 
 }

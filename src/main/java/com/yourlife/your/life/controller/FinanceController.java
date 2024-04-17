@@ -44,4 +44,11 @@ public class FinanceController {
         return ResponseEntity.ok(fixedAccount);
     }
 
+    @GetMapping(value = "/accounts/fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FinanceFixedAccountDTO> returningAFixedAccount(@PathVariable String id){
+
+        FinanceFixedAccountDTO fixedAccount = financeService.returningAFixedAccountById(id);
+
+        return ResponseEntity.ok(fixedAccount);
+    }
 }

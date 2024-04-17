@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude
 public class FinanceFixedAccountDTO {
+    private String id;
     private String name;
     private Number value;
     private String description;

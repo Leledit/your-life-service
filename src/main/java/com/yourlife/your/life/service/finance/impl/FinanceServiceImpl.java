@@ -9,6 +9,7 @@ import com.yourlife.your.life.repository.finance.FinanceFixedAccountRepository;
 import com.yourlife.your.life.service.finance.FinanceService;
 import com.yourlife.your.life.utils.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -59,6 +60,18 @@ public class FinanceServiceImpl implements FinanceService {
         );
 
         return financeFixedAccountDTOS;
+    }
+
+    @Override
+    public FinanceFixedAccountDTO returningAFixedAccountById(String id) {
+
+        Optional<FixedAccount> fixedAccount = financeFixedAccountRepository.findById(id);
+
+        if(fixedAccount.isEmpty()){
+            throw new RuntimeException("Nenhuma conta foi encontrada!");
+        }
+
+        return modelMapper.map(fixedAccount.get(),FinanceFixedAccountDTO.class);
     }
 
     private User returnUserCorrespondingToTheRequest(){

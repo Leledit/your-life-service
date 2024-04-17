@@ -49,11 +49,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByLogin(User user) {
-        return null;
-    }
-
-    @Override
     public UserDTO loginUser(UserLoginRequestVO userLoginRequestVO) {
 
         Optional<User> userFound = this.userRepository.findFirstByEmail(userLoginRequestVO.getEmail());

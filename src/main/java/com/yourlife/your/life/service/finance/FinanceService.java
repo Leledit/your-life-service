@@ -10,4 +10,6 @@ public interface FinanceService {
     FinanceFixedAccountDTO createdFixedAccount(FinanceRegisterFixedAccountVO financeRegisterFixedAccountVO);
 
     ArrayList<FinanceFixedAccountDTO> returnRegisteredFixedAccounts();
+
+    FinanceFixedAccountDTO returningAFixedAccountById(String id);
 }
