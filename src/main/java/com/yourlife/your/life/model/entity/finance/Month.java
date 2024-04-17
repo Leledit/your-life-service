@@ -24,8 +24,8 @@ public class Month {
     private String name;
     private LocalDateTime date;
     private List<Appetizer> appetizer;
-    private List<CategoryVariableExpenses> categoryVariableExpenses;
-    private List<FixedAccounts> fixedAccounts;
+    private List<CategoryVariableExpense> categoryVariableExpens;
+    private List<FixedAccount> fixedAccounts;
     private List<Installment> installments;
 
     @DBRef

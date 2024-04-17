@@ -1,7 +1,6 @@
 package com.yourlife.your.life.model.entity.finance;
 
 import com.yourlife.your.life.model.entity.user.User;
-import com.yourlife.your.life.model.types.finance.CategoryVariableExpensesTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,19 +9,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "categoryVariableExpenses")
-public class CategoryVariableExpenses {
+@Document(collection = "fixedAccounts")
+public class FixedAccount {
 
     @Id
     private String id;
     private String name;
+    private Number value;
     private String description;
-    private CategoryVariableExpensesTypes type;
-    private List<Exits> exits;
+    private Number dueDate;
+
+    @DBRef
+    private User user;
 }
