@@ -6,13 +6,11 @@ import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
 
 import java.util.ArrayList;
 
-public interface FinanceService {
-
+public interface FixedAccountService {
     FinanceFixedAccountDTO createdFixedAccount(FinanceRegisterFixedAccountVO financeRegisterFixedAccountVO);
-
     ArrayList<FinanceFixedAccountDTO> returnRegisteredFixedAccounts();
-
     FinanceFixedAccountDTO returningAFixedAccountById(String id);
-
     FinanceFixedAccountDTO changingFixedAccount(FinanceChangingFixedAccountVO financeChangingFixedAccountVO);
+
+    Void deletingAFixedAccount(String id);
 }

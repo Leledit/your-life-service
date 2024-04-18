@@ -1,38 +1,28 @@
-package com.yourlife.your.life.controller;
+package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.FinanceFixedAccountDTO;
-import com.yourlife.your.life.model.entity.finance.FixedAccount;
-import com.yourlife.your.life.model.entity.user.User;
-import com.yourlife.your.life.model.entity.user.UserAuth;
 import com.yourlife.your.life.model.vo.finance.FinanceChangingFixedAccountVO;
 import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
-import com.yourlife.your.life.service.finance.FinanceService;
-import com.yourlife.your.life.utils.Logger;
+import com.yourlife.your.life.service.finance.FixedAccountService;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.stream.events.EntityReference;
 import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/service/api/v1")
-public class FinanceController {
+public class FixedAccountController {
 
     @Autowired
-    private FinanceService financeService;
+    private FixedAccountService fixedAccountService;
 
     @PostMapping(value = "/accounts/fixed", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<FinanceFixedAccountDTO> registerFixedAccount(@RequestBody @Valid FinanceRegisterFixedAccountVO financeRegisterFixedAccountVO){
 
-        FinanceFixedAccountDTO fixedAccounts = financeService.createdFixedAccount(financeRegisterFixedAccountVO);
+        FinanceFixedAccountDTO fixedAccounts = fixedAccountService.createdFixedAccount(financeRegisterFixedAccountVO);
 
         return  ResponseEntity.ok(fixedAccounts);
     }
@@ -40,7 +30,7 @@ public class FinanceController {
     @GetMapping(value = "/accounts/fixed",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ArrayList<FinanceFixedAccountDTO>>  returnAllRegisteredFixedAccounts(){
 
-        ArrayList<FinanceFixedAccountDTO> fixedAccount = financeService.returnRegisteredFixedAccounts();
+        ArrayList<FinanceFixedAccountDTO> fixedAccount = fixedAccountService.returnRegisteredFixedAccounts();
 
         return ResponseEntity.ok(fixedAccount);
     }
@@ -48,7 +38,7 @@ public class FinanceController {
     @GetMapping(value = "/accounts/fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FinanceFixedAccountDTO> returningAFixedAccount(@PathVariable String id){
 
-        FinanceFixedAccountDTO fixedAccount = financeService.returningAFixedAccountById(id);
+        FinanceFixedAccountDTO fixedAccount = fixedAccountService.returningAFixedAccountById(id);
 
         return ResponseEntity.ok(fixedAccount);
     }
@@ -57,8 +47,16 @@ public class FinanceController {
     @ResponseBody
     public ResponseEntity<FinanceFixedAccountDTO> changingDataOnAFixedAccount(@RequestBody @Valid FinanceChangingFixedAccountVO financeChangingFixedAccountVO){
 
-        FinanceFixedAccountDTO fixedAccount = financeService.changingFixedAccount(financeChangingFixedAccountVO);
+        FinanceFixedAccountDTO fixedAccount = fixedAccountService.changingFixedAccount(financeChangingFixedAccountVO);
 
         return ResponseEntity.ok(fixedAccount);
+    }
+
+    @DeleteMapping(value = "/accounts/fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deletingAFixedAccount(@PathVariable String id){
+
+        fixedAccountService.deletingAFixedAccount(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

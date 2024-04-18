@@ -6,13 +6,10 @@ import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.model.entity.user.UserAuth;
 import com.yourlife.your.life.model.vo.finance.FinanceChangingFixedAccountVO;
 import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
-import com.yourlife.your.life.repository.finance.FinanceFixedAccountRepository;
-import com.yourlife.your.life.service.finance.FinanceService;
-import com.yourlife.your.life.utils.Logger;
+import com.yourlife.your.life.repository.finance.FixedAccountRepository;
+import com.yourlife.your.life.service.finance.FixedAccountService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -24,10 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FinanceServiceImpl implements FinanceService {
+public class FixedAccountServiceImpl implements FixedAccountService {
 
     @Autowired
-    private FinanceFixedAccountRepository financeFixedAccountRepository;
+    private FixedAccountRepository fixedAccountRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -41,7 +38,7 @@ public class FinanceServiceImpl implements FinanceService {
 
         fixedAccount.setUser(user);
 
-        FixedAccount fixedAccountSalve =  financeFixedAccountRepository.save(fixedAccount);
+        FixedAccount fixedAccountSalve =  fixedAccountRepository.save(fixedAccount);
 
         return  modelMapper.map(fixedAccountSalve,FinanceFixedAccountDTO.class);
     }
@@ -51,7 +48,7 @@ public class FinanceServiceImpl implements FinanceService {
 
         User user = returnUserCorrespondingToTheRequest();
 
-        Optional<ArrayList<FixedAccount>> fixedAccountOptional = financeFixedAccountRepository.findAllByUser_Id(user.getId());
+        Optional<ArrayList<FixedAccount>> fixedAccountOptional = fixedAccountRepository.findAllByUser_Id(user.getId());
 
         List<FixedAccount> listFixedAccount = new ArrayList<>();
 
@@ -68,7 +65,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public FinanceFixedAccountDTO returningAFixedAccountById(String id) {
 
-        Optional<FixedAccount> fixedAccount = financeFixedAccountRepository.findById(id);
+        Optional<FixedAccount> fixedAccount = fixedAccountRepository.findById(id);
 
         if(fixedAccount.isEmpty()){
             throw new RuntimeException("Nenhuma conta foi encontrada!");
@@ -80,7 +77,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public FinanceFixedAccountDTO changingFixedAccount(FinanceChangingFixedAccountVO financeChangingFixedAccountVO) {
 
-        Optional<FixedAccount> fixedAccountOptional = financeFixedAccountRepository.findById(financeChangingFixedAccountVO.getId());
+        Optional<FixedAccount> fixedAccountOptional = fixedAccountRepository.findById(financeChangingFixedAccountVO.getId());
 
         if(fixedAccountOptional.isEmpty()){
             throw new RuntimeException("O id informado é invalido");
@@ -104,10 +101,25 @@ public class FinanceServiceImpl implements FinanceService {
             fixedAccount.setDueDate(financeChangingFixedAccountVO.getDueDate());
         }
 
-        FixedAccount fixedAccountSalved = financeFixedAccountRepository.save(fixedAccount);
+        FixedAccount fixedAccountSalved = fixedAccountRepository.save(fixedAccount);
 
         return modelMapper.map(fixedAccountSalved,FinanceFixedAccountDTO.class);
     }
+
+    @Override
+    public Void deletingAFixedAccount(String id) {
+
+        Optional<FixedAccount> fixedAccountOptional = fixedAccountRepository.findById(id);
+
+        if(fixedAccountOptional.isEmpty()){
+            throw new RuntimeException("O id informado não é valido!");
+        }
+
+        fixedAccountRepository.deleteById(id);
+
+        return null;
+    }
+
 
     private User returnUserCorrespondingToTheRequest(){
         SecurityContext securityContext = SecurityContextHolder.getContext();

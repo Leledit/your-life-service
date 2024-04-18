@@ -1,4 +1,4 @@
-package com.yourlife.your.life.controller;
+package com.yourlife.your.life.controller.user;
 
 import com.yourlife.your.life.model.dto.user.UserDTO;
 import com.yourlife.your.life.model.vo.user.UserLoginRequestVO;
