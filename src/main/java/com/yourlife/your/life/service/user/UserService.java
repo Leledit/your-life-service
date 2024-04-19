@@ -7,8 +7,8 @@ import com.yourlife.your.life.model.vo.user.UserRegistertRequestVO;
 
 public interface UserService {
 
-    UserDTO createUser(UserRegistertRequestVO userPostRequestVO);
+    UserDTO createUser(User user);
 
-    UserDTO loginUser(UserLoginRequestVO userLoginRequestVO);
+    UserDTO loginUser(User user);
 
 }

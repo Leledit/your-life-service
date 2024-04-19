@@ -1,22 +1,24 @@
 package com.yourlife.your.life.model.dto.finance;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.yourlife.your.life.model.dto.user.UserDTO;
-import com.yourlife.your.life.model.entity.user.User;
+import com.yourlife.your.life.model.entity.finance.Exit;
+import com.yourlife.your.life.model.types.finance.CategoryVariableExpensesTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude
-public class FinanceFixedAccountDTO {
+public class CategoryVariableExpenseDTO {
     private String id;
     private String name;
-    private Number value;
     private String description;
-    private Number dueDate;
+    private CategoryVariableExpensesTypes type;
+    private List<Exit> exits;
 }

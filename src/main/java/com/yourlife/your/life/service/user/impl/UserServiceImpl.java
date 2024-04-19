@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,19 +28,18 @@ public class UserServiceImpl implements UserService {
     @Autowired TokenUtils tokenUtils;
 
     @Override
-    public UserDTO createUser(UserRegistertRequestVO userPostRequestVO) {
+    public UserDTO createUser(User user) {
 
-        Optional<User> userFound = this.userRepository.findFirstByEmail(userPostRequestVO.getEmail());
+        Optional<User> userFound = this.userRepository.findFirstByEmail(user.getEmail());
 
         if(userFound.isPresent()){
             throw new RuntimeException("Email ja cadastrado no sistema");
         }
 
-        User user = modelMapper.map(userPostRequestVO,User.class);
-
         user.setPassword(PasswordUtil.encodePassword(user.getPassword()));
 
         User savedUser =  userRepository.save(user);
+        savedUser.setCreatedAt(LocalDateTime.now());
 
         UserDTO userDTO = modelMapper.map(user,UserDTO.class);
 
@@ -49,22 +49,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO loginUser(UserLoginRequestVO userLoginRequestVO) {
+    public UserDTO loginUser(User user) {
 
-        Optional<User> userFound = this.userRepository.findFirstByEmail(userLoginRequestVO.getEmail());
+        Optional<User> userFound = this.userRepository.findFirstByEmail(user.getEmail());
 
         if(userFound.isEmpty()){
             throw new RuntimeException("O email fornecido não foi encontrado em nosso sistema!");
         }
-        User user = userFound.get();
+        User userData = userFound.get();
 
-        if(!PasswordUtil.matches(userLoginRequestVO.getPassword(),user.getPassword())){
+        if(!PasswordUtil.matches(user.getPassword(),userData.getPassword())){
             throw new RuntimeException("A senha fornecida está incorreta!");
         }
 
-        String token = tokenUtils.generateToken(user.getId());
+        String token = tokenUtils.generateToken(userData.getId());
 
-        UserDTO userDTO = modelMapper.map(user,UserDTO.class);
+        UserDTO userDTO = modelMapper.map(userData,UserDTO.class);
         userDTO.setToken(token);
 
         return userDTO;

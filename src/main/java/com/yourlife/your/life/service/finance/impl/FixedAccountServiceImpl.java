@@ -1,11 +1,9 @@
 package com.yourlife.your.life.service.finance.impl;
 
-import com.yourlife.your.life.model.dto.finance.FinanceFixedAccountDTO;
+import com.yourlife.your.life.model.dto.finance.FixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.model.entity.user.UserAuth;
-import com.yourlife.your.life.model.vo.finance.FinanceChangingFixedAccountVO;
-import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
 import com.yourlife.your.life.repository.finance.FixedAccountRepository;
 import com.yourlife.your.life.service.finance.FixedAccountService;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,21 +28,21 @@ public class FixedAccountServiceImpl implements FixedAccountService {
     private ModelMapper modelMapper;
 
     @Override
-    public FinanceFixedAccountDTO createdFixedAccount(FinanceRegisterFixedAccountVO financeRegisterFixedAccountVO) {
-
-        FixedAccount fixedAccount = modelMapper.map(financeRegisterFixedAccountVO, FixedAccount.class);
+    public FixedAccountDTO createdFixedAccount(FixedAccount fixedAccountRequest) {
 
         User user = returnUserCorrespondingToTheRequest();
 
-        fixedAccount.setUser(user);
+        fixedAccountRequest.setUser(user);
+        fixedAccountRequest.setCreatedAt(LocalDateTime.now());
+        fixedAccountRequest.setDeleted(false);
 
-        FixedAccount fixedAccountSalve =  fixedAccountRepository.save(fixedAccount);
+        FixedAccount fixedAccountSalve =  fixedAccountRepository.save(fixedAccountRequest);
 
-        return  modelMapper.map(fixedAccountSalve,FinanceFixedAccountDTO.class);
+        return  modelMapper.map(fixedAccountSalve, FixedAccountDTO.class);
     }
 
     @Override
-    public ArrayList<FinanceFixedAccountDTO> returnRegisteredFixedAccounts() {
+    public ArrayList<FixedAccountDTO> returnRegisteredFixedAccounts() {
 
         User user = returnUserCorrespondingToTheRequest();
 
@@ -54,16 +52,19 @@ public class FixedAccountServiceImpl implements FixedAccountService {
 
         fixedAccountOptional.ifPresent(listFixedAccount::addAll);
 
-        ArrayList<FinanceFixedAccountDTO> financeFixedAccountDTOS = new ArrayList<>();
-        listFixedAccount.forEach(fixedAccount ->
-            financeFixedAccountDTOS.add(modelMapper.map(fixedAccount,FinanceFixedAccountDTO.class))
+        ArrayList<FixedAccountDTO> fixedAccountDTOS = new ArrayList<>();
+        listFixedAccount.forEach(fixedAccount -> {
+            if(!fixedAccount.getDeleted()){
+                fixedAccountDTOS.add(modelMapper.map(fixedAccount, FixedAccountDTO.class));
+            }
+        }
         );
 
-        return financeFixedAccountDTOS;
+        return fixedAccountDTOS;
     }
 
     @Override
-    public FinanceFixedAccountDTO returningAFixedAccountById(String id) {
+    public FixedAccountDTO returningAFixedAccountById(String id) {
 
         Optional<FixedAccount> fixedAccount = fixedAccountRepository.findById(id);
 
@@ -71,13 +72,13 @@ public class FixedAccountServiceImpl implements FixedAccountService {
             throw new RuntimeException("Nenhuma conta foi encontrada!");
         }
 
-        return modelMapper.map(fixedAccount.get(),FinanceFixedAccountDTO.class);
+        return modelMapper.map(fixedAccount.get(), FixedAccountDTO.class);
     }
 
     @Override
-    public FinanceFixedAccountDTO changingFixedAccount(FinanceChangingFixedAccountVO financeChangingFixedAccountVO) {
+    public FixedAccountDTO changingFixedAccount(FixedAccount fixedAccountRequest) {
 
-        Optional<FixedAccount> fixedAccountOptional = fixedAccountRepository.findById(financeChangingFixedAccountVO.getId());
+        Optional<FixedAccount> fixedAccountOptional = fixedAccountRepository.findById(fixedAccountRequest.getId());
 
         if(fixedAccountOptional.isEmpty()){
             throw new RuntimeException("O id informado é invalido");
@@ -85,25 +86,27 @@ public class FixedAccountServiceImpl implements FixedAccountService {
 
         FixedAccount fixedAccount = fixedAccountOptional.get();
 
-        if(StringUtils.isNotBlank(financeChangingFixedAccountVO.getName())){
-            fixedAccount.setName(financeChangingFixedAccountVO.getName());
+        if(StringUtils.isNotBlank(fixedAccountRequest.getName())){
+            fixedAccount.setName(fixedAccountRequest.getName());
         }
 
-        if(financeChangingFixedAccountVO.getValue() != null && financeChangingFixedAccountVO.getValue().intValue() != 0) {
-            fixedAccount.setValue(financeChangingFixedAccountVO.getValue());
+        if(fixedAccountRequest.getValue() != null && fixedAccountRequest.getValue().intValue() != 0) {
+            fixedAccount.setValue(fixedAccountRequest.getValue());
         }
 
-        if(StringUtils.isNotBlank(financeChangingFixedAccountVO.getDescription())){
-            fixedAccount.setDescription(financeChangingFixedAccountVO.getDescription());
+        if(StringUtils.isNotBlank(fixedAccountRequest.getDescription())){
+            fixedAccount.setDescription(fixedAccountRequest.getDescription());
         }
 
-        if(financeChangingFixedAccountVO.getDueDate() != null &&financeChangingFixedAccountVO.getDueDate().intValue() != 0 ){
-            fixedAccount.setDueDate(financeChangingFixedAccountVO.getDueDate());
+        if(fixedAccountRequest.getDueDate() != null && fixedAccountRequest.getDueDate().intValue() != 0 ){
+            fixedAccount.setDueDate(fixedAccountRequest.getDueDate());
         }
+
+        fixedAccount.setUpdatedAt(LocalDateTime.now());
 
         FixedAccount fixedAccountSalved = fixedAccountRepository.save(fixedAccount);
 
-        return modelMapper.map(fixedAccountSalved,FinanceFixedAccountDTO.class);
+        return modelMapper.map(fixedAccountSalved, FixedAccountDTO.class);
     }
 
     @Override
@@ -115,12 +118,18 @@ public class FixedAccountServiceImpl implements FixedAccountService {
             throw new RuntimeException("O id informado não é valido!");
         }
 
-        fixedAccountRepository.deleteById(id);
+        FixedAccount fixedAccount = fixedAccountOptional.get();
+        fixedAccount.setDeleted(true);
+        fixedAccount.setUpdatedAt(LocalDateTime.now());
+        fixedAccount.setDeletedAt(LocalDateTime.now());
+
+        fixedAccountRepository.save(fixedAccount);
 
         return null;
     }
 
 
+    //isolar esse metodo assim que possivel
     private User returnUserCorrespondingToTheRequest(){
         SecurityContext securityContext = SecurityContextHolder.getContext();
 

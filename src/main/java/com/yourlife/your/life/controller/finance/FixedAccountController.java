@@ -1,10 +1,12 @@
 package com.yourlife.your.life.controller.finance;
 
-import com.yourlife.your.life.model.dto.finance.FinanceFixedAccountDTO;
-import com.yourlife.your.life.model.vo.finance.FinanceChangingFixedAccountVO;
-import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
+import com.yourlife.your.life.model.dto.finance.FixedAccountDTO;
+import com.yourlife.your.life.model.entity.finance.FixedAccount;
+import com.yourlife.your.life.model.vo.finance.FixedAccountChangingVO;
+import com.yourlife.your.life.model.vo.finance.FixedAccountRegisterVO;
 import com.yourlife.your.life.service.finance.FixedAccountService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,41 +20,48 @@ public class FixedAccountController {
     @Autowired
     private FixedAccountService fixedAccountService;
 
-    @PostMapping(value = "/accounts/fixed", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<FinanceFixedAccountDTO> registerFixedAccount(@RequestBody @Valid FinanceRegisterFixedAccountVO financeRegisterFixedAccountVO){
+    @Autowired
+    private ModelMapper modelMapper;
 
-        FinanceFixedAccountDTO fixedAccounts = fixedAccountService.createdFixedAccount(financeRegisterFixedAccountVO);
+    @PostMapping(value = "/accounts-fixed", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<FixedAccountDTO> registerFixedAccount(@RequestBody @Valid FixedAccountRegisterVO fixedAccountRegisterVO){
+
+        FixedAccount account = modelMapper.map(fixedAccountRegisterVO,FixedAccount.class);
+
+        FixedAccountDTO fixedAccounts = fixedAccountService.createdFixedAccount(account);
 
         return  ResponseEntity.ok(fixedAccounts);
     }
 
-    @GetMapping(value = "/accounts/fixed",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<FinanceFixedAccountDTO>>  returnAllRegisteredFixedAccounts(){
+    @GetMapping(value = "/accounts-fixed",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ArrayList<FixedAccountDTO>>  returnAllRegisteredFixedAccounts(){
 
-        ArrayList<FinanceFixedAccountDTO> fixedAccount = fixedAccountService.returnRegisteredFixedAccounts();
-
-        return ResponseEntity.ok(fixedAccount);
-    }
-
-    @GetMapping(value = "/accounts/fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FinanceFixedAccountDTO> returningAFixedAccount(@PathVariable String id){
-
-        FinanceFixedAccountDTO fixedAccount = fixedAccountService.returningAFixedAccountById(id);
+        ArrayList<FixedAccountDTO> fixedAccount = fixedAccountService.returnRegisteredFixedAccounts();
 
         return ResponseEntity.ok(fixedAccount);
     }
 
-    @PutMapping(value = "/accounts/fixed",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/account-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FixedAccountDTO> returningAFixedAccount(@PathVariable String id){
+
+        FixedAccountDTO fixedAccount = fixedAccountService.returningAFixedAccountById(id);
+
+        return ResponseEntity.ok(fixedAccount);
+    }
+
+    @PutMapping(value = "/accounts-fixed",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<FinanceFixedAccountDTO> changingDataOnAFixedAccount(@RequestBody @Valid FinanceChangingFixedAccountVO financeChangingFixedAccountVO){
+    public ResponseEntity<FixedAccountDTO> changingDataOnAFixedAccount(@RequestBody @Valid FixedAccountChangingVO fixedAccountChangingVO){
 
-        FinanceFixedAccountDTO fixedAccount = fixedAccountService.changingFixedAccount(financeChangingFixedAccountVO);
+        FixedAccount account = modelMapper.map(fixedAccountChangingVO,FixedAccount.class);
+
+        FixedAccountDTO fixedAccount = fixedAccountService.changingFixedAccount(account);
 
         return ResponseEntity.ok(fixedAccount);
     }
 
-    @DeleteMapping(value = "/accounts/fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/account-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deletingAFixedAccount(@PathVariable String id){
 
         fixedAccountService.deletingAFixedAccount(id);

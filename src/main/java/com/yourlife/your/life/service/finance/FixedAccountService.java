@@ -1,16 +1,17 @@
 package com.yourlife.your.life.service.finance;
 
-import com.yourlife.your.life.model.dto.finance.FinanceFixedAccountDTO;
-import com.yourlife.your.life.model.vo.finance.FinanceChangingFixedAccountVO;
-import com.yourlife.your.life.model.vo.finance.FinanceRegisterFixedAccountVO;
+import com.yourlife.your.life.model.dto.finance.FixedAccountDTO;
+import com.yourlife.your.life.model.entity.finance.FixedAccount;
+import com.yourlife.your.life.model.vo.finance.FixedAccountChangingVO;
+import com.yourlife.your.life.model.vo.finance.FixedAccountRegisterVO;
 
 import java.util.ArrayList;
 
 public interface FixedAccountService {
-    FinanceFixedAccountDTO createdFixedAccount(FinanceRegisterFixedAccountVO financeRegisterFixedAccountVO);
-    ArrayList<FinanceFixedAccountDTO> returnRegisteredFixedAccounts();
-    FinanceFixedAccountDTO returningAFixedAccountById(String id);
-    FinanceFixedAccountDTO changingFixedAccount(FinanceChangingFixedAccountVO financeChangingFixedAccountVO);
+    FixedAccountDTO createdFixedAccount(FixedAccount fixedAccount);
+    ArrayList<FixedAccountDTO> returnRegisteredFixedAccounts();
+    FixedAccountDTO returningAFixedAccountById(String id);
+    FixedAccountDTO changingFixedAccount(FixedAccount fixedAccount);
 
     Void deletingAFixedAccount(String id);
 }
