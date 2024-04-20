@@ -86,6 +86,10 @@ public class FixedAccountServiceImpl implements FixedAccountService {
 
         FixedAccount fixedAccount = fixedAccountOptional.get();
 
+        if(fixedAccount.getDeleted()){
+            throw new RuntimeException("O id informado é invalido");
+        }
+
         if(StringUtils.isNotBlank(fixedAccountRequest.getName())){
             fixedAccount.setName(fixedAccountRequest.getName());
         }

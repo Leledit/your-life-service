@@ -19,6 +19,4 @@ public class CategoryVariableExpenseDTO {
     private String id;
     private String name;
     private String description;
-    private CategoryVariableExpensesTypes type;
-    private List<Exit> exits;
 }

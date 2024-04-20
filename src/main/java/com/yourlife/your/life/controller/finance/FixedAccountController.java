@@ -61,11 +61,13 @@ public class FixedAccountController {
         return ResponseEntity.ok(fixedAccount);
     }
 
-    @DeleteMapping(value = "/account-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/account-fixed/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deletingAFixedAccount(@PathVariable String id){
 
         fixedAccountService.deletingAFixedAccount(id);
 
         return ResponseEntity.noContent().build();
     }
+
+
 }
