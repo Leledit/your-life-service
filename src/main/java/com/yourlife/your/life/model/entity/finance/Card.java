@@ -9,6 +9,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,9 +20,13 @@ public class Card {
     @Id
     private String id;
     private String name;
-    private Number dueDate;
+    private String dueDate;
     private String model;
 
+    private Boolean deleted;
+    private LocalDateTime deletedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     @DBRef
     private User user;
 }
