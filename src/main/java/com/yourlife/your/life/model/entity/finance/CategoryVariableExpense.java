@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "categoryVariableExpenses")
+@Document(collection = "category_variable_expenses")
 public class CategoryVariableExpense {
 
     @Id

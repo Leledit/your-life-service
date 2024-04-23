@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface CategoryVariableExpenseRepository extends MongoRepository<CategoryVariableExpense,String> {
 
-    Optional<ArrayList<CategoryVariableExpense>> findAllByUser_Id(String id);
+    Optional<ArrayList<CategoryVariableExpense>> findAllByUser_IdAndDeleted(String id,Boolean deleted);
 }

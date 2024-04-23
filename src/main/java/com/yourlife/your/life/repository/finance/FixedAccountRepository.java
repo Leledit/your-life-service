@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface FixedAccountRepository extends MongoRepository<FixedAccount,String> {
 
-    Optional<ArrayList<FixedAccount>> findAllByUser_Id(String id);
+    Optional<ArrayList<FixedAccount>> findAllByUser_IdAndDeleted(String id,Boolean deleted);
 }

@@ -2,8 +2,6 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.CardDTO;
 import com.yourlife.your.life.model.entity.finance.Card;
-import com.yourlife.your.life.model.entity.user.User;
-import com.yourlife.your.life.model.entity.user.UserAuth;
 import com.yourlife.your.life.model.vo.finance.CardChanginVO;
 import com.yourlife.your.life.model.vo.finance.CardRegisterVO;
 import com.yourlife.your.life.service.finance.CardService;
@@ -14,15 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/service/api/v1")
@@ -69,14 +62,7 @@ public class CardController {
 
     @GetMapping(value = "/cards/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CardDTO> getById(@PathVariable String id){
-
-        Card card = cardService.getById(id);
-
-        if(card == null){
-            throw new RuntimeException("ID is not null");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(card,CardDTO.class));
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(cardService.getById(id),CardDTO.class));
     }
 
     @PutMapping(value = "/cards",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -86,10 +72,6 @@ public class CardController {
         Card cardRequest = modelMapper.map(cardChanginVO,Card.class);
 
         Card card = cardService.getById(cardRequest.getId());
-
-        if(card == null){
-            throw new RuntimeException("ID is not null");
-        }
 
         card.setName(cardRequest.getName() != null ? cardRequest.getName() : card.getName());
         card.setDueDate(cardRequest.getDueDate() != null ? cardRequest.getDueDate() : card.getDueDate());
@@ -105,10 +87,6 @@ public class CardController {
     public ResponseEntity<Void> deleted(@PathVariable String id){
 
         Card card = cardService.getById(id);
-
-        if(card == null){
-            throw new RuntimeException("ID is not null");
-        }
 
         card.setDeleted(true);
         card.setUpdatedAt(LocalDateTime.now());

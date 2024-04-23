@@ -5,7 +5,7 @@ import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
 import com.yourlife.your.life.model.vo.finance.CategoryVariableExpenseChangingVO;
 import com.yourlife.your.life.model.vo.finance.CategoryVariableExpenseRegisterVO;
 import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
-import com.yourlife.your.life.utils.Logger;
+import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +27,20 @@ public class CategoryVariableExpenseController {
     @Autowired
     private CategoryVariableExpenseService categoryVariableExpenseService;
 
+    @Autowired
+    private UserContext userContext;
+
     @PostMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CategoryVariableExpenseDTO> registerNewCategoryVariableExpense(@RequestBody @Valid CategoryVariableExpenseRegisterVO categoryVariableExpenseRegisterVO){
+    public ResponseEntity<CategoryVariableExpenseDTO> register(@RequestBody @Valid CategoryVariableExpenseRegisterVO categoryVariableExpenseRegisterVO){
 
-        CategoryVariableExpense categoryVariableExpense = modelMapper.map(categoryVariableExpenseRegisterVO,CategoryVariableExpense.class);
+        CategoryVariableExpense categoryVariableExpenseRequest = modelMapper.map(categoryVariableExpenseRegisterVO,CategoryVariableExpense.class);
 
-        CategoryVariableExpenseDTO categoryVariableExpenseDTO = categoryVariableExpenseService.created(categoryVariableExpense);
+        categoryVariableExpenseRequest.setUser(userContext.returnUserCorrespondingToTheRequest());
+        categoryVariableExpenseRequest.setCreatedAt(LocalDateTime.now());
+        categoryVariableExpenseRequest.setDeleted(false);
+
+        CategoryVariableExpenseDTO categoryVariableExpenseDTO = modelMapper.map(categoryVariableExpenseService.save(categoryVariableExpenseRequest), CategoryVariableExpenseDTO.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpenseDTO);
     }
@@ -58,25 +64,33 @@ public class CategoryVariableExpenseController {
     }
 
     @GetMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<CategoryVariableExpenseDTO>> getAllCategoryVariableExpense(){
+    public ResponseEntity<List<CategoryVariableExpenseDTO>> getAllCategoryVariableExpense(){
 
-        ArrayList<CategoryVariableExpenseDTO> categoryVariableExpenseDTOS = categoryVariableExpenseService.getAll();
+        ArrayList<CategoryVariableExpense> categoryVariableExpenses = categoryVariableExpenseService.getAll(userContext.returnUserCorrespondingToTheRequest().getId());
 
-        return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpenseDTOS);
+        List<CategoryVariableExpenseDTO> categoryVariableExpensesDTO = new ArrayList<>();
+        categoryVariableExpenses.forEach(categoryVariableExpense -> {
+            categoryVariableExpensesDTO.add(modelMapper.map(categoryVariableExpense,CategoryVariableExpenseDTO.class));
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpensesDTO);
     }
 
     @GetMapping(value = "/accounts-category-expense/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryVariableExpenseDTO> getCategoryVariableExpense(@PathVariable String id){
-
-        CategoryVariableExpenseDTO categoryVariableExpenseDTO = categoryVariableExpenseService.getById(id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpenseDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(categoryVariableExpenseService.getById(id),CategoryVariableExpenseDTO.class));
     }
 
     @PatchMapping(value = "/accounts-category-expense/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deletingCategoryVariableExpense(@PathVariable String id){
 
-        categoryVariableExpenseService.deleted(id);
+        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById(id);
+
+        categoryVariableExpense.setDeleted(true);
+        categoryVariableExpense.setDeletedAt(LocalDateTime.now());
+        categoryVariableExpense.setUpdatedAt(LocalDateTime.now());
+
+        categoryVariableExpenseService.save(categoryVariableExpense);
 
         return null;
     }
@@ -85,12 +99,13 @@ public class CategoryVariableExpenseController {
     @ResponseBody
     public ResponseEntity<CategoryVariableExpenseDTO> update(@RequestBody @Valid CategoryVariableExpenseChangingVO categoryVariableExpenseChangingVO){
 
-        CategoryVariableExpense categoryVariableExpense = modelMapper.map(categoryVariableExpenseChangingVO,CategoryVariableExpense.class);
+        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById(categoryVariableExpenseChangingVO.getId());
 
-        CategoryVariableExpenseDTO categoryVariableExpenseDTO = categoryVariableExpenseService.update(categoryVariableExpense);
+        categoryVariableExpense.setName(categoryVariableExpenseChangingVO.getName() != null ? categoryVariableExpenseChangingVO.getName() : categoryVariableExpense.getName());
+        categoryVariableExpense.setDescription(categoryVariableExpenseChangingVO.getDescription() != null ? categoryVariableExpenseChangingVO.getDescription() : categoryVariableExpense.getDescription());
+        categoryVariableExpense.setUpdatedAt(LocalDateTime.now());
 
-        return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpenseDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(categoryVariableExpenseService.save(categoryVariableExpense),CategoryVariableExpenseDTO.class));
     }
-
 
 }

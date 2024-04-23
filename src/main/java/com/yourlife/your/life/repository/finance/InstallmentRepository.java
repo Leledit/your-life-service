@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface InstallmentRepository extends MongoRepository<Installment,String> {
-    Optional<ArrayList<Installment>> findAllByUser_Id(String id);
+    Optional<ArrayList<Installment>> findAllByUser_IdAndDeleted(String id,Boolean deleted);
 }

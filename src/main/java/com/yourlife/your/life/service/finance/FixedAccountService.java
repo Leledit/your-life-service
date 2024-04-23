@@ -8,10 +8,7 @@ import com.yourlife.your.life.model.vo.finance.FixedAccountRegisterVO;
 import java.util.ArrayList;
 
 public interface FixedAccountService {
-    FixedAccountDTO createdFixedAccount(FixedAccount fixedAccount);
-    ArrayList<FixedAccountDTO> returnRegisteredFixedAccounts();
-    FixedAccountDTO returningAFixedAccountById(String id);
-    FixedAccountDTO changingFixedAccount(FixedAccount fixedAccount);
-
-    Void deletingAFixedAccount(String id);
+    FixedAccount save(FixedAccount fixedAccount);
+    ArrayList<FixedAccount> getAll(String userId);
+    FixedAccount getById(String id);
 }

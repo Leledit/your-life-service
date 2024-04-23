@@ -9,10 +9,8 @@ import java.util.List;
 
 public interface CategoryVariableExpenseService {
 
-    CategoryVariableExpenseDTO created(CategoryVariableExpense categoryVariableExpense);
-    ArrayList<CategoryVariableExpenseDTO> getAll();
-    CategoryVariableExpenseDTO getById(String id);
-    Void deleted(String id);
-    CategoryVariableExpenseDTO update(CategoryVariableExpense categoryVariableExpense);
+    CategoryVariableExpense save(CategoryVariableExpense categoryVariableExpense);
+    ArrayList<CategoryVariableExpense> getAll(String userId);
+    CategoryVariableExpense getById(String id);
     List<CategoryVariableExpenseDTO> createdSeveral(List<CategoryVariableExpense> categoryVariableExpenses);
 }

@@ -7,14 +7,10 @@ import java.util.List;
 
 public interface InstallmentService {
 
-    InstallmentDTO createdInstallment(Installment installment);
+    Installment save(Installment installment);
 
-    List<InstallmentDTO> getAllInstallment();
+    List<Installment> getAll(String userId);
 
-    InstallmentDTO getById(String id);
-
-    InstallmentDTO changingInstallment(Installment installment);
-
-    Void deletedInstallment(String id);
+    Installment getById(String id);
 
 }

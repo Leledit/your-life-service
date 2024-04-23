@@ -27,6 +27,13 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Card getById(String id) {
-        return cardRepository.findById(id).orElse(null);
+
+        Card card = cardRepository.findById(id).orElse(null);
+
+        if(card == null || card.getDeleted()){
+            throw new RuntimeException("Nenhuma registro foi encontrado!");
+        }
+
+        return card;
     }
 }

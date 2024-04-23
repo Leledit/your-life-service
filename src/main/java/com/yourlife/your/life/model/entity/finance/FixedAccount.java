@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "fixedAccounts")
+@Document(collection = "fixed_accounts")
 public class FixedAccount {
 
     @Id
