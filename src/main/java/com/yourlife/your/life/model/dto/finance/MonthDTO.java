@@ -1,13 +1,14 @@
-package com.yourlife.your.life.model.entity.finance;
+package com.yourlife.your.life.model.dto.finance;
 
-import com.yourlife.your.life.model.entity.user.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.yourlife.your.life.model.entity.finance.Appetizer;
+import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
+import com.yourlife.your.life.model.entity.finance.FixedAccount;
+import com.yourlife.your.life.model.entity.finance.Installment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,20 +17,14 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "month")
-public class Month {
-
-    @Id
+@JsonInclude
+public class MonthDTO {
     private String id;
     private String name;
     private Integer year;
-    private Integer month;
     private LocalDateTime date;
     private List<Appetizer> appetizer;
     private List<CategoryVariableExpense> categoryVariableExpens;
     private List<FixedAccount> fixedAccounts;
     private List<Installment> installments;
-
-    @DBRef
-    private User user;
 }
