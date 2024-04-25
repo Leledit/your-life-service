@@ -24,6 +24,7 @@ public class Installment {
     private String firstInstallmentDate;
     private Number value;
     private Number qtd;
+    private String current;
     private Boolean deleted;
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;

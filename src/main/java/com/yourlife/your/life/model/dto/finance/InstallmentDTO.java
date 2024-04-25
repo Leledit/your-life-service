@@ -15,6 +15,7 @@ public class InstallmentDTO {
     private String id;
     private String description;
     private String  firstInstallmentDate;
+    private String current;
     private Number value;
     private Number qtd;
 }
