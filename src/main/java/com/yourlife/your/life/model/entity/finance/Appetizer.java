@@ -21,7 +21,10 @@ public class Appetizer {
     private String name;
     private Number value;
     private String description;
-    private LocalDateTime creationDate;
+    private LocalDateTime createdAt;
+    private Boolean deleted;
+    private LocalDateTime deletedAt;
+    private LocalDateTime updatedAt;
 
     @DBRef
     private User user;
