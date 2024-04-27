@@ -22,7 +22,6 @@ public class Card {
     private String name;
     private String dueDate;
     private String model;
-
     private Boolean deleted;
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;

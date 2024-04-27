@@ -26,9 +26,9 @@ public class CategoryVariableExpense {
     private String description;
     private Boolean deleted;
     private LocalDateTime deletedAt;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<Exit> exit;
 
     @DBRef
     private User user;

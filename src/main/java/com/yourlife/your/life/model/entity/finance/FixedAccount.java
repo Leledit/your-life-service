@@ -26,7 +26,6 @@ public class FixedAccount {
     private Number dueDate;
     private Boolean deleted;
     private LocalDateTime deletedAt;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

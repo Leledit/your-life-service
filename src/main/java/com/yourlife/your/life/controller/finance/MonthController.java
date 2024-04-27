@@ -1,14 +1,16 @@
 package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.AppetizerDTO;
+import com.yourlife.your.life.model.dto.finance.ExitDTO;
 import com.yourlife.your.life.model.dto.finance.InstallmentDTO;
 import com.yourlife.your.life.model.dto.finance.MonthDTO;
-import com.yourlife.your.life.model.entity.finance.Appetizer;
-import com.yourlife.your.life.model.entity.finance.Installment;
-import com.yourlife.your.life.model.entity.finance.Month;
+import com.yourlife.your.life.model.entity.finance.*;
 import com.yourlife.your.life.model.entity.user.User;
+import com.yourlife.your.life.model.vo.finance.AppetizerChanginVO;
 import com.yourlife.your.life.model.vo.finance.AppetizerRegisterVO;
+import com.yourlife.your.life.model.vo.finance.ExitRegisterVO;
 import com.yourlife.your.life.model.vo.finance.InstallmentRegisterVO;
+import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
 import com.yourlife.your.life.service.finance.MonthService;
 import com.yourlife.your.life.utils.Logger;
 import com.yourlife.your.life.utils.UserContext;
@@ -40,6 +42,9 @@ public class MonthController {
 
     @Autowired
     private MonthService monthService;
+
+    @Autowired
+    private CategoryVariableExpenseService categoryVariableExpenseService;
 
     @PostMapping(value = "/month",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -167,47 +172,137 @@ public class MonthController {
 
         Month month = findbyId(idMonth);
 
-        Appetizer appetizerFound = returnASpecificEntry(month.getAppetizer(),idAppetizer);
+        Appetizer appetizerFound = returnASpecificAppetizerFromTheArray(month.getAppetizer(),idAppetizer);
 
-        if(appetizerFound != null){
-
-            appetizerFound.setDeletedAt(LocalDateTime.now());
-            appetizerFound.setDeleted(true);
-            appetizerFound.setUpdatedAt(LocalDateTime.now());
-            month.getAppetizer().removeIf(a -> Objects.equals(a.getId(), idAppetizer));
-            month.getAppetizer().add(appetizerFound);
-            monthService.save(month);
-        }
-
-        /*for(Appetizer appetizer :  month.getAppetizer() ){
-            if(Objects.equals(appetizer.getId(), idAppetizer)){
-                    appetizer.setDeletedAt(LocalDateTime.now());
-                    appetizer.setDeleted(true);
-                    appetizer.setUpdatedAt(LocalDateTime.now());
-                    break;
-            }
-        }*/
-
-
-
+        appetizerFound.setDeletedAt(LocalDateTime.now());
+        appetizerFound.setDeleted(true);
+        appetizerFound.setUpdatedAt(LocalDateTime.now());
+        month.getAppetizer().removeIf(a -> Objects.equals(a.getId(), idAppetizer));
+        month.getAppetizer().add(appetizerFound);
+        monthService.save(month);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    private Appetizer returnASpecificEntry(List<Appetizer> appetizers, String idAppetizer){
+
+    private Appetizer returnASpecificAppetizerFromTheArray(List<Appetizer> appetizers, String idAppetizer){
+        Appetizer appetizerFound = null;
         for (Appetizer appetizer : appetizers) {
             if (Objects.equals(appetizer.getId(), idAppetizer)) {
-                return appetizer;
+                appetizerFound = appetizer;
             }
         }
+        if(appetizerFound == null){
+            throw new RuntimeException("Entrada não encontrada!");
+        }else{
+            if(appetizerFound.getDeleted()){
+                throw new RuntimeException("Entrada não encontrada!");
+            }
+        }
+        return appetizerFound;
+    }
+
+    //private CategoryVariableExpense returnA
+
+    @PutMapping(value = "/month/{idMonth}/appetizer/{idAppetizer}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Void> updated(@PathVariable String idMonth, @PathVariable String idAppetizer, @RequestBody AppetizerChanginVO appetizerChanginVO){
+
+        Month month = findbyId(idMonth);
+
+        Appetizer appetizerFound = returnASpecificAppetizerFromTheArray(month.getAppetizer(),idAppetizer);
+
+        appetizerFound.setName(appetizerChanginVO.getName() != null ? appetizerChanginVO.getName() : appetizerFound.getName());
+        appetizerFound.setValue(appetizerChanginVO.getValue() != null ? appetizerChanginVO.getValue() : appetizerFound.getValue());
+        appetizerFound.setDescription(appetizerChanginVO.getDescription() != null ? appetizerChanginVO.getDescription() : appetizerFound.getDescription());
+        appetizerFound.setUpdatedAt(LocalDateTime.now());
+
+        month.getAppetizer().removeIf(a -> Objects.equals(a.getId(), idAppetizer));
+        month.getAppetizer().add(appetizerFound);
+        monthService.save(month);
+
+        return  ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping(value = "/month/{idMonth}/categoryVariableExpense/{idCategory}/exit",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ExitDTO> creatNewExit(@PathVariable String idMonth ,
+                                                @PathVariable String idCategory,
+                                                @RequestBody @Valid ExitRegisterVO exitRegisterVO){
+
+        Month month = findbyId(idMonth);
+
+        CategoryVariableExpense categoryVariableExpenseFound = categoryVariableExpenseService.getById(idCategory);
+
+        CategoryVariableExpense categoryVariableExpenseMonth = returnASpecificCategoryVariableExpenseFromTheArray(month.getCategoryVariableExpens(),idCategory);
+
+        Exit newExist = modelMapper.map(exitRegisterVO,Exit.class);
+        newExist.setId(UUID.randomUUID().toString());
+        newExist.setCreatedAt(LocalDateTime.now());
+        newExist.setDeleted(false);
+
+        if(categoryVariableExpenseMonth == null){
+            List<Exit> exitList = new ArrayList<>();
+            exitList.add(newExist);
+
+            categoryVariableExpenseFound.setExit(exitList);
+
+            List<CategoryVariableExpense> categoryVariableExpenses = new ArrayList<>();
+            categoryVariableExpenses.add(categoryVariableExpenseFound);
+
+            month.setCategoryVariableExpens(categoryVariableExpenses);
+
+        }else{
+            categoryVariableExpenseMonth.getExit().add(newExist);
+        }
+
+        monthService.save(month);
+
+        return  ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(newExist,ExitDTO.class));
+    }
+
+    private CategoryVariableExpense returnASpecificCategoryVariableExpenseFromTheArray(List<CategoryVariableExpense> categoryVariableExpenses, String idCategoryVariableExpense){
+
+        for (CategoryVariableExpense categoryVariableExpense : categoryVariableExpenses) {
+            if(Objects.equals(categoryVariableExpense.getId(), idCategoryVariableExpense)){
+                if(categoryVariableExpense.getDeleted()){
+                    throw new RuntimeException("Categoria não foi encontrada!!");
+                }
+                return categoryVariableExpense;
+            }
+
+        }
+
         return null;
     }
 
 
-    @PutMapping(value = "/month/{idMonth}/appetizer/{idAppetizer}",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Void> updated(@PathVariable String idMonth,@PathVariable String idAppetizer){
-        return  null;
+    @PatchMapping(value = "/month/{idMonth}/categoryVariableExpense/{idCategory}/exit/{idExit}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deletedExit( @PathVariable String idMonth ,
+                                             @PathVariable String idCategory,
+                                             @PathVariable String idExit){
+
+        Month month = findbyId(idMonth);
+
+        for(CategoryVariableExpense categoryVariableExpense : month.getCategoryVariableExpens()){
+            if(Objects.equals(categoryVariableExpense.getId(),idCategory)){
+                for(Exit exit: categoryVariableExpense.getExit()){
+                    if(Objects.equals(exit.getId(),idExit)){
+                       if(exit.getDeleted()){
+                           throw  new RuntimeException("id exit invalido");
+                       }else{
+                           exit.setDeleted(true);
+                           exit.setDeletedAt(LocalDateTime.now());
+                           exit.setUpdatedAt(LocalDateTime.now());
+                       }
+                    }
+                }
+            }
+        }
+
+       monthService.save(month);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
