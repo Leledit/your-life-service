@@ -1,5 +1,6 @@
 package com.yourlife.your.life.model.vo.finance;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +11,9 @@ import org.springframework.format.annotation.NumberFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstallmentChanginVO {
-
-    private String id;
+public class FixedAccountMonthChangingVO {
+    private String name;
+    private Number value;
     private String description;
-    private String firstInstallmentDate;
-    @NumberFormat
-    private Number  value;
-    @NumberFormat
-    private Number qtd;
+    private Number dueDate;
 }

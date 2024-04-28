@@ -1,6 +1,6 @@
 package com.yourlife.your.life.model.vo.finance;
 
-import jakarta.validation.constraints.NotBlank;
+import com.yourlife.your.life.model.types.finance.PaymentMethods;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardChanginVO {
-    @NotBlank
-    private String id;
+public class ExitChangingVO {
     private String name;
-    private String dueDate;
-    private String model;
+    private PaymentMethods paymentMethods;
+    private Number value;
 }

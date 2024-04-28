@@ -2,7 +2,7 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.CardDTO;
 import com.yourlife.your.life.model.entity.finance.Card;
-import com.yourlife.your.life.model.vo.finance.CardChanginVO;
+import com.yourlife.your.life.model.vo.finance.CardChangingVO;
 import com.yourlife.your.life.model.vo.finance.CardRegisterVO;
 import com.yourlife.your.life.service.finance.CardService;
 import com.yourlife.your.life.utils.UserContext;
@@ -67,15 +67,15 @@ public class CardController {
 
     @PutMapping(value = "/cards",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CardDTO> updated(@RequestBody @Valid CardChanginVO cardChanginVO){
+    public ResponseEntity<CardDTO> updated(@RequestBody @Valid CardChangingVO cardChangingVO){
 
-        Card cardRequest = modelMapper.map(cardChanginVO,Card.class);
+        Card cardRequest = modelMapper.map(cardChangingVO,Card.class);
 
         Card card = cardService.getById(cardRequest.getId());
 
         card.setName(cardRequest.getName() != null ? cardRequest.getName() : card.getName());
         card.setDueDate(cardRequest.getDueDate() != null ? cardRequest.getDueDate() : card.getDueDate());
-        card.setModel(cardChanginVO.getModel() != null ? cardRequest.getModel() : card.getModel());
+        card.setModel(cardChangingVO.getModel() != null ? cardRequest.getModel() : card.getModel());
 
         cardService.save(card);
 

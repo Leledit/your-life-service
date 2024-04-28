@@ -2,7 +2,7 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.InstallmentDTO;
 import com.yourlife.your.life.model.entity.finance.Installment;
-import com.yourlife.your.life.model.vo.finance.InstallmentChanginVO;
+import com.yourlife.your.life.model.vo.finance.InstallmentChangingVO;
 import com.yourlife.your.life.model.vo.finance.InstallmentRegisterVO;
 import com.yourlife.your.life.service.finance.InstallmentService;
 import com.yourlife.your.life.utils.UserContext;
@@ -64,14 +64,14 @@ public class InstallmentController {
 
     @PutMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<InstallmentDTO> updated(@RequestBody @Valid InstallmentChanginVO installmentChanginVO){
+    public ResponseEntity<InstallmentDTO> updated(@RequestBody @Valid InstallmentChangingVO installmentChangingVO){
 
-        Installment installment = installmentService.getById(installmentChanginVO.getId());
+        Installment installment = installmentService.getById(installmentChangingVO.getId());
 
-        installment.setDescription(installmentChanginVO.getDescription() !=null ? installmentChanginVO.getDescription(): installment.getDescription());
-        installment.setFirstInstallmentDate(installmentChanginVO.getFirstInstallmentDate() !=null ? installmentChanginVO.getFirstInstallmentDate(): installment.getFirstInstallmentDate());
-        installment.setValue(installmentChanginVO.getValue() !=null? installmentChanginVO.getValue() : installment.getValue());
-        installment.setQtd(installmentChanginVO.getQtd() != null ? installmentChanginVO.getQtd() : installment.getQtd());
+        installment.setDescription(installmentChangingVO.getDescription() !=null ? installmentChangingVO.getDescription(): installment.getDescription());
+        installment.setFirstInstallmentDate(installmentChangingVO.getFirstInstallmentDate() !=null ? installmentChangingVO.getFirstInstallmentDate(): installment.getFirstInstallmentDate());
+        installment.setValue(installmentChangingVO.getValue() !=null? installmentChangingVO.getValue() : installment.getValue());
+        installment.setQtd(installmentChangingVO.getQtd() != null ? installmentChangingVO.getQtd() : installment.getQtd());
         installment.setUpdatedAt(LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(installmentService.save(installment),InstallmentDTO.class));
