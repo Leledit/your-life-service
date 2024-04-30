@@ -2,8 +2,8 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.FixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
-import com.yourlife.your.life.model.vo.finance.FixedAccountChangingVO;
-import com.yourlife.your.life.model.vo.finance.FixedAccountRegisterVO;
+import com.yourlife.your.life.model.vo.finance.FixedAccountPutVO;
+import com.yourlife.your.life.model.vo.finance.FixedAccountPostVO;
 import com.yourlife.your.life.service.finance.FixedAccountService;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
@@ -31,9 +31,9 @@ public class FixedAccountController {
 
     @PostMapping(value = "/accounts-fixed", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<FixedAccountDTO> register(@RequestBody @Valid FixedAccountRegisterVO fixedAccountRegisterVO){
+    public ResponseEntity<FixedAccountDTO> save(@RequestBody @Valid FixedAccountPostVO fixedAccountPostVO){
 
-        FixedAccount account = modelMapper.map(fixedAccountRegisterVO,FixedAccount.class);
+        FixedAccount account = modelMapper.map(fixedAccountPostVO,FixedAccount.class);
         account.setUser(userContext.returnUserCorrespondingToTheRequest());
         account.setCreatedAt(LocalDateTime.now());
         account.setDeleted(false);
@@ -61,14 +61,14 @@ public class FixedAccountController {
 
     @PutMapping(value = "/accounts-fixed",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<FixedAccountDTO> update(@RequestBody @Valid FixedAccountChangingVO fixedAccountChangingVO){
+    public ResponseEntity<FixedAccountDTO> updated(@RequestBody @Valid FixedAccountPutVO fixedAccountPutVO){
 
-        FixedAccount fixedAccount = fixedAccountService.getById(fixedAccountChangingVO.getId());
+        FixedAccount fixedAccount = fixedAccountService.getById(fixedAccountPutVO.getId());
 
-        fixedAccount.setName(fixedAccountChangingVO.getName() != null ? fixedAccountChangingVO.getName() : fixedAccount.getName());
-        fixedAccount.setValue(fixedAccountChangingVO.getValue() != null ? fixedAccountChangingVO.getValue() : fixedAccount.getValue());
-        fixedAccount.setDescription(fixedAccountChangingVO.getDescription() != null ? fixedAccountChangingVO.getDescription() : fixedAccount.getDescription());
-        fixedAccount.setDueDate(fixedAccountChangingVO.getDueDate() != null ? fixedAccountChangingVO.getDueDate() : fixedAccount.getDueDate());
+        fixedAccount.setName(fixedAccountPutVO.getName() != null ? fixedAccountPutVO.getName() : fixedAccount.getName());
+        fixedAccount.setValue(fixedAccountPutVO.getValue() != null ? fixedAccountPutVO.getValue() : fixedAccount.getValue());
+        fixedAccount.setDescription(fixedAccountPutVO.getDescription() != null ? fixedAccountPutVO.getDescription() : fixedAccount.getDescription());
+        fixedAccount.setDueDate(fixedAccountPutVO.getDueDate() != null ? fixedAccountPutVO.getDueDate() : fixedAccount.getDueDate());
         fixedAccount.setUpdatedAt(LocalDateTime.now());
 
         FixedAccount fixedAccountSave = fixedAccountService.save(fixedAccount);
@@ -78,7 +78,7 @@ public class FixedAccountController {
 
 
     @PatchMapping(value = "/account-fixed/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleting(@PathVariable String id){
+    public ResponseEntity<Void> deleted(@PathVariable String id){
 
         FixedAccount fixedAccount = fixedAccountService.getById(id);
 

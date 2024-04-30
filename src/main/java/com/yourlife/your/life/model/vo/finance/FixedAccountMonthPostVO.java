@@ -1,21 +1,25 @@
 package com.yourlife.your.life.model.vo.finance;
 
-import com.yourlife.your.life.model.types.finance.PaymentMethods;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExitRegisterVO {
+public class FixedAccountMonthPostVO {
+    @NotBlank
+    private String id;
     @NotBlank
     private String name;
-    @NotBlank
-    private PaymentMethods paymentMethods;
-    @NotBlank
+    @NumberFormat
     private Number value;
+    @NotBlank
+    private String description;
+    @NumberFormat
+    private Number dueDate;
 }

@@ -2,22 +2,14 @@ package com.yourlife.your.life.service.user.impl;
 
 import com.yourlife.your.life.model.dto.user.UserDTO;
 import com.yourlife.your.life.model.entity.user.User;
-import com.yourlife.your.life.model.entity.user.UserAuth;
-import com.yourlife.your.life.model.vo.user.UserLoginRequestVO;
-import com.yourlife.your.life.model.vo.user.UserRegistertRequestVO;
 import com.yourlife.your.life.repository.user.UserRepository;
 import com.yourlife.your.life.service.user.UserService;
 import com.yourlife.your.life.utils.PasswordUtil;
 import com.yourlife.your.life.utils.TokenUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

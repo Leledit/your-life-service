@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLoginRequestVO {
+public class UserLoginVO {
     @NotBlank
     @Email
     private String email;

@@ -1,19 +1,17 @@
 package com.yourlife.your.life.model.vo.finance;
 
-import jakarta.validation.constraints.NotBlank;
+import com.yourlife.your.life.model.types.finance.PaymentMethods;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryVariableExpenseRegisterVO {
-
+public class ExitPutVO {
     private String name;
-    private String description;
+    private PaymentMethods paymentMethods;
+    private Number value;
 }

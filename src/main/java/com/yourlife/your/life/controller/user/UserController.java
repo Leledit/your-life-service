@@ -2,8 +2,8 @@ package com.yourlife.your.life.controller.user;
 
 import com.yourlife.your.life.model.dto.user.UserDTO;
 import com.yourlife.your.life.model.entity.user.User;
-import com.yourlife.your.life.model.vo.user.UserLoginRequestVO;
-import com.yourlife.your.life.model.vo.user.UserRegistertRequestVO;
+import com.yourlife.your.life.model.vo.user.UserLoginVO;
+import com.yourlife.your.life.model.vo.user.UserRegistertVO;
 import com.yourlife.your.life.service.user.UserService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping(value = "/user/register", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<UserDTO> createAnAccount(@RequestBody @Valid UserRegistertRequestVO userPostRequestVO){
+    public ResponseEntity<UserDTO> createAnAccount(@RequestBody @Valid UserRegistertVO userPostRequestVO){
 
         User user = modelMapper.map(userPostRequestVO,User.class);
 
@@ -37,8 +37,8 @@ public class UserController {
 
     @PostMapping(value = "/user/login",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<UserDTO> login(@RequestBody @Valid UserLoginRequestVO userLoginRequestVO){
-        User user = modelMapper.map(userLoginRequestVO,User.class);
+    public ResponseEntity<UserDTO> login(@RequestBody @Valid UserLoginVO userLoginVO){
+        User user = modelMapper.map(userLoginVO,User.class);
 
         UserDTO dataUser = this.userService.loginUser(user);
 

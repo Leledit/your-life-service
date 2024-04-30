@@ -2,8 +2,8 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.InstallmentDTO;
 import com.yourlife.your.life.model.entity.finance.Installment;
-import com.yourlife.your.life.model.vo.finance.InstallmentChangingVO;
-import com.yourlife.your.life.model.vo.finance.InstallmentRegisterVO;
+import com.yourlife.your.life.model.vo.finance.InstallmentPutVO;
+import com.yourlife.your.life.model.vo.finance.InstallmentPostVO;
 import com.yourlife.your.life.service.finance.InstallmentService;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
@@ -32,9 +32,9 @@ public class InstallmentController {
 
     @PostMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<InstallmentDTO> register(@RequestBody @Valid InstallmentRegisterVO installmentRegisterVO){
+    public ResponseEntity<InstallmentDTO> save(@RequestBody @Valid InstallmentPostVO installmentPostVO){
 
-        Installment installment = modelMapper.map(installmentRegisterVO,Installment.class);
+        Installment installment = modelMapper.map(installmentPostVO,Installment.class);
         installment.setCreatedAt(LocalDateTime.now());
         installment.setDeleted(false);
         installment.setUser(userContext.returnUserCorrespondingToTheRequest());
@@ -45,7 +45,7 @@ public class InstallmentController {
     }
 
     @GetMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<InstallmentDTO>> listAll(){
+    public ResponseEntity<List<InstallmentDTO>> getAll(){
 
         List<Installment> installments = installmentService.getAll(userContext.returnUserCorrespondingToTheRequest().getId());
 
@@ -58,20 +58,21 @@ public class InstallmentController {
     }
 
     @GetMapping(value = "/installment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<InstallmentDTO> listById(@PathVariable String id){
+    public ResponseEntity<InstallmentDTO> getById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(installmentService.getById(id),InstallmentDTO.class));
     }
 
-    @PutMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/installment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<InstallmentDTO> updated(@RequestBody @Valid InstallmentChangingVO installmentChangingVO){
+    public ResponseEntity<InstallmentDTO> updated(@RequestBody @Valid InstallmentPutVO installmentPutVO,
+                                                  @PathVariable String id){
 
-        Installment installment = installmentService.getById(installmentChangingVO.getId());
+        Installment installment = installmentService.getById(id);
 
-        installment.setDescription(installmentChangingVO.getDescription() !=null ? installmentChangingVO.getDescription(): installment.getDescription());
-        installment.setFirstInstallmentDate(installmentChangingVO.getFirstInstallmentDate() !=null ? installmentChangingVO.getFirstInstallmentDate(): installment.getFirstInstallmentDate());
-        installment.setValue(installmentChangingVO.getValue() !=null? installmentChangingVO.getValue() : installment.getValue());
-        installment.setQtd(installmentChangingVO.getQtd() != null ? installmentChangingVO.getQtd() : installment.getQtd());
+        installment.setDescription(installmentPutVO.getDescription() !=null ? installmentPutVO.getDescription(): installment.getDescription());
+        installment.setFirstInstallmentDate(installmentPutVO.getFirstInstallmentDate() !=null ? installmentPutVO.getFirstInstallmentDate(): installment.getFirstInstallmentDate());
+        installment.setValue(installmentPutVO.getValue() !=null? installmentPutVO.getValue() : installment.getValue());
+        installment.setQtd(installmentPutVO.getQtd() != null ? installmentPutVO.getQtd() : installment.getQtd());
         installment.setUpdatedAt(LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(installmentService.save(installment),InstallmentDTO.class));

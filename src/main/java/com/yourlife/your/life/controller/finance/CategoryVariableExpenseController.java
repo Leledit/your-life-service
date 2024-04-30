@@ -2,8 +2,8 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.CategoryVariableExpenseDTO;
 import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
-import com.yourlife.your.life.model.vo.finance.CategoryVariableExpenseChangingVO;
-import com.yourlife.your.life.model.vo.finance.CategoryVariableExpenseRegisterVO;
+import com.yourlife.your.life.model.vo.finance.CategoryVariableExpensePutVO;
+import com.yourlife.your.life.model.vo.finance.CategoryVariableExpensePostVO;
 import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
@@ -32,9 +32,9 @@ public class CategoryVariableExpenseController {
 
     @PostMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CategoryVariableExpenseDTO> register(@RequestBody @Valid CategoryVariableExpenseRegisterVO categoryVariableExpenseRegisterVO){
+    public ResponseEntity<CategoryVariableExpenseDTO> save(@RequestBody @Valid CategoryVariableExpensePostVO categoryVariableExpensePostVO){
 
-        CategoryVariableExpense categoryVariableExpenseRequest = modelMapper.map(categoryVariableExpenseRegisterVO,CategoryVariableExpense.class);
+        CategoryVariableExpense categoryVariableExpenseRequest = modelMapper.map(categoryVariableExpensePostVO,CategoryVariableExpense.class);
 
         categoryVariableExpenseRequest.setUser(userContext.returnUserCorrespondingToTheRequest());
         categoryVariableExpenseRequest.setCreatedAt(LocalDateTime.now());
@@ -47,12 +47,12 @@ public class CategoryVariableExpenseController {
 
     @PostMapping(value = "/accounts-category-expense/batch",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<CategoryVariableExpenseDTO>> registerSeveralNewCategoryVariableExpense(@RequestBody @Valid List<CategoryVariableExpenseRegisterVO> categoryVariableExpenseRegisterVO){
+    public ResponseEntity<List<CategoryVariableExpenseDTO>> saveAll(@RequestBody @Valid List<CategoryVariableExpensePostVO> categoryVariableExpensePostVO){
 
         List<CategoryVariableExpense> categoryVariableExpenses = new ArrayList<>();
 
-        categoryVariableExpenseRegisterVO.forEach(categoryVariableExpenseRegisterVO1 -> {
-            CategoryVariableExpense categoryVariableExpense = modelMapper.map(categoryVariableExpenseRegisterVO1,CategoryVariableExpense.class);
+        categoryVariableExpensePostVO.forEach(categoryVariableExpensePostVO1 -> {
+            CategoryVariableExpense categoryVariableExpense = modelMapper.map(categoryVariableExpensePostVO1,CategoryVariableExpense.class);
             categoryVariableExpense.setDeleted(false);
             categoryVariableExpense.setCreatedAt(LocalDateTime.now());
             categoryVariableExpenses.add(categoryVariableExpense);
@@ -64,7 +64,7 @@ public class CategoryVariableExpenseController {
     }
 
     @GetMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CategoryVariableExpenseDTO>> getAllCategoryVariableExpense(){
+    public ResponseEntity<List<CategoryVariableExpenseDTO>> getAll(){
 
         ArrayList<CategoryVariableExpense> categoryVariableExpenses = categoryVariableExpenseService.getAll(userContext.returnUserCorrespondingToTheRequest().getId());
 
@@ -77,12 +77,12 @@ public class CategoryVariableExpenseController {
     }
 
     @GetMapping(value = "/accounts-category-expense/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryVariableExpenseDTO> getCategoryVariableExpense(@PathVariable String id){
+    public ResponseEntity<CategoryVariableExpenseDTO> getById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(categoryVariableExpenseService.getById(id),CategoryVariableExpenseDTO.class));
     }
 
     @PatchMapping(value = "/accounts-category-expense/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deletingCategoryVariableExpense(@PathVariable String id){
+    public ResponseEntity<Void> deleted(@PathVariable String id){
 
         CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById(id);
 
@@ -95,14 +95,15 @@ public class CategoryVariableExpenseController {
         return null;
     }
 
-    @PutMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/accounts-category-expense/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CategoryVariableExpenseDTO> update(@RequestBody @Valid CategoryVariableExpenseChangingVO categoryVariableExpenseChangingVO){
+    public ResponseEntity<CategoryVariableExpenseDTO> updated(@RequestBody @Valid CategoryVariableExpensePutVO categoryVariableExpensePutVO,
+                                                             @PathVariable String id){
 
-        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById(categoryVariableExpenseChangingVO.getId());
+        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById(id);
 
-        categoryVariableExpense.setName(categoryVariableExpenseChangingVO.getName() != null ? categoryVariableExpenseChangingVO.getName() : categoryVariableExpense.getName());
-        categoryVariableExpense.setDescription(categoryVariableExpenseChangingVO.getDescription() != null ? categoryVariableExpenseChangingVO.getDescription() : categoryVariableExpense.getDescription());
+        categoryVariableExpense.setName(categoryVariableExpensePutVO.getName() != null ? categoryVariableExpensePutVO.getName() : categoryVariableExpense.getName());
+        categoryVariableExpense.setDescription(categoryVariableExpensePutVO.getDescription() != null ? categoryVariableExpensePutVO.getDescription() : categoryVariableExpense.getDescription());
         categoryVariableExpense.setUpdatedAt(LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(categoryVariableExpenseService.save(categoryVariableExpense),CategoryVariableExpenseDTO.class));

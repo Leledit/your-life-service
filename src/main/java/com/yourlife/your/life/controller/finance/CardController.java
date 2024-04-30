@@ -2,8 +2,8 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.CardDTO;
 import com.yourlife.your.life.model.entity.finance.Card;
-import com.yourlife.your.life.model.vo.finance.CardChangingVO;
-import com.yourlife.your.life.model.vo.finance.CardRegisterVO;
+import com.yourlife.your.life.model.vo.finance.CardPutVO;
+import com.yourlife.your.life.model.vo.finance.CardPostVO;
 import com.yourlife.your.life.service.finance.CardService;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
@@ -32,9 +32,9 @@ public class CardController {
 
     @PostMapping(value = "/cards",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CardDTO> register (@RequestBody @Valid CardRegisterVO cardRegisterVO){
+    public ResponseEntity<CardDTO> save(@RequestBody @Valid CardPostVO cardPostVO){
 
-        Card card = modelMapper.map(cardRegisterVO,Card.class);
+        Card card = modelMapper.map(cardPostVO,Card.class);
 
         card.setUser(userContext.returnUserCorrespondingToTheRequest());
         card.setCreatedAt(LocalDateTime.now());
@@ -65,17 +65,18 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(cardService.getById(id),CardDTO.class));
     }
 
-    @PutMapping(value = "/cards",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/cards/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CardDTO> updated(@RequestBody @Valid CardChangingVO cardChangingVO){
+    public ResponseEntity<CardDTO> updated(@RequestBody @Valid CardPutVO cardPutVO,
+                                           @PathVariable String id){
 
-        Card cardRequest = modelMapper.map(cardChangingVO,Card.class);
+        Card cardRequest = modelMapper.map(cardPutVO,Card.class);
 
-        Card card = cardService.getById(cardRequest.getId());
+        Card card = cardService.getById(id);
 
         card.setName(cardRequest.getName() != null ? cardRequest.getName() : card.getName());
         card.setDueDate(cardRequest.getDueDate() != null ? cardRequest.getDueDate() : card.getDueDate());
-        card.setModel(cardChangingVO.getModel() != null ? cardRequest.getModel() : card.getModel());
+        card.setModel(cardPutVO.getModel() != null ? cardRequest.getModel() : card.getModel());
 
         cardService.save(card);
 

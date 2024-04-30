@@ -11,15 +11,13 @@ import org.springframework.format.annotation.NumberFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FixedAccountMonthRegisterVO {
-    @NotBlank
-    private String id;
-    @NotBlank
-    private String name;
-    @NumberFormat
-    private Number value;
+public class InstallmentPostVO {
     @NotBlank
     private String description;
+    @NotBlank
+    private String firstInstallmentDate;
     @NumberFormat
-    private Number dueDate;
+    private Number  value;
+    @NumberFormat
+    private Number qtd;
 }

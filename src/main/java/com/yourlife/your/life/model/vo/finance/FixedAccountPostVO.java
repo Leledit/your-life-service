@@ -1,22 +1,23 @@
-package com.yourlife.your.life.model.vo.user;
+package com.yourlife.your.life.model.vo.finance;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegistertRequestVO {
+public class FixedAccountPostVO {
     @NotBlank
     private String name;
+    @NumberFormat
+    private Number value;
     @NotBlank
-    @Email
-    private String email;
-    @NotBlank
-    private String password;
+    private String description;
+    @NumberFormat
+    private Number dueDate;
 }

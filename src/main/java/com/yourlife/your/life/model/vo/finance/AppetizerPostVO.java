@@ -5,15 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardChangingVO {
+public class AppetizerPostVO {
     @NotBlank
-    private String id;
     private String name;
-    private String dueDate;
-    private String model;
+    @NumberFormat
+    private Number value;
+    @NotBlank
+    private String description;
 }
