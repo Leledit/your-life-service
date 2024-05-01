@@ -1,5 +1,6 @@
 package com.yourlife.your.life.service.finance.impl;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.CategoryVariableExpenseDTO;
 import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
 import com.yourlife.your.life.repository.finance.CategoryVariableExpenseRepository;
@@ -35,7 +36,7 @@ public class CategoryVariableExpenseServiceImpl implements CategoryVariableExpen
         CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseRepository.findById(id).orElse(null);
 
         if(categoryVariableExpense == null || categoryVariableExpense.getDeleted()){
-            throw new RuntimeException("Nenhuma registro foi encontrado!");
+            throw new RuntimeException(ExceptionMessages.NOT_FOUND);
         }
 
         return categoryVariableExpense;

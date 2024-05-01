@@ -1,5 +1,6 @@
 package com.yourlife.your.life.service.user.impl;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.user.UserDTO;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.repository.user.UserRepository;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userFound = this.userRepository.findFirstByEmail(user.getEmail());
 
         if(userFound.isPresent()){
-            throw new RuntimeException("Email ja cadastrado no sistema");
+            throw new RuntimeException(ExceptionMessages.EMAIL_ALREADY_REGISTERED);
         }
 
         user.setPassword(PasswordUtil.encodePassword(user.getPassword()));
@@ -50,12 +51,12 @@ public class UserServiceImpl implements UserService {
         Optional<User> userFound = this.userRepository.findFirstByEmail(user.getEmail());
 
         if(userFound.isEmpty()){
-            throw new RuntimeException("O email fornecido não foi encontrado em nosso sistema!");
+            throw new RuntimeException(ExceptionMessages.INVALID_CREDENTIALS);
         }
         User userData = userFound.get();
 
         if(!PasswordUtil.matches(user.getPassword(),userData.getPassword())){
-            throw new RuntimeException("A senha fornecida está incorreta!");
+            throw new RuntimeException(ExceptionMessages.INVALID_CREDENTIALS);
         }
 
         String token = tokenUtils.generateToken(userData.getId());

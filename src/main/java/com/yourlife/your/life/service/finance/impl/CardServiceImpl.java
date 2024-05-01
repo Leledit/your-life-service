@@ -1,5 +1,6 @@
 package com.yourlife.your.life.service.finance.impl;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.entity.finance.Card;
 import com.yourlife.your.life.repository.finance.CardRepository;
 import com.yourlife.your.life.service.finance.CardService;
@@ -30,7 +31,7 @@ public class CardServiceImpl implements CardService {
         Card card = cardRepository.findById(id).orElse(null);
 
         if(card == null || card.getDeleted()){
-            throw new RuntimeException("Nenhuma registro foi encontrado!");
+            throw new RuntimeException(ExceptionMessages.NOT_FOUND);
         }
 
         return card;

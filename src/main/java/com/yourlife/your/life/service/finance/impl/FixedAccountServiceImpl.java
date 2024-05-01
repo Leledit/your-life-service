@@ -1,5 +1,6 @@
 package com.yourlife.your.life.service.finance.impl;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
 import com.yourlife.your.life.repository.finance.FixedAccountRepository;
 import com.yourlife.your.life.service.finance.FixedAccountService;
@@ -29,7 +30,7 @@ public class FixedAccountServiceImpl implements FixedAccountService {
         FixedAccount fixedAccount = fixedAccountRepository.findById(id).orElse(null);
 
         if(fixedAccount == null || fixedAccount.getDeleted()){
-            throw new RuntimeException("Nenhuma registro foi encontrado!");
+            throw new RuntimeException(ExceptionMessages.NOT_FOUND);
         }
 
         return fixedAccount;

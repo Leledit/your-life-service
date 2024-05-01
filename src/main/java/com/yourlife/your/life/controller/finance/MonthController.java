@@ -1,5 +1,6 @@
 package com.yourlife.your.life.controller.finance;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.*;
 import com.yourlife.your.life.model.entity.finance.*;
 import com.yourlife.your.life.model.vo.finance.*;
@@ -43,7 +44,7 @@ public class MonthController {
         Month monthFound = monthService.findByMonth(currentDate.getDayOfMonth(),currentDate.getYear(),userContext.returnUserCorrespondingToTheRequest().getId());
 
         if(monthFound != null){
-            throw new RuntimeException("Mes ja cadastrado");
+            throw new RuntimeException(ExceptionMessages.MONT_ALREADY_REGISTERED);
         }
 
         Month monthSave = createNewMonthRecord(currentDate);
@@ -213,7 +214,7 @@ public class MonthController {
         Exit exit = returnASpecificExit(month,idCategory,idExit);
 
         if(exit == null){
-            throw new RuntimeException("id exit invalido");
+            throw new RuntimeException(ExceptionMessages.EXIT_NOT_FOUND);
         }else{
             exit.setDeleted(true);
             exit.setDeletedAt(LocalDateTime.now());
@@ -238,7 +239,7 @@ public class MonthController {
         Exit exit = returnASpecificExit(month,idCategory,idExit);
 
         if(exit == null){
-            throw new RuntimeException("Exit não encontrada");
+            throw new RuntimeException(ExceptionMessages.EXIT_NOT_FOUND);
         }
 
         exit.setName(exitPutVO.getName() != null ? exitPutVO.getName() : exit.getName());
@@ -294,7 +295,7 @@ public class MonthController {
         FixedAccount fixedAccountFound = returnASpecificFixedAccount(month,idFixedAccount);
 
         if(fixedAccountFound == null){
-            throw new RuntimeException("Conta-fixa não foi informada");
+            throw new RuntimeException(ExceptionMessages.FIXED_ACCOUNT_NOT_FOUND);
         }else {
             fixedAccountFound.setDeleted(true);
             fixedAccountFound.setDeletedAt(LocalDateTime.now());
@@ -317,7 +318,7 @@ public class MonthController {
         FixedAccount fixedAccountFound = returnASpecificFixedAccount(month,idFixedAccount);
 
         if(fixedAccountFound == null){
-            throw new RuntimeException("Conta-fixa não foi informada");
+            throw new RuntimeException(ExceptionMessages.FIXED_ACCOUNT_NOT_FOUND);
         }else {
             fixedAccountFound.setName(fixedAccountMonthPutVO.getName() != null ? fixedAccountMonthPutVO.getName() : fixedAccountFound.getName());
             fixedAccountFound.setValue(fixedAccountMonthPutVO.getValue() != null ? fixedAccountMonthPutVO.getValue() : fixedAccountFound.getValue());
@@ -349,7 +350,7 @@ public class MonthController {
         Month month = monthService.findById(id);
 
         if(month == null){
-            throw new RuntimeException("Nenhum mes foi cadastrado!");
+            throw new RuntimeException(ExceptionMessages.MONTH_NOT_FOUND);
         }
 
         return month;
@@ -362,10 +363,10 @@ public class MonthController {
             }
         }
         if(appetizerFound == null){
-            throw new RuntimeException("Entrada não encontrada!");
+            throw new RuntimeException(ExceptionMessages.MONTH_NOT_FOUND);
         }else{
             if(appetizerFound.getDeleted()){
-                throw new RuntimeException("Entrada não encontrada!");
+                throw new RuntimeException(ExceptionMessages.MONTH_NOT_FOUND);
             }
         }
         return appetizerFound;
@@ -374,7 +375,7 @@ public class MonthController {
         for (CategoryVariableExpense categoryVariableExpense : categoryVariableExpenses) {
             if(Objects.equals(categoryVariableExpense.getId(), idCategoryVariableExpense)){
                 if(categoryVariableExpense.getDeleted()){
-                    throw new RuntimeException("Categoria não foi encontrada!!");
+                    throw new RuntimeException(ExceptionMessages.CATEGORY_VARIABLE_EXPENSE_NOT_FOUND);
                 }
                 return categoryVariableExpense;
             }

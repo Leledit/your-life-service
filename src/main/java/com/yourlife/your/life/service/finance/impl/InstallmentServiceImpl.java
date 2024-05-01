@@ -1,5 +1,6 @@
 package com.yourlife.your.life.service.finance.impl;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.entity.finance.Installment;
 import com.yourlife.your.life.repository.finance.InstallmentRepository;
 import com.yourlife.your.life.service.finance.InstallmentService;
@@ -29,7 +30,7 @@ public class InstallmentServiceImpl implements InstallmentService {
         Installment installment = installmentRepository.findById(id).orElse(null);
 
         if(installment == null || installment.getDeleted()){
-            throw new RuntimeException("Nenhuma registro foi encontrado!");
+            throw new RuntimeException(ExceptionMessages.NOT_FOUND);
         }
 
         return installment;
