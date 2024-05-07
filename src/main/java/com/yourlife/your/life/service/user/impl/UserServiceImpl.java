@@ -5,6 +5,7 @@ import com.yourlife.your.life.model.dto.user.UserDTO;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.repository.user.UserRepository;
 import com.yourlife.your.life.service.user.UserService;
+import com.yourlife.your.life.utils.Logger;
 import com.yourlife.your.life.utils.PasswordUtil;
 import com.yourlife.your.life.utils.TokenUtils;
 import org.modelmapper.ModelMapper;
@@ -60,6 +61,8 @@ public class UserServiceImpl implements UserService {
         }
 
         String token = tokenUtils.generateToken(userData.getId());
+
+
 
         UserDTO userDTO = modelMapper.map(userData,UserDTO.class);
         userDTO.setToken(token);
