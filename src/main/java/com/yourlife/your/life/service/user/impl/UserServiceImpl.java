@@ -62,8 +62,6 @@ public class UserServiceImpl implements UserService {
 
         String token = tokenUtils.generateToken(userData.getId());
 
-
-
         UserDTO userDTO = modelMapper.map(userData,UserDTO.class);
         userDTO.setToken(token);
 
