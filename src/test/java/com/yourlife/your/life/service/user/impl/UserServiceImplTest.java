@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-//@SpringBootTest
 @DisplayName("User")
 class UserServiceImplTest {
 
