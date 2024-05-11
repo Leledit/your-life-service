@@ -22,7 +22,6 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<Card> getAll(String userId) {
         return cardRepository.findAllByUser_IdAndDeleted(userId,false).orElse(null);
-
     }
 
     @Override

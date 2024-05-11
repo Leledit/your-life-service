@@ -31,7 +31,7 @@ class CardServiceImplTest {
 
     private User userMock;
 
-    private List<Card> cardList;
+    private Card cardMock;
 
     @BeforeEach
     public void setUp(){
@@ -40,16 +40,19 @@ class CardServiceImplTest {
         userMock.setEmail("test@teste.com.br");
         userMock.setName("leandro");
         userMock.setPassword("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS");
+
+        cardMock = new Card();
+        cardMock.setId("6625739518b9de67f587a657");
+        cardMock.setName("Cartão do Nubank");
+        cardMock.setDueDate("15/07/2028");
+        cardMock.setModel("Nubank");
+        cardMock.setDeleted(false);
+        cardMock.setUser(userMock);
     }
 
     @Test
     @DisplayName("Card - Check success when registering a new card")
     void testSave() {
-        Card cardMock = new Card();
-        cardMock.setName("Cartão do Nubank");
-        cardMock.setDueDate("15/07/2028");
-        cardMock.setModel("Nubank");
-
         when(cardRepository.save(cardMock)).thenReturn(cardMock);
 
         Card card = cardService.save(cardMock);
@@ -82,13 +85,6 @@ class CardServiceImplTest {
     @Test
     @DisplayName("Card - Searching for a single card")
     void testGetByIdReturning_Card() {
-        Card cardMock = new Card();
-        cardMock.setId("6625739518b9de67f587a657");
-        cardMock.setName("Cartão do Nubank");
-        cardMock.setDueDate("15/07/2028");
-        cardMock.setModel("Nubank");
-        cardMock.setDeleted(false);
-
         when(cardRepository.findById("6625739518b9de67f587a657")).thenReturn(Optional.of(cardMock));
 
         Card card = cardService.getById("6625739518b9de67f587a657");
@@ -99,11 +95,6 @@ class CardServiceImplTest {
     @Test
     @DisplayName("Card - throwing an exception when trying to search for a deleted card")
     void testGetByIdReturning_Exception() {
-        Card cardMock = new Card();
-        cardMock.setId("6625739518b9de67f587a657");
-        cardMock.setName("Cartão do Nubank");
-        cardMock.setDueDate("15/07/2028");
-        cardMock.setModel("Nubank");
         cardMock.setDeleted(true);
 
         when(cardRepository.findById("6625739518b9de67f587a657")).thenReturn(Optional.of(cardMock));

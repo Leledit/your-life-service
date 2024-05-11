@@ -43,17 +43,8 @@ public class CategoryVariableExpenseServiceImpl implements CategoryVariableExpen
     }
 
     @Override
-    public List<CategoryVariableExpenseDTO> createdSeveral(List<CategoryVariableExpense> categoryVariableExpenses) {
-
-        List<CategoryVariableExpense> categoryVariableExpensesSave = categoryVariableExpenseRepository.saveAll(categoryVariableExpenses);
-
-        List<CategoryVariableExpenseDTO> categoryVariableExpenseDTOS = new ArrayList<>();
-
-        categoryVariableExpensesSave.forEach(categoryVariableExpense -> {
-            categoryVariableExpenseDTOS.add(modelMapper.map(categoryVariableExpense,CategoryVariableExpenseDTO.class));
-        });
-
-        return categoryVariableExpenseDTOS;
+    public List<CategoryVariableExpense> createdSeveral(List<CategoryVariableExpense> categoryVariableExpenses) {
+        return categoryVariableExpenseRepository.saveAll(categoryVariableExpenses);
     }
 
 }

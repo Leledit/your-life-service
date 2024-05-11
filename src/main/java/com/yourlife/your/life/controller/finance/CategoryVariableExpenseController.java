@@ -57,8 +57,13 @@ public class CategoryVariableExpenseController {
             categoryVariableExpense.setCreatedAt(LocalDateTime.now());
             categoryVariableExpenses.add(categoryVariableExpense);
         });
+        List<CategoryVariableExpenseDTO> categoryVariableExpenseDTOS = new ArrayList<>();
 
-        List<CategoryVariableExpenseDTO> categoryVariableExpenseDTOS = categoryVariableExpenseService.createdSeveral(categoryVariableExpenses);
+        List<CategoryVariableExpense> categoryVariableExpense = categoryVariableExpenseService.createdSeveral(categoryVariableExpenses);
+
+        categoryVariableExpense.forEach(category -> {
+            categoryVariableExpenseDTOS.add(modelMapper.map(category,CategoryVariableExpenseDTO.class));
+        });
 
         return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpenseDTOS);
     }

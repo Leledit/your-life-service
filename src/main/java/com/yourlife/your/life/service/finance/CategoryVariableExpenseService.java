@@ -10,5 +10,5 @@ public interface CategoryVariableExpenseService {
     CategoryVariableExpense save(CategoryVariableExpense categoryVariableExpense);
     ArrayList<CategoryVariableExpense> getAll(String userId);
     CategoryVariableExpense getById(String id);
-    List<CategoryVariableExpenseDTO> createdSeveral(List<CategoryVariableExpense> categoryVariableExpenses);
+    List<CategoryVariableExpense> createdSeveral(List<CategoryVariableExpense> categoryVariableExpenses);
 }
