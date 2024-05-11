@@ -16,7 +16,7 @@ public class FixedAccountServiceImpl implements FixedAccountService {
 
     @Override
     public FixedAccount save(FixedAccount fixedAccountRequest) {
-        return   fixedAccountRepository.save(fixedAccountRequest);
+        return fixedAccountRepository.save(fixedAccountRequest);
     }
 
     @Override
