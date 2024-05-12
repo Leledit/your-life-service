@@ -44,7 +44,7 @@ class UserControllerTest {
     private UserController userController;
 
     @Test
-    @DisplayName("create - Criando novo registro com sucesso!")
+    @DisplayName("create - Creating new record successfully!")
     void testCreateAnAccount() throws Exception{
         UserRegistertVO userRegistertVOMock = new UserRegistertVO();
         userRegistertVOMock.setName("leandro");
@@ -72,7 +72,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("create - provocando uma exceção, ao criar registro com dados invalidos!")
+    @DisplayName("create - Causing an exception when creating a record with invalid data!")
     void testCreateAnAccount_InvalidInput() throws Exception{
         UserRegistertVO userRegistertVOMock = new UserRegistertVO();
 
@@ -80,7 +80,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("login - logando na aplicação")
+    @DisplayName("login - logging into the application")
     void testLogin() {
         UserLoginVO userLoginVO = new UserLoginVO();
         userLoginVO.setEmail("test@teste.com.br");

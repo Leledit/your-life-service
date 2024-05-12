@@ -1,5 +1,6 @@
 package com.yourlife.your.life.controller.finance;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.CardDTO;
 import com.yourlife.your.life.model.entity.finance.Card;
 import com.yourlife.your.life.model.vo.finance.CardPutVO;
@@ -34,6 +35,10 @@ public class CardController {
     @ResponseBody
     public ResponseEntity<CardDTO> save(@RequestBody @Valid CardPostVO cardPostVO){
 
+        if(cardPostVO.getName() == null || cardPostVO.getDueDate() == null || cardPostVO.getModel() == null){
+            throw new RuntimeException(ExceptionMessages.INVALID_REQUEST_COMPONENT);
+        }
+
         Card card = modelMapper.map(cardPostVO,Card.class);
 
         card.setUser(userContext.returnUserCorrespondingToTheRequest());
@@ -59,7 +64,6 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(cardDTOS);
     }
 
-
     @GetMapping(value = "/cards/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CardDTO> getById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(cardService.getById(id),CardDTO.class));
@@ -78,9 +82,9 @@ public class CardController {
         card.setDueDate(cardRequest.getDueDate() != null ? cardRequest.getDueDate() : card.getDueDate());
         card.setModel(cardPutVO.getModel() != null ? cardRequest.getModel() : card.getModel());
 
-        cardService.save(card);
+        Card cardSave = cardService.save(card);
 
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(card,CardDTO.class));
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(cardSave,CardDTO.class));
     }
 
 
