@@ -62,7 +62,6 @@ class UserServiceImplTest {
     @DisplayName("Login - whether the login is successful!")
     public void testLoginUser_Success() {
         when(userRepository.findFirstByEmail("test@teste.com.br")).thenReturn(Optional.of(userMock));
-        when(tokenUtils.generateToken(userMock.getId())).thenReturn("testToken");
         when(modelMapper.map(any(User.class), eq(UserDTO.class))).thenReturn(userDTO);
 
         User userMockRequest = new User();
@@ -70,10 +69,10 @@ class UserServiceImplTest {
         userMockRequest.setName("leandro");
         userMockRequest.setPassword("12345");
 
-        UserDTO loginUser = userService.loginUser(userMockRequest);
+        User loginUser = userService.loginUser(userMockRequest);
 
         assertNotNull(loginUser);
-        assertEquals("testToken", loginUser.getToken());
+
     }
 
     @Test
@@ -101,12 +100,10 @@ class UserServiceImplTest {
         when(userRepository.findFirstByEmail("test@teste.com.br")).thenReturn(Optional.empty());
         when(userRepository.save(userMockRequest)).thenReturn(userMock);
         when(modelMapper.map(any(User.class), eq(UserDTO.class))).thenReturn(userDTO);
-        when(tokenUtils.generateToken(userMock.getId())).thenReturn("testToken");
 
-        UserDTO createdUser = userService.createUser(userMockRequest);
+        User createdUser = userService.createUser(userMockRequest);
 
         assertNotNull(createdUser);
-        assertEquals("testToken", createdUser.getToken());
     }
 
     @Test

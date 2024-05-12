@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Autowired TokenUtils tokenUtils;
 
     @Override
-    public UserDTO createUser(User user) {
+    public User createUser(User user) {
 
         Optional<User> userFound = this.userRepository.findFirstByEmail(user.getEmail());
 
@@ -39,15 +39,11 @@ public class UserServiceImpl implements UserService {
         User savedUser =  userRepository.save(user);
         savedUser.setCreatedAt(LocalDateTime.now());
 
-        UserDTO userDTO = modelMapper.map(user,UserDTO.class);
-
-        userDTO.setToken(tokenUtils.generateToken(savedUser.getId()));
-
-        return userDTO;
+        return savedUser;
     }
 
     @Override
-    public UserDTO loginUser(User user) {
+    public User loginUser(User user) {
 
         Optional<User> userFound = this.userRepository.findFirstByEmail(user.getEmail());
 
@@ -60,11 +56,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ExceptionMessages.INVALID_CREDENTIALS);
         }
 
-        String token = tokenUtils.generateToken(userData.getId());
-
-        UserDTO userDTO = modelMapper.map(userData,UserDTO.class);
-        userDTO.setToken(token);
-
-        return userDTO;
+        return userData;
     }
 }

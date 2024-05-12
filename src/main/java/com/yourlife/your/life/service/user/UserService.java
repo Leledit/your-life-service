@@ -5,8 +5,8 @@ import com.yourlife.your.life.model.entity.user.User;
 
 public interface UserService {
 
-    UserDTO createUser(User user);
+    User createUser(User user);
 
-    UserDTO loginUser(User user);
+    User loginUser(User user);
 
 }
