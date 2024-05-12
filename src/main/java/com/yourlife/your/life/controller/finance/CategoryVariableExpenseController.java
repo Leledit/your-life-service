@@ -1,5 +1,6 @@
 package com.yourlife.your.life.controller.finance;
 
+import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.CategoryVariableExpenseDTO;
 import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
 import com.yourlife.your.life.model.vo.finance.CategoryVariableExpensePutVO;
@@ -33,6 +34,10 @@ public class CategoryVariableExpenseController {
     @PostMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<CategoryVariableExpenseDTO> save(@RequestBody @Valid CategoryVariableExpensePostVO categoryVariableExpensePostVO){
+
+        if(categoryVariableExpensePostVO.getName() == null || categoryVariableExpensePostVO.getDescription() == null){
+            throw new RuntimeException(ExceptionMessages.INVALID_REQUEST_COMPONENT);
+        }
 
         CategoryVariableExpense categoryVariableExpenseRequest = modelMapper.map(categoryVariableExpensePostVO,CategoryVariableExpense.class);
 
@@ -97,7 +102,7 @@ public class CategoryVariableExpenseController {
 
         categoryVariableExpenseService.save(categoryVariableExpense);
 
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PutMapping(value = "/accounts-category-expense/{id}",produces = MediaType.APPLICATION_JSON_VALUE)

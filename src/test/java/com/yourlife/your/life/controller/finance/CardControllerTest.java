@@ -31,7 +31,6 @@ import static org.mockito.Mockito.when;
 @DisplayName("Card")
 class CardControllerTest {
 
-
     @Mock
     private ModelMapper modelMapper;
 
