@@ -7,6 +7,7 @@ import com.yourlife.your.life.model.vo.user.UserLoginVO;
 import com.yourlife.your.life.model.vo.user.UserRegistertVO;
 import com.yourlife.your.life.service.user.UserService;
 import com.yourlife.your.life.utils.TokenUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +44,21 @@ class UserControllerTest {
     @InjectMocks
     private UserController userController;
 
+    private User userMock;
+
+    private UserDTO userDTOMock;
+    @BeforeEach
+    public void setUp() {
+        userMock = new User();
+        userMock.setName("leandro");
+        userMock.setPassword("1234");
+        userMock.setEmail("test@teste.com.br");
+
+        userDTOMock = new UserDTO();
+        userDTOMock.setName("leandro");
+        userDTOMock.setId("6621b1c02c3dbe50ac7d6319");
+    }
+
     @Test
     @DisplayName("create - Creating new record successfully!")
     void testCreateAnAccount() throws Exception{
@@ -50,15 +66,6 @@ class UserControllerTest {
         userRegistertVOMock.setName("leandro");
         userRegistertVOMock.setPassword("1234");
         userRegistertVOMock.setEmail("test@teste.com.br");
-
-        User userMock = new User();
-        userMock.setName("leandro");
-        userMock.setPassword("1234");
-        userMock.setEmail("test@teste.com.br");
-
-        UserDTO userDTOMock = new UserDTO();
-        userDTOMock.setName("leandro");
-        userDTOMock.setId("6621b1c02c3dbe50ac7d6319");
 
         when(modelMapper.map(any(UserRegistertVO.class),eq(User.class))).thenReturn(userMock);
         when(userService.createUser(userMock)).thenReturn(userMock);
@@ -85,14 +92,6 @@ class UserControllerTest {
         UserLoginVO userLoginVO = new UserLoginVO();
         userLoginVO.setEmail("test@teste.com.br");
         userLoginVO.setPassword("1234");
-
-        User userMock = new User();
-        userMock.setEmail("test@teste.com.br");
-        userMock.setPassword("1234");
-
-        UserDTO userDTOMock = new UserDTO();
-        userDTOMock.setName("leandro");
-        userDTOMock.setId("6621b1c02c3dbe50ac7d6319");
 
         when(modelMapper.map(any(UserLoginVO.class),eq(User.class))).thenReturn(userMock);
         when(userService.loginUser(userMock)).thenReturn(userMock);

@@ -45,6 +45,11 @@ class CategoryVariableExpenseControllerTest {
     private CategoryVariableExpenseController categoryVariableExpenseController;
 
     private User userMock;
+
+    private CategoryVariableExpense categoryVariableExpenseMock;
+
+    private CategoryVariableExpenseDTO categoryVariableExpenseDTOMock;
+
     @BeforeEach
     public void setUp(){
         userMock = new User();
@@ -52,6 +57,16 @@ class CategoryVariableExpenseControllerTest {
         userMock.setEmail("test@teste.com.br");
         userMock.setName("leandro");
         userMock.setPassword("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS");
+
+        categoryVariableExpenseMock = new CategoryVariableExpense();
+        categoryVariableExpenseMock.setId("6626fbc8b030c6195d5aa007");
+        categoryVariableExpenseMock.setName("Gastos pessoais");
+        categoryVariableExpenseMock.setDescription("Gastos com coisa supérfluos");
+
+        categoryVariableExpenseDTOMock = new CategoryVariableExpenseDTO();
+        categoryVariableExpenseDTOMock.setName("Gastos pessoais");
+        categoryVariableExpenseDTOMock.setDescription("Gastos com coisa supérfluos");
+        categoryVariableExpenseDTOMock.setId("6626fbc8b030c6195d5aa007");
     }
 
     @Test
@@ -60,15 +75,6 @@ class CategoryVariableExpenseControllerTest {
         CategoryVariableExpensePostVO categoryVariableExpensePostVOMock = new CategoryVariableExpensePostVO();
         categoryVariableExpensePostVOMock.setName("Gastos pessoais");
         categoryVariableExpensePostVOMock.setDescription("Gastos com coisa supérfluos");
-
-        CategoryVariableExpense categoryVariableExpenseMock = new CategoryVariableExpense();
-        categoryVariableExpenseMock.setName("Gastos pessoais");
-        categoryVariableExpenseMock.setDescription("Gastos com coisa supérfluos");
-
-        CategoryVariableExpenseDTO categoryVariableExpenseDTOMock = new CategoryVariableExpenseDTO();
-        categoryVariableExpenseDTOMock.setName("Gastos pessoais");
-        categoryVariableExpenseDTOMock.setDescription("Gastos com coisa supérfluos");
-        categoryVariableExpenseDTOMock.setId("6626fbc8b030c6195d5aa007");
 
         when(modelMapper.map(any(CategoryVariableExpensePostVO.class),eq(CategoryVariableExpense.class))).thenReturn(categoryVariableExpenseMock);
         when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
@@ -99,14 +105,9 @@ class CategoryVariableExpenseControllerTest {
         categoryVariableExpensesMock.add(new CategoryVariableExpense());
         categoryVariableExpensesMock.add(new CategoryVariableExpense());
 
-        CategoryVariableExpenseDTO categoryVariableExpenseDTO = new CategoryVariableExpenseDTO();
-        categoryVariableExpenseDTO.setName("Gastos pessoais");
-        categoryVariableExpenseDTO.setDescription("Gastos com coisa supérfluos");
-        categoryVariableExpenseDTO.setId("6626fbc8b030c6195d5aa007");
-
         when(modelMapper.map(any(CategoryVariableExpensePostVO.class),eq(CategoryVariableExpense.class))).thenReturn(new CategoryVariableExpense());
         when(categoryVariableExpenseService.createdSeveral(anyList())).thenReturn(categoryVariableExpensesMock);
-        when(modelMapper.map(any(CategoryVariableExpense.class),eq(CategoryVariableExpenseDTO.class))).thenReturn(categoryVariableExpenseDTO);
+        when(modelMapper.map(any(CategoryVariableExpense.class),eq(CategoryVariableExpenseDTO.class))).thenReturn(categoryVariableExpenseDTOMock);
 
         ResponseEntity<List<CategoryVariableExpenseDTO>> categoryVariableExpenseDTOResponseEntity = categoryVariableExpenseController.saveAll(categoryVariableExpensePostVOS);
 
@@ -117,7 +118,6 @@ class CategoryVariableExpenseControllerTest {
     @Test
     @DisplayName("getAll - Searching multiple records at once")
     void testGetAll() {
-
         ArrayList<CategoryVariableExpense> categoryVariableExpensesMock = new ArrayList<>();
         categoryVariableExpensesMock.add(new CategoryVariableExpense());
         categoryVariableExpensesMock.add(new CategoryVariableExpense());
@@ -136,20 +136,10 @@ class CategoryVariableExpenseControllerTest {
     @Test
     @DisplayName("getById - Searching for a single record")
     void testGetById() {
-        String id = "6626fbc8b030c6195d5aa007";
-
-        CategoryVariableExpense categoryVariableExpenseMock = new CategoryVariableExpense();
-        categoryVariableExpenseMock.setName("Gastos pessoais");
-        categoryVariableExpenseMock.setDescription("Gastos com coisa supérfluos");
-
-        CategoryVariableExpenseDTO categoryVariableExpenseDTOMock = new CategoryVariableExpenseDTO();
-        categoryVariableExpenseDTOMock.setName("Gastos pessoais");
-        categoryVariableExpenseDTOMock.setDescription("Gastos com coisa supérfluos");
-
-        when(categoryVariableExpenseService.getById(id)).thenReturn(categoryVariableExpenseMock);
+        when(categoryVariableExpenseService.getById(categoryVariableExpenseMock.getId())).thenReturn(categoryVariableExpenseMock);
         when(modelMapper.map(any(CategoryVariableExpense.class),eq(CategoryVariableExpenseDTO.class))).thenReturn(categoryVariableExpenseDTOMock);
 
-        ResponseEntity<CategoryVariableExpenseDTO> categoryVariableExpenseDTOResponseEntity = categoryVariableExpenseController.getById(id);
+        ResponseEntity<CategoryVariableExpenseDTO> categoryVariableExpenseDTOResponseEntity = categoryVariableExpenseController.getById(categoryVariableExpenseMock.getId());
 
         assertEquals(HttpStatus.OK, categoryVariableExpenseDTOResponseEntity.getStatusCode());
         assertEquals(categoryVariableExpenseDTOMock,categoryVariableExpenseDTOResponseEntity.getBody());
@@ -158,20 +148,14 @@ class CategoryVariableExpenseControllerTest {
     @Test
     @DisplayName("deleted - Deleting a record")
     void testDeleted() {
-        String id = "6626fbc8b030c6195d5aa007";
-
-        CategoryVariableExpense categoryVariableExpenseMock = new CategoryVariableExpense();
-        categoryVariableExpenseMock.setName("Gastos pessoais");
-        categoryVariableExpenseMock.setDescription("Gastos com coisa supérfluos");
-
         CategoryVariableExpenseDTO categoryVariableExpenseDTOMock = new CategoryVariableExpenseDTO();
         categoryVariableExpenseDTOMock.setName("Gastos pessoais");
         categoryVariableExpenseDTOMock.setDescription("Gastos com coisa supérfluos");
 
-        when(categoryVariableExpenseService.getById(id)).thenReturn(categoryVariableExpenseMock);
+        when(categoryVariableExpenseService.getById(categoryVariableExpenseMock.getId())).thenReturn(categoryVariableExpenseMock);
         when(categoryVariableExpenseService.save(categoryVariableExpenseMock)).thenReturn(categoryVariableExpenseMock);
 
-        ResponseEntity<Void> voidResponseEntity = categoryVariableExpenseController.deleted(id);
+        ResponseEntity<Void> voidResponseEntity = categoryVariableExpenseController.deleted(categoryVariableExpenseMock.getId());
 
         assertEquals(HttpStatus.OK, voidResponseEntity.getStatusCode());
 
@@ -179,26 +163,16 @@ class CategoryVariableExpenseControllerTest {
 
     @Test
     @DisplayName("updated - Changing a record")
-    void updated() {
-        String id = "6626fbc8b030c6195d5aa007";
-
+    void testUpdated() {
         CategoryVariableExpensePutVO categoryVariableExpensePutVOMock = new CategoryVariableExpensePutVO();
         categoryVariableExpensePutVOMock.setDescription("Gastos pessoais");
         categoryVariableExpensePutVOMock.setName("Gastos com coisa supérfluos");
 
-        CategoryVariableExpense categoryVariableExpenseMock = new CategoryVariableExpense();
-        categoryVariableExpenseMock.setName("Gastos pessoais");
-        categoryVariableExpenseMock.setDescription("Gastos com coisa supérfluos");
-
-        CategoryVariableExpenseDTO categoryVariableExpenseDTOMock = new CategoryVariableExpenseDTO();
-        categoryVariableExpenseDTOMock.setName("Gastos pessoais");
-        categoryVariableExpenseDTOMock.setDescription("Gastos com coisa supérfluos");
-
-        when(categoryVariableExpenseService.getById(id)).thenReturn(categoryVariableExpenseMock);
+        when(categoryVariableExpenseService.getById(categoryVariableExpenseMock.getId())).thenReturn(categoryVariableExpenseMock);
         when(categoryVariableExpenseService.save(categoryVariableExpenseMock)).thenReturn(categoryVariableExpenseMock);
         when(modelMapper.map(any(CategoryVariableExpense.class),eq(CategoryVariableExpenseDTO.class))).thenReturn(categoryVariableExpenseDTOMock);
 
-        ResponseEntity<CategoryVariableExpenseDTO> categoryVariableExpenseDTOResponseEntity = categoryVariableExpenseController.updated(categoryVariableExpensePutVOMock,id);
+        ResponseEntity<CategoryVariableExpenseDTO> categoryVariableExpenseDTOResponseEntity = categoryVariableExpenseController.updated(categoryVariableExpensePutVOMock,categoryVariableExpenseMock.getId());
 
         assertEquals(HttpStatus.OK, categoryVariableExpenseDTOResponseEntity.getStatusCode());
         assertEquals(categoryVariableExpenseDTOMock,categoryVariableExpenseDTOResponseEntity.getBody());

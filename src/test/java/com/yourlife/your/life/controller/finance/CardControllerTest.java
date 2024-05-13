@@ -44,6 +44,10 @@ class CardControllerTest {
     private CardController cardController;
 
     private User userMock;
+
+    private Card cardMock;
+
+    private CardDTO cardDTOMock;
     @BeforeEach
     public void setUp(){
         userMock = new User();
@@ -51,6 +55,18 @@ class CardControllerTest {
         userMock.setEmail("test@teste.com.br");
         userMock.setName("leandro");
         userMock.setPassword("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS");
+
+        cardMock = new Card();
+        cardMock.setId("6625739518b9de67f587a657");
+        cardMock.setName("Cartão do Nubank");
+        cardMock.setDueDate("15/07/2028");
+        cardMock.setModel("Nubank");
+
+        cardDTOMock = new CardDTO();
+        cardDTOMock.setId("6625739518b9de67f587a657");
+        cardDTOMock.setName("Cartão do Nubank");
+        cardDTOMock.setDueDate("15/07/2028");
+        cardDTOMock.setModel("Nubank");
     }
 
     @Test
@@ -60,17 +76,6 @@ class CardControllerTest {
         cardPostVOMock.setName("Cartão do Nubank");
         cardPostVOMock.setDueDate("15/07/2028");
         cardPostVOMock.setModel("Nubank");
-
-        Card cardMock = new Card();
-        cardMock.setName("Cartão do Nubank");
-        cardMock.setDueDate("15/07/2028");
-        cardMock.setModel("Nubank");
-
-        CardDTO cardDTOMock = new CardDTO();
-        cardDTOMock.setId("6625739518b9de67f587a657");
-        cardDTOMock.setName("Cartão do Nubank");
-        cardDTOMock.setDueDate("15/07/2028");
-        cardDTOMock.setModel("Nubank");
 
         when(modelMapper.map(any(CardPostVO.class),eq(Card.class))).thenReturn(cardMock);
         when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
@@ -115,24 +120,11 @@ class CardControllerTest {
 
     @Test
     @DisplayName("getById - Searching for a single record")
-    void getById_Returning_Card() {
-        String cardId = "6625739518b9de67f587a657";
-
-        Card cardMock = new Card();
-        cardMock.setName("Cartão do Nubank");
-        cardMock.setDueDate("15/07/2028");
-        cardMock.setModel("Nubank");
-
-        CardDTO cardDTOMock = new CardDTO();
-        cardDTOMock.setId("6625739518b9de67f587a657");
-        cardDTOMock.setName("Cartão do Nubank");
-        cardDTOMock.setDueDate("15/07/2028");
-        cardDTOMock.setModel("Nubank");
-
-        when(cardService.getById(cardId)).thenReturn(cardMock);
+    void testGetById_Returning_Card() {
+        when(cardService.getById(cardMock.getId())).thenReturn(cardMock);
         when(modelMapper.map(any(Card.class),eq(CardDTO.class))).thenReturn(cardDTOMock);
 
-        ResponseEntity<CardDTO> cardDTOResponseEntity = cardController.getById(cardId);
+        ResponseEntity<CardDTO> cardDTOResponseEntity = cardController.getById(cardMock.getId());
 
         assertEquals(HttpStatus.OK, cardDTOResponseEntity.getStatusCode());
         assertEquals(cardDTOMock,cardDTOResponseEntity.getBody());
@@ -147,25 +139,12 @@ class CardControllerTest {
         cardPutVOMock.setDueDate("20/07/2028");
         cardPutVOMock.setModel("Nubank 2");
 
-        String cardId = "6625739518b9de67f587a657";
-
-        Card cardMock = new Card();
-        cardMock.setName("Cartão do Nubank ");
-        cardMock.setDueDate("15/07/2028");
-        cardMock.setModel("Nubank");
-
-        CardDTO cardDTOMock = new CardDTO();
-        cardDTOMock.setId("6625739518b9de67f587a657");
-        cardDTOMock.setName("Cartão do Nubank 2");
-        cardDTOMock.setDueDate("20/07/2028");
-        cardDTOMock.setModel("Nubank 2");
-
         when(modelMapper.map(any(CardPutVO.class),eq(Card.class))).thenReturn(cardMock);
-        when(cardService.getById(cardId)).thenReturn(cardMock);
+        when(cardService.getById(cardMock.getId())).thenReturn(cardMock);
         when(cardService.save(cardMock)).thenReturn(cardMock);
         when(modelMapper.map(any(Card.class),eq(CardDTO.class))).thenReturn(cardDTOMock);
 
-        ResponseEntity<CardDTO> cardDTOResponseEntity = cardController.updated(cardPutVOMock,cardId);
+        ResponseEntity<CardDTO> cardDTOResponseEntity = cardController.updated(cardPutVOMock,cardMock.getId());
 
         assertEquals(HttpStatus.OK, cardDTOResponseEntity.getStatusCode());
         assertEquals(cardDTOMock,cardDTOResponseEntity.getBody());
@@ -174,17 +153,10 @@ class CardControllerTest {
     @Test
     @DisplayName("deleted - Deleting a record")
     void testDeleted() {
-        String cardId = "6625739518b9de67f587a657";
-
-        Card cardMock = new Card();
-        cardMock.setName("Cartão do Nubank ");
-        cardMock.setDueDate("15/07/2028");
-        cardMock.setModel("Nubank");
-
-        when(cardService.getById(cardId)).thenReturn(cardMock);
+        when(cardService.getById(cardMock.getId())).thenReturn(cardMock);
         when(cardService.save(cardMock)).thenReturn(cardMock);
 
-        ResponseEntity<Void> cardDTOResponseEntity = cardController.deleted(cardId);
+        ResponseEntity<Void> cardDTOResponseEntity = cardController.deleted(cardMock.getId());
 
         assertEquals(HttpStatus.OK, cardDTOResponseEntity.getStatusCode());
     }
