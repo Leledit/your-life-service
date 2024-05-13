@@ -59,11 +59,11 @@ public class FixedAccountController {
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(fixedAccountService.getById(id),FixedAccountDTO.class));
     }
 
-    @PutMapping(value = "/accounts-fixed",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/accounts-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<FixedAccountDTO> updated(@RequestBody @Valid FixedAccountPutVO fixedAccountPutVO){
+    public ResponseEntity<FixedAccountDTO> updated(@RequestBody @Valid FixedAccountPutVO fixedAccountPutVO,@PathVariable String id){
 
-        FixedAccount fixedAccount = fixedAccountService.getById(fixedAccountPutVO.getId());
+        FixedAccount fixedAccount = fixedAccountService.getById(id);
 
         fixedAccount.setName(fixedAccountPutVO.getName() != null ? fixedAccountPutVO.getName() : fixedAccount.getName());
         fixedAccount.setValue(fixedAccountPutVO.getValue() != null ? fixedAccountPutVO.getValue() : fixedAccount.getValue());

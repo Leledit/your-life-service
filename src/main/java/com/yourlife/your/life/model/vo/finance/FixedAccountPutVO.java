@@ -12,8 +12,6 @@ import org.springframework.format.annotation.NumberFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FixedAccountPutVO {
-    @NotBlank
-    private String Id;
     private String name;
     @NumberFormat
     private Number value;

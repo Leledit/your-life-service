@@ -116,7 +116,7 @@ class CategoryVariableExpenseControllerTest {
 
     @Test
     @DisplayName("getAll - Searching multiple records at once")
-    void getAll() {
+    void testGetAll() {
 
         ArrayList<CategoryVariableExpense> categoryVariableExpensesMock = new ArrayList<>();
         categoryVariableExpensesMock.add(new CategoryVariableExpense());
@@ -135,7 +135,7 @@ class CategoryVariableExpenseControllerTest {
 
     @Test
     @DisplayName("getById - Searching for a single record")
-    void getById() {
+    void testGetById() {
         String id = "6626fbc8b030c6195d5aa007";
 
         CategoryVariableExpense categoryVariableExpenseMock = new CategoryVariableExpense();
