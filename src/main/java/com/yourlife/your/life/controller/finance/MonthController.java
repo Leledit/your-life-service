@@ -6,6 +6,7 @@ import com.yourlife.your.life.model.entity.finance.*;
 import com.yourlife.your.life.model.vo.finance.*;
 import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
 import com.yourlife.your.life.service.finance.MonthService;
+import com.yourlife.your.life.utils.Logger;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -332,10 +333,10 @@ public class MonthController {
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(fixedAccountFound,FixedAccountDTO.class));
     }
 
-    private Month createNewMonthRecord(LocalDate currentDate){
+    protected Month createNewMonthRecord(LocalDate currentDate){
         Month month = new Month();
         month.setName(currentDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")));
-        month.setDate(LocalDateTime.now());
+        month.setDate(currentDate);
         month.setMonth(currentDate.getMonthValue());
         month.setYear(currentDate.getYear());
         month.setUser(userContext.returnUserCorrespondingToTheRequest());

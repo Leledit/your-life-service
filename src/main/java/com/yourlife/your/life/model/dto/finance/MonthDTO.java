@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class MonthDTO {
     private String id;
     private String name;
     private Integer year;
-    private LocalDateTime date;
+    private LocalDate date;
     private List<Appetizer> appetizer;
     private List<CategoryVariableExpense> categoryVariableExpens;
     private List<FixedAccount> fixedAccounts;

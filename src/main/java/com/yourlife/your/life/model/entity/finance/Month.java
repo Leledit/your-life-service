@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Month {
     private String name;
     private Integer year;
     private Integer month;
-    private LocalDateTime date;
+    private LocalDate date;
     private List<Appetizer> appetizer;
     private List<CategoryVariableExpense> categoryVariableExpens;
     private List<FixedAccount> fixedAccounts;

@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ class MonthServiceImplTest {
         monthMock = new Month();
         monthMock.setName("maio");
         monthMock.setId("662e9866e348a57153c48cdd");
-        monthMock.setDate(LocalDateTime.parse("2024-04-28T18:41:42.584+00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")));
+        monthMock.setDate(LocalDate.parse("2024-04-28T18", DateTimeFormatter.ofPattern("yyyy-MM-dd'T")));
         monthMock.setMonth(5);
         monthMock.setYear(2014);
         monthMock.setUser(userMock);
