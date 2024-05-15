@@ -347,7 +347,7 @@ public class MonthController {
 
         return monthService.save(month);
     }
-    private Month findbyId(String id){
+    protected Month findbyId(String id){
         Month month = monthService.findById(id);
 
         if(month == null){
@@ -356,7 +356,7 @@ public class MonthController {
 
         return month;
     }
-    private Appetizer returnASpecificAppetizerFromTheArray(List<Appetizer> appetizers, String idAppetizer){
+    protected Appetizer returnASpecificAppetizerFromTheArray(List<Appetizer> appetizers, String idAppetizer){
         Appetizer appetizerFound = null;
         for (Appetizer appetizer : appetizers) {
             if (Objects.equals(appetizer.getId(), idAppetizer)) {
