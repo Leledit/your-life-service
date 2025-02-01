@@ -14,5 +14,5 @@ public class ExceptionMessages {
     public static final String TOKEN_GENERATION_ERROR="Erro ao gerrar token jwt";
     public static final String INVALID_TOKEN="Token JWT inválido ou expirado!";
     public static final String INVALID_REQUEST_COMPONENT="Há campos invalidos no corpo da requisição";
-
+    public static final String BENEFIT_NOT_FOUND="BENEFIT_NOT_FOUND";
 }

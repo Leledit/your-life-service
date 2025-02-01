@@ -374,7 +374,7 @@ class MonthControllerTest {
         when((monthService.findById(idMonthMock))).thenReturn(monthMock);
         when(monthService.save(monthMock)).thenReturn(monthMock);
 
-        ResponseEntity<ExitDTO> responseEntity = monthController.upadtedExit(idMonthMock,idCategoryMock,idExitMock,exitPutVO);
+        ResponseEntity<ExitDTO> responseEntity = monthController.upadtedeExit(idMonthMock,idCategoryMock,idExitMock,exitPutVO);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
     }

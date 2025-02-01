@@ -3,6 +3,7 @@ package com.yourlife.your.life.controller.finance;
 import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.*;
 import com.yourlife.your.life.model.entity.finance.*;
+import com.yourlife.your.life.model.vo.finance.benefit.BenefitPostVO;
 import com.yourlife.your.life.model.vo.finance.entry.EntryPostVO;
 import com.yourlife.your.life.model.vo.finance.entry.EntryPutVO;
 import com.yourlife.your.life.model.vo.finance.exit.ExitPostVO;
@@ -10,6 +11,8 @@ import com.yourlife.your.life.model.vo.finance.exit.ExitPutVO;
 import com.yourlife.your.life.model.vo.finance.fixedAccountMonth.FixedAccountMonthPostVO;
 import com.yourlife.your.life.model.vo.finance.fixedAccountMonth.FixedAccountMonthPutVO;
 import com.yourlife.your.life.model.vo.finance.installment.InstallmentPostVO;
+import com.yourlife.your.life.service.finance.BenefitItemService;
+import com.yourlife.your.life.service.finance.BenefitService;
 import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
 import com.yourlife.your.life.service.finance.MonthService;
 import com.yourlife.your.life.utils.UserContext;
@@ -39,7 +42,13 @@ public class MonthController {
     private MonthService monthService;
 
     @Autowired
+    private BenefitService benefitService;
+
+    @Autowired
     private CategoryVariableExpenseService categoryVariableExpenseService;
+
+    @Autowired
+    private BenefitItemService benefitItemService;
 
     @PostMapping(value = "/month",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -47,7 +56,7 @@ public class MonthController {
 
         LocalDate currentDate = LocalDate.now();
 
-        Month monthFound = monthService.findByMonth(currentDate.getDayOfMonth(),currentDate.getYear(),userContext.returnUserCorrespondingToTheRequest().getId());
+        Month monthFound = monthService.findByMonth(currentDate.getDayOfMonth()+1,currentDate.getYear(),userContext.returnUserCorrespondingToTheRequest().getId());
 
         if(monthFound != null){
             throw new RuntimeException(ExceptionMessages.MONT_ALREADY_REGISTERED);
@@ -234,7 +243,7 @@ public class MonthController {
 
     @PutMapping(value = "/month/{idMonth}/categoryVariableExpense/{idCategory}/exit/{idExit}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public  ResponseEntity<ExitDTO> upadtedExit(@PathVariable String idMonth ,
+    public  ResponseEntity<ExitDTO> upadtedeExit(@PathVariable String idMonth ,
                                                 @PathVariable String idCategory,
                                                 @PathVariable String idExit,
                                                 @RequestBody @Valid ExitPutVO exitPutVO
@@ -338,6 +347,39 @@ public class MonthController {
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(fixedAccountFound,FixedAccountDTO.class));
     }
 
+    @PostMapping(value = "/month/{idMonth}/benefit",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<BenefitDTO> saveBenefit(@PathVariable String idMonth, @RequestBody @Valid BenefitPostVO benefitPostVO){
+
+        Month month = findbyId(idMonth);
+
+        Benefit benefit = benefitService.save(Benefit
+                .builder()
+                .name(benefitPostVO.getName())
+                .description(benefitPostVO.getDescription())
+                .createdAt(LocalDateTime.now())
+                .type(benefitPostVO.getType())
+                .deleted(false)
+                .valueReceived(benefitPostVO.getValueReceived())
+                .itens(new ArrayList<>())
+                .build());
+
+        List<Benefit> benefits = month.getBenefits();
+        benefits.add(benefit);
+
+        month.setBenefits(benefits);
+
+        monthService.save(month);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(benefit,BenefitDTO.class));
+    }
+
+    @PutMapping(value = "/month/{idMonth}/benefit/",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<BenefitDTO> saveBenefit(@PathVariable String idMonth, @PathVariable String idBenefit, @RequestBody @Valid BenefitPostVO benefitPostVO){
+
+    }
+
     protected Month createNewMonthRecord(LocalDate currentDate){
         Month month = new Month();
         month.setName(currentDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")));
@@ -349,6 +391,7 @@ public class MonthController {
         month.setCategoryVariableExpens(new ArrayList<>());
         month.setInstallments(new ArrayList<>());
         month.setFixedAccounts(new ArrayList<>());
+        month.setBenefits(new ArrayList<>());
 
         return monthService.save(month);
     }

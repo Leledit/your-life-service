@@ -31,5 +31,8 @@ public class Month {
     private List<Installment> installments;
 
     @DBRef
+    private List<Benefit> benefits;
+
+    @DBRef
     private User user;
 }

@@ -1,10 +1,7 @@
 package com.yourlife.your.life.model.dto.finance;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.yourlife.your.life.model.entity.finance.Entry;
-import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
-import com.yourlife.your.life.model.entity.finance.FixedAccount;
-import com.yourlife.your.life.model.entity.finance.Installment;
+import com.yourlife.your.life.model.entity.finance.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,4 +24,5 @@ public class MonthDTO {
     private List<CategoryVariableExpense> categoryVariableExpens;
     private List<FixedAccount> fixedAccounts;
     private List<Installment> installments;
+    private List<Benefit> benefits;
 }
