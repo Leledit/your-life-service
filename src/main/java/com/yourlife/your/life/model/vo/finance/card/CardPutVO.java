@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.finance;
+package com.yourlife.your.life.model.vo.finance.card;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,8 +2,8 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.FixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
-import com.yourlife.your.life.model.vo.finance.FixedAccountPutVO;
-import com.yourlife.your.life.model.vo.finance.FixedAccountPostVO;
+import com.yourlife.your.life.model.vo.finance.fixedAccount.FixedAccountPutVO;
+import com.yourlife.your.life.model.vo.finance.fixedAccount.FixedAccountPostVO;
 import com.yourlife.your.life.service.finance.FixedAccountService;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;

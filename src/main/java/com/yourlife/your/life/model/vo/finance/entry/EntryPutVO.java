@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.finance;
+package com.yourlife.your.life.model.vo.finance.entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryVariableExpensePutVO {
+public class EntryPutVO {
     private String name;
+    private Number value;
     private String description;
 }

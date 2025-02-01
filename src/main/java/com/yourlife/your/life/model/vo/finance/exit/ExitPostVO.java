@@ -1,21 +1,21 @@
-package com.yourlife.your.life.model.vo.finance;
+package com.yourlife.your.life.model.vo.finance.exit;
 
+import com.yourlife.your.life.model.types.finance.PaymentMethods;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppetizerPostVO {
+public class ExitPostVO {
     @NotBlank
     private String name;
-    @NumberFormat
-    private Number value;
     @NotBlank
-    private String description;
+    private PaymentMethods paymentMethods;
+    @NotBlank
+    private Number value;
 }

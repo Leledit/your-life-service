@@ -49,11 +49,11 @@ class MonthServiceImplTest {
         monthMock = new Month();
         monthMock.setName("maio");
         monthMock.setId("662e9866e348a57153c48cdd");
-        monthMock.setDate(LocalDate.parse("2024-04-28T18", DateTimeFormatter.ofPattern("yyyy-MM-dd'T")));
+        monthMock.setDate(LocalDate.parse("2025-04-28", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         monthMock.setMonth(5);
         monthMock.setYear(2014);
         monthMock.setUser(userMock);
-        monthMock.setAppetizer(new ArrayList<>());
+        monthMock.setEntry(new ArrayList<>());
         monthMock.setCategoryVariableExpens(new ArrayList<>());
         monthMock.setInstallments(new ArrayList<>());
         monthMock.setFixedAccounts(new ArrayList<>());

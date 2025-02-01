@@ -1,6 +1,5 @@
-package com.yourlife.your.life.model.vo.finance;
+package com.yourlife.your.life.model.vo.finance.fixedAccountMonth;
 
-import com.yourlife.your.life.model.types.finance.PaymentMethods;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExitPutVO {
+public class FixedAccountMonthPutVO {
     private String name;
-    private PaymentMethods paymentMethods;
     private Number value;
+    private String description;
+    private Number dueDate;
 }

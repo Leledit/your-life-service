@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.finance;
+package com.yourlife.your.life.model.vo.finance.fixedAccount;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
