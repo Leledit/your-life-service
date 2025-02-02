@@ -1,26 +1,30 @@
-package com.yourlife.your.life.model.dto.finance;
+package com.yourlife.your.life.model.entity.finance;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.yourlife.your.life.model.entity.finance.BenefitItem;
 import com.yourlife.your.life.model.types.finance.BenefitType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude
-public class BenefitDTO {
+@Document(collection = "finance_benefit_month")
+public class BenefitMonth {
+    @Id
+    private String id;
+
     private String name;
     private Number valueReceived;
     private BenefitType type;
     private String description;
-    private List<BenefitItem> itens;
+    private Boolean deleted;
+    private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

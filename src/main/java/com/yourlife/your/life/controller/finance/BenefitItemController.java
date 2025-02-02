@@ -31,7 +31,7 @@ public class BenefitItemController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping(value = "/benefit/{idBenefit}/item",produces = MediaType.APPLICATION_JSON_VALUE)
+   /* @PostMapping(value = "/benefit/{idBenefit}/item",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<BenefitItemDTO> saveBenefitItem(@PathVariable String idBenefit, @RequestBody @Valid BenefitItemPostVO benefitItemPostVO){
 
@@ -57,5 +57,5 @@ public class BenefitItemController {
         benefitService.save(benefit);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(benefitItem,BenefitItemDTO.class));
-    }
+    }*/
 }

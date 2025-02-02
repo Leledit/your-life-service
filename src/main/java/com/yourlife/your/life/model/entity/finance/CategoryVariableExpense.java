@@ -1,7 +1,6 @@
 package com.yourlife.your.life.model.entity.finance;
 
 import com.yourlife.your.life.model.entity.user.User;
-import com.yourlife.your.life.model.types.finance.CategoryVariableExpensesTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "category_variable_expenses")
+@Document(collection = "finance_category_variable_expenses")
 public class CategoryVariableExpense {
 
     @Id
@@ -28,10 +27,7 @@ public class CategoryVariableExpense {
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<Exit> exit;
 
     @DBRef
     private User user;
-
-
 }

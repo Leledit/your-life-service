@@ -1,5 +1,6 @@
 package com.yourlife.your.life.model.entity.finance;
 
+import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.model.types.finance.BenefitType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,13 +11,12 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "benefits")
+@Document(collection = "finance_benefit")
 public class Benefit {
 
     @Id
@@ -32,5 +32,5 @@ public class Benefit {
     private LocalDateTime updatedAt;
 
     @DBRef
-    private List<BenefitItem> itens;
+    private User user;
 }

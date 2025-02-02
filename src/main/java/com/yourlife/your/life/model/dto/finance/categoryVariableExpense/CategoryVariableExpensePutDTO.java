@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.finance.categoryVariableExpense;
+package com.yourlife.your.life.model.dto.finance.categoryVariableExpense;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryVariableExpensePutVO {
+public class CategoryVariableExpensePutDTO {
     private String name;
     private String description;
 }

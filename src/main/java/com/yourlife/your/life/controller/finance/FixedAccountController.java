@@ -1,9 +1,8 @@
 package com.yourlife.your.life.controller.finance;
 
-import com.yourlife.your.life.model.dto.finance.FixedAccountDTO;
+import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPostDTO;
+import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPutDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
-import com.yourlife.your.life.model.vo.finance.fixedAccount.FixedAccountPutVO;
-import com.yourlife.your.life.model.vo.finance.fixedAccount.FixedAccountPostVO;
 import com.yourlife.your.life.service.finance.FixedAccountService;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @RestController
@@ -31,62 +29,32 @@ public class FixedAccountController {
 
     @PostMapping(value = "/accounts-fixed", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<FixedAccountDTO> save(@RequestBody @Valid FixedAccountPostVO fixedAccountPostVO){
-
-        FixedAccount account = modelMapper.map(fixedAccountPostVO,FixedAccount.class);
-        account.setUser(userContext.returnUserCorrespondingToTheRequest());
-        account.setCreatedAt(LocalDateTime.now());
-        account.setDeleted(false);
-
-        return  ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(fixedAccountService.save(account),FixedAccountDTO.class));
+    public ResponseEntity<FixedAccount> save(@RequestBody @Valid FixedAccountPostDTO fixedAccountPostDTO){
+        FixedAccount fixedAccount = fixedAccountService.save(fixedAccountPostDTO);
+        return  ResponseEntity.status(HttpStatus.OK).body(fixedAccount);
     }
 
     @GetMapping(value = "/accounts-fixed",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<FixedAccountDTO>>  getAll(){
-
-        ArrayList<FixedAccount> fixedAccounts = fixedAccountService.getAll(userContext.returnUserCorrespondingToTheRequest().getId());
-
-        ArrayList<FixedAccountDTO> fixedAccountDTO = new ArrayList<>();
-        fixedAccounts.forEach(fixedAccount -> {
-            fixedAccountDTO.add(modelMapper.map(fixedAccount,FixedAccountDTO.class));
-        });
-
-        return ResponseEntity.status(HttpStatus.OK).body(fixedAccountDTO);
+    public ResponseEntity<ArrayList<FixedAccount>>  getAll(){
+        ArrayList<FixedAccount> fixedAccounts = fixedAccountService.findAll(userContext.returnUserCorrespondingToTheRequest().getId());
+        return ResponseEntity.status(HttpStatus.OK).body(fixedAccounts);
     }
 
     @GetMapping(value = "/account-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FixedAccountDTO> getById(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(fixedAccountService.getById(id),FixedAccountDTO.class));
+    public ResponseEntity<FixedAccount> getById(@PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(fixedAccountService.findById(id));
     }
 
     @PutMapping(value = "/accounts-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<FixedAccountDTO> updated(@RequestBody @Valid FixedAccountPutVO fixedAccountPutVO,@PathVariable String id){
-
-        FixedAccount fixedAccount = fixedAccountService.getById(id);
-
-        fixedAccount.setName(fixedAccountPutVO.getName() != null ? fixedAccountPutVO.getName() : fixedAccount.getName());
-        fixedAccount.setValue(fixedAccountPutVO.getValue() != null ? fixedAccountPutVO.getValue() : fixedAccount.getValue());
-        fixedAccount.setDescription(fixedAccountPutVO.getDescription() != null ? fixedAccountPutVO.getDescription() : fixedAccount.getDescription());
-        fixedAccount.setDueDate(fixedAccountPutVO.getDueDate() != null ? fixedAccountPutVO.getDueDate() : fixedAccount.getDueDate());
-        fixedAccount.setUpdatedAt(LocalDateTime.now());
-
-        FixedAccount fixedAccountSave = fixedAccountService.save(fixedAccount);
-
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(fixedAccountSave,FixedAccountDTO.class));
+    public ResponseEntity<FixedAccount> updated(@RequestBody @Valid FixedAccountPutDTO fixedAccountPutDTO, @PathVariable String id){
+        FixedAccount fixedAccount = fixedAccountService.update(id,fixedAccountPutDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(fixedAccount);
     }
-
 
     @PatchMapping(value = "/account-fixed/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleted(@PathVariable String id){
-
-        FixedAccount fixedAccount = fixedAccountService.getById(id);
-
-        fixedAccount.setDeleted(true);
-        fixedAccount.setUpdatedAt(LocalDateTime.now());
-        fixedAccount.setDeletedAt(LocalDateTime.now());
-
-        fixedAccountService.save(fixedAccount);
+        fixedAccountService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
 
     }

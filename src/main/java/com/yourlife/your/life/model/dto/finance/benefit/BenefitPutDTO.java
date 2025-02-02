@@ -1,22 +1,18 @@
-package com.yourlife.your.life.model.vo.finance.benefit;
+package com.yourlife.your.life.model.dto.finance.benefit;
 
-import com.yourlife.your.life.model.entity.finance.BenefitItem;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yourlife.your.life.model.types.finance.BenefitType;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class BenefitPostVO {
-
-    @NotBlank
+@NoArgsConstructor
+@JsonInclude
+public class BenefitPutDTO {
     private String name;
     private Number valueReceived;
     private BenefitType type;

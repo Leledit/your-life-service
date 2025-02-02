@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "month")
+@Document(collection = "finance_month")
 public class Month {
 
     @Id
@@ -25,13 +25,21 @@ public class Month {
     private Integer year;
     private Integer month;
     private LocalDate date;
-    private List<Entry> entry;
-    private List<CategoryVariableExpense> categoryVariableExpens;
+
+    @DBRef
     private List<FixedAccount> fixedAccounts;
+
+    @DBRef
     private List<Installment> installments;
 
     @DBRef
-    private List<Benefit> benefits;
+    private List<CategoryVariableExpenseMonth> categoryVariableExpenseMonth;
+
+    @DBRef
+    private List<Entry> entry;
+
+    @DBRef
+    private List<BenefitMonth> benefitsMonth;
 
     @DBRef
     private User user;

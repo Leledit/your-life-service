@@ -1,13 +1,16 @@
 package com.yourlife.your.life.service.finance;
 
+import com.yourlife.your.life.model.dto.finance.Month.MonthAddFixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.Month;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public interface MonthService {
-    Month save(Month month);
+    Month save();
     Month findByMonth(Integer month, Integer year,String userId);
-    List<Month> getAll(String userId);
+    List<Month> findAll(String userId);
     Month findById(String id);
+
+    Month addFixedAccount(String id, MonthAddFixedAccountDTO monthAddFixedAccountDTO);
 }

@@ -68,7 +68,7 @@ class FixedAccountServiceImplTest {
     void testGetAllReturning_Null() {
         when(fixedAccountRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.empty());
 
-        List<FixedAccount> fixedAccounts = fixedAccountService.getAll(userMock.getId());
+        List<FixedAccount> fixedAccounts = fixedAccountService.findAll(userMock.getId());
 
         assertNull(fixedAccounts);
     }
@@ -82,7 +82,7 @@ class FixedAccountServiceImplTest {
 
         when(fixedAccountRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(fixedAccountsMock));
 
-        List<FixedAccount> fixedAccounts = fixedAccountService.getAll(userMock.getId());
+        List<FixedAccount> fixedAccounts = fixedAccountService.findAll(userMock.getId());
 
         assertEquals(1, fixedAccounts.size());
     }
@@ -92,7 +92,7 @@ class FixedAccountServiceImplTest {
     void testGetByIdReturning_FixedAccount() {
         when(fixedAccountRepository.findById("662707bea770e96a56b3d049")).thenReturn(Optional.of(fixedAccountMock));
 
-        FixedAccount account = fixedAccountService.getById("662707bea770e96a56b3d049");
+        FixedAccount account = fixedAccountService.findById("662707bea770e96a56b3d049");
 
         assertEquals("662707bea770e96a56b3d049",account.getId());
     }
@@ -104,6 +104,6 @@ class FixedAccountServiceImplTest {
 
         when(fixedAccountRepository.findById("662707bea770e96a56b3d049")).thenReturn(Optional.of(fixedAccountMock));
 
-        assertThrows(RuntimeException.class, () -> fixedAccountService.getById("662707bea770e96a56b3d049"), ExceptionMessages.NOT_FOUND);
+        assertThrows(RuntimeException.class, () -> fixedAccountService.findById("662707bea770e96a56b3d049"), ExceptionMessages.NOT_FOUND);
     }
 }

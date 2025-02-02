@@ -1,6 +1,5 @@
-package com.yourlife.your.life.model.vo.finance.fixedAccount;
+package com.yourlife.your.life.model.dto.finance.FixedAccount;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +10,9 @@ import org.springframework.format.annotation.NumberFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FixedAccountPutVO {
+public class FixedAccountPutDTO {
     private String name;
-    @NumberFormat
     private Number value;
     private String description;
-    @NumberFormat
     private Number dueDate;
 }

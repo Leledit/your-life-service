@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.finance.fixedAccount;
+package com.yourlife.your.life.model.dto.finance.FixedAccount;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.format.annotation.NumberFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FixedAccountPostVO {
+public class FixedAccountPostDTO {
     @NotBlank
     private String name;
     @NumberFormat

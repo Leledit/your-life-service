@@ -2,20 +2,19 @@ package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.*;
+import com.yourlife.your.life.model.dto.finance.Month.MonthAddFixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.*;
-import com.yourlife.your.life.model.vo.finance.benefit.BenefitPostVO;
 import com.yourlife.your.life.model.vo.finance.entry.EntryPostVO;
 import com.yourlife.your.life.model.vo.finance.entry.EntryPutVO;
-import com.yourlife.your.life.model.vo.finance.exit.ExitPostVO;
-import com.yourlife.your.life.model.vo.finance.exit.ExitPutVO;
 import com.yourlife.your.life.model.vo.finance.fixedAccountMonth.FixedAccountMonthPostVO;
 import com.yourlife.your.life.model.vo.finance.fixedAccountMonth.FixedAccountMonthPutVO;
 import com.yourlife.your.life.model.vo.finance.installment.InstallmentPostVO;
 import com.yourlife.your.life.service.finance.BenefitItemService;
 import com.yourlife.your.life.service.finance.BenefitService;
-import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
+import com.yourlife.your.life.service.finance.VariableExpensesCategoryService;
 import com.yourlife.your.life.service.finance.MonthService;
 import com.yourlife.your.life.utils.UserContext;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,46 +44,50 @@ public class MonthController {
     private BenefitService benefitService;
 
     @Autowired
-    private CategoryVariableExpenseService categoryVariableExpenseService;
+    private VariableExpensesCategoryService variableExpensesCategoryService;
 
     @Autowired
     private BenefitItemService benefitItemService;
 
     @PostMapping(value = "/month",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<MonthDTO> save(){
-
-        LocalDate currentDate = LocalDate.now();
-
-        Month monthFound = monthService.findByMonth(currentDate.getDayOfMonth()+1,currentDate.getYear(),userContext.returnUserCorrespondingToTheRequest().getId());
-
-        if(monthFound != null){
-            throw new RuntimeException(ExceptionMessages.MONT_ALREADY_REGISTERED);
-        }
-
-        Month monthSave = createNewMonthRecord(currentDate);
-
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(monthSave, MonthDTO.class));
+    public ResponseEntity<Month> save(){
+        Month month = monthService.save();
+        return ResponseEntity.status(HttpStatus.OK).body(month);
     }
 
     @GetMapping(value = "/month",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MonthDTO>> getAll(){
-
-        List<Month> months = monthService.getAll(userContext.returnUserCorrespondingToTheRequest().getId());
-
-        List<MonthDTO> monthDTOS = new ArrayList<>();
-        months.forEach(month -> {
-            monthDTOS.add(modelMapper.map(month,MonthDTO.class));
-        });
-
-        return ResponseEntity.status(HttpStatus.OK).body(monthDTOS);
+    public ResponseEntity<List<Month>> getAll(){
+        List<Month> months = monthService.findAll(userContext.returnUserCorrespondingToTheRequest().getId());
+        return ResponseEntity.status(HttpStatus.OK).body(months);
     }
 
     @GetMapping(value = "/month/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MonthDTO> getById(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(monthService.findById(id),MonthDTO.class));
+    public ResponseEntity<Month> getById(@PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(monthService.findById(id));
     }
 
+    @GetMapping(value = "/month/data",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Month> getByMonthAndYear(@Parameter Integer monthNumber, @Parameter Integer yearNumber) {
+        Month month = monthService.findByMonth(monthNumber,yearNumber,userContext.returnUserCorrespondingToTheRequest().getId());
+        return ResponseEntity.status(HttpStatus.OK).body(month);
+    }
+
+    @PostMapping(value = "/month/{idMonth}/fixed-account",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Month> saveFixedAccount (@PathVariable String idMonth, @RequestBody @Valid MonthAddFixedAccountDTO monthAddFixedAccountDTO
+    ){
+
+        Month month = monthService.addFixedAccount(idMonth,monthAddFixedAccountDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(month);
+    }
+
+
+    //findByMonth
+
+/*
+    /*
     @PostMapping(value = "/month/installment",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<InstallmentDTO> saveInstallment(@RequestBody @Valid InstallmentPostVO installmentPostVO){
 
@@ -182,124 +185,7 @@ public class MonthController {
         return  ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping(value = "/month/{idMonth}/categoryVariableExpense/{idCategory}/exit",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<ExitDTO> saveExit(@PathVariable String idMonth ,
-                                                @PathVariable String idCategory,
-                                                @RequestBody @Valid ExitPostVO exitPostVO){
 
-        Month month = findbyId(idMonth);
-
-        CategoryVariableExpense categoryVariableExpenseFound = categoryVariableExpenseService.getById(idCategory);
-
-        CategoryVariableExpense categoryVariableExpenseMonth = returnASpecificCategoryVariableExpenseFromTheArray(month.getCategoryVariableExpens(),idCategory);
-
-        Exit newExist = modelMapper.map(exitPostVO,Exit.class);
-        newExist.setId(UUID.randomUUID().toString());
-        newExist.setCreatedAt(LocalDateTime.now());
-        newExist.setDeleted(false);
-
-        if(categoryVariableExpenseMonth == null){
-            List<Exit> exitList = new ArrayList<>();
-            exitList.add(newExist);
-
-            categoryVariableExpenseFound.setExit(exitList);
-
-            List<CategoryVariableExpense> categoryVariableExpenses = new ArrayList<>();
-            categoryVariableExpenses.add(categoryVariableExpenseFound);
-
-            month.setCategoryVariableExpens(categoryVariableExpenses);
-
-        }else{
-            categoryVariableExpenseMonth.getExit().add(newExist);
-        }
-
-        monthService.save(month);
-
-        return  ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(newExist,ExitDTO.class));
-    }
-
-    @PatchMapping(value = "/month/{idMonth}/categoryVariableExpense/{idCategory}/exit/{idExit}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deletedExit( @PathVariable String idMonth ,
-                                             @PathVariable String idCategory,
-                                             @PathVariable String idExit){
-
-        Month month = findbyId(idMonth);
-
-        Exit exit = returnASpecificExit(month,idCategory,idExit);
-
-        if(exit == null){
-            throw new RuntimeException(ExceptionMessages.EXIT_NOT_FOUND);
-        }else{
-            exit.setDeleted(true);
-            exit.setDeletedAt(LocalDateTime.now());
-            exit.setUpdatedAt(LocalDateTime.now());
-        }
-
-        monthService.save(month);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @PutMapping(value = "/month/{idMonth}/categoryVariableExpense/{idCategory}/exit/{idExit}",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public  ResponseEntity<ExitDTO> upadtedeExit(@PathVariable String idMonth ,
-                                                @PathVariable String idCategory,
-                                                @PathVariable String idExit,
-                                                @RequestBody @Valid ExitPutVO exitPutVO
-                                               ){
-
-        Month month = findbyId(idMonth);
-
-        Exit exit = returnASpecificExit(month,idCategory,idExit);
-
-        if(exit == null){
-            throw new RuntimeException(ExceptionMessages.EXIT_NOT_FOUND);
-        }
-
-        exit.setName(exitPutVO.getName() != null ? exitPutVO.getName() : exit.getName());
-        exit.setPaymentMethods(exitPutVO.getPaymentMethods() != null ? exitPutVO.getPaymentMethods() : exit.getPaymentMethods());
-        exit.setValue(exitPutVO.getValue() != null ? exitPutVO.getValue() : exit.getValue());
-        exit.setUpdatedAt(LocalDateTime.now());
-
-        monthService.save(month);
-
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(exit,ExitDTO.class));
-    }
-
-    @PostMapping(value = "/month/{idMonth}/fixed-account",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<List<FixedAccountDTO>> saveFixedAccount (@PathVariable String idMonth ,
-                                                                   @RequestBody @Valid List<FixedAccountMonthPostVO> fixedAccountRegisterVOS
-                                                                   ){
-        Month month = findbyId(idMonth);
-
-        List<FixedAccount> fixedAccountsMonth = month.getFixedAccounts();
-        List<FixedAccountDTO> fixedAccountAddInMonth  = new ArrayList<>();
-
-        for (FixedAccountMonthPostVO fixedAccountMonthPostVO : fixedAccountRegisterVOS){
-            FixedAccount fixedAccountFound = modelMapper.map(fixedAccountMonthPostVO,FixedAccount.class);;
-            for(FixedAccount fixedAccount : fixedAccountsMonth){
-                if(Objects.equals(fixedAccount.getId(), fixedAccountMonthPostVO.getId())) {
-                    if(!fixedAccount.getDeleted()) {
-                        fixedAccountFound = null;
-                        break;
-                    }
-                }
-            }
-
-            if(fixedAccountFound != null){
-                fixedAccountFound.setCreatedAt(LocalDateTime.now());
-                fixedAccountFound.setDeleted(false);
-                fixedAccountAddInMonth.add(modelMapper.map(fixedAccountFound,FixedAccountDTO.class));
-                fixedAccountsMonth.add(fixedAccountFound);
-            }
-        }
-
-        monthService.save(month);
-
-        return ResponseEntity.status(HttpStatus.OK).body(fixedAccountAddInMonth);
-    }
 
     @PatchMapping(value = "/month/{idMonth}/fixed-account/{idFixedAccount}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FixedAccountDTO> deletedFixedAccount (@PathVariable String idMonth ,
@@ -347,7 +233,7 @@ public class MonthController {
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(fixedAccountFound,FixedAccountDTO.class));
     }
 
-    @PostMapping(value = "/month/{idMonth}/benefit",produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@PostMapping(value = "/month/{idMonth}/benefit",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<BenefitDTO> saveBenefit(@PathVariable String idMonth, @RequestBody @Valid BenefitPostVO benefitPostVO){
 
@@ -372,30 +258,15 @@ public class MonthController {
         monthService.save(month);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(benefit,BenefitDTO.class));
-    }
+    }*/
 
-    @PutMapping(value = "/month/{idMonth}/benefit/",produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@PutMapping(value = "/month/{idMonth}/benefit/",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<BenefitDTO> saveBenefit(@PathVariable String idMonth, @PathVariable String idBenefit, @RequestBody @Valid BenefitPostVO benefitPostVO){
 
-    }
+    }*/
 
-    protected Month createNewMonthRecord(LocalDate currentDate){
-        Month month = new Month();
-        month.setName(currentDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")));
-        month.setDate(currentDate);
-        month.setMonth(currentDate.getMonthValue());
-        month.setYear(currentDate.getYear());
-        month.setUser(userContext.returnUserCorrespondingToTheRequest());
-        month.setEntry(new ArrayList<>());
-        month.setCategoryVariableExpens(new ArrayList<>());
-        month.setInstallments(new ArrayList<>());
-        month.setFixedAccounts(new ArrayList<>());
-        month.setBenefits(new ArrayList<>());
-
-        return monthService.save(month);
-    }
-    protected Month findbyId(String id){
+    /*protected Month findbyId(String id){
         Month month = monthService.findById(id);
 
         if(month == null){
@@ -436,7 +307,7 @@ public class MonthController {
     private Exit returnASpecificExit(Month month, String idCategory, String idExit){
         for (CategoryVariableExpense categoryVariableExpense : month.getCategoryVariableExpens()) {
             if (Objects.equals(categoryVariableExpense.getId(), idCategory)) {
-                for (Exit exit : categoryVariableExpense.getExit()) {
+                /*for (Exit exit : categoryVariableExpense.getExit()) {
                     if (Objects.equals(exit.getId(), idExit)) {
                         if(exit.getDeleted()){
                             return null;
@@ -444,7 +315,8 @@ public class MonthController {
                             return exit;
                         }
                     }
-                }
+                }*
+
             }
         }
         return null;
@@ -459,5 +331,5 @@ public class MonthController {
         }
 
         return null;
-    }
+    }*/
 }

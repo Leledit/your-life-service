@@ -1,6 +1,6 @@
-package com.yourlife.your.life.model.vo.finance.exit;
+package com.yourlife.your.life.model.dto.finance.categoryVariableExpense;
 
-import com.yourlife.your.life.model.types.finance.PaymentMethods;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExitPostVO {
+public class CategoryVariableExpensePostDTO {
     @NotBlank
     private String name;
     @NotBlank
-    private PaymentMethods paymentMethods;
-    @NotBlank
-    private Number value;
+    private String description;
 }

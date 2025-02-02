@@ -5,13 +5,7 @@ import com.yourlife.your.life.model.dto.finance.*;
 import com.yourlife.your.life.model.entity.finance.*;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.model.types.finance.PaymentMethods;
-import com.yourlife.your.life.model.vo.finance.entry.EntryPostVO;
-import com.yourlife.your.life.model.vo.finance.entry.EntryPutVO;
-import com.yourlife.your.life.model.vo.finance.exit.ExitPostVO;
-import com.yourlife.your.life.model.vo.finance.exit.ExitPutVO;
-import com.yourlife.your.life.model.vo.finance.fixedAccountMonth.FixedAccountMonthPostVO;
-import com.yourlife.your.life.model.vo.finance.fixedAccountMonth.FixedAccountMonthPutVO;
-import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
+import com.yourlife.your.life.service.finance.VariableExpensesCategoryService;
 import com.yourlife.your.life.service.finance.MonthService;
 import com.yourlife.your.life.utils.UserContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +46,7 @@ class MonthControllerTest {
     private MonthService monthService;
 
     @Mock
-    private CategoryVariableExpenseService categoryVariableExpenseService;
+    private VariableExpensesCategoryService variableExpensesCategoryService;
 
     @InjectMocks
     private MonthController monthController;
@@ -195,7 +189,7 @@ class MonthControllerTest {
         monthsMock.add(new Month());
 
         when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
-        when(monthService.getAll(userMock.getId())).thenReturn(monthsMock);
+        when(monthService.findAll(userMock.getId())).thenReturn(monthsMock);
         when(modelMapper.map(any(Month.class),eq(MonthDTO.class))).thenReturn(monthDTOMock);
 
        ResponseEntity<List<MonthDTO>>listResponseEntity = monthController.getAll();
@@ -248,7 +242,7 @@ class MonthControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(installmentDTO,responseEntity.getBody());
 
-    }*/
+    }
 
     @Test
     @DisplayName("saveAppetizer - Creating new record successfully!")
@@ -445,4 +439,6 @@ class MonthControllerTest {
         assertEquals(fixedAccountDTOMock,fixedAccountDTOResponseEntity.getBody());
 
     }
+
+     */
 }

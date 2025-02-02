@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +87,7 @@ class MonthServiceImplTest {
 
         when(monthRepository.findAllByUser_Id(userMock.getId())).thenReturn(Optional.of(monthMock));
 
-        List<Month> months = monthService.getAll(userMock.getId());
+        List<Month> months = monthService.findAll(userMock.getId());
 
         assertEquals(2,months.size());
     }
@@ -98,7 +97,7 @@ class MonthServiceImplTest {
     void testGetAllReturning_Null() {
         when(monthRepository.findAllByUser_Id(userMock.getId())).thenReturn(Optional.empty());
 
-        List<Month> months = monthService.getAll(userMock.getId());
+        List<Month> months = monthService.findAll(userMock.getId());
 
         assertNull(months);
     }
