@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,10 +22,10 @@ public class Installment {
     @Id
     private String id;
     private String description;
-    private String firstInstallmentDate;
+    private LocalDate firstInstallmentDate;
+    private LocalDate lastInstallmentDate;
     private Number value;
     private Number qtd;
-    private String current;
     private Boolean deleted;
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;

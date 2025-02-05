@@ -27,7 +27,7 @@ public class Month {
     private LocalDate date;
 
     @DBRef
-    private List<FixedAccount> fixedAccounts;
+    private List<FixedAccount> fixedAccounts; //Feito
 
     @DBRef
     private List<Installment> installments;

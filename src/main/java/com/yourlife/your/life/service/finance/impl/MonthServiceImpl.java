@@ -3,8 +3,10 @@ package com.yourlife.your.life.service.finance.impl;
 import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.Month.MonthAddFixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
+import com.yourlife.your.life.model.entity.finance.Installment;
 import com.yourlife.your.life.model.entity.finance.Month;
 import com.yourlife.your.life.repository.finance.FixedAccountRepository;
+import com.yourlife.your.life.repository.finance.InstallmentRepository;
 import com.yourlife.your.life.repository.finance.MonthRepository;
 import com.yourlife.your.life.service.finance.MonthService;
 import com.yourlife.your.life.utils.UserContext;
@@ -29,9 +31,16 @@ public class MonthServiceImpl implements MonthService {
     @Autowired
     private FixedAccountRepository fixedAccountRepository;
 
+    @Autowired
+    private InstallmentRepository installmentRepository;
+
+    //TODO: Verificar
     @Override
     public Month save() {
+
         LocalDate currentDate = LocalDate.now();
+
+        List<Installment> installmentList = installmentRepository.findByFirstInstallmentDateLessThanEqualAndLastInstallmentDateGreaterThanEqualAndDeleted(currentDate, currentDate,false);
 
         Month month = new Month();
         month.setName(currentDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")));
@@ -41,7 +50,7 @@ public class MonthServiceImpl implements MonthService {
         month.setUser(userContext.returnUserCorrespondingToTheRequest());
         month.setEntry(new ArrayList<>());
         month.setBenefitsMonth(new ArrayList<>());
-        month.setInstallments(new ArrayList<>());
+        month.setInstallments(installmentList);
         month.setFixedAccounts(new ArrayList<>());
         month.setCategoryVariableExpenseMonth(new ArrayList<>());
 
@@ -71,7 +80,13 @@ public class MonthServiceImpl implements MonthService {
 
         if(!fixedAccounts.isEmpty()){
             List<FixedAccount> fixedAccountsMonth = month.getFixedAccounts();
-            fixedAccountsMonth.addAll(fixedAccounts);
+
+            if(!fixedAccountsMonth.isEmpty()){
+                List<FixedAccount> newFixedAccount = fixedAccounts.stream().filter((fixedAccount -> !fixedAccountsMonth.contains(fixedAccount))).toList();
+                fixedAccountsMonth.addAll(newFixedAccount);
+            }else{
+                fixedAccountsMonth.addAll(fixedAccounts);
+            }
 
             month.setFixedAccounts(fixedAccountsMonth);
             monthRepository.save(month);

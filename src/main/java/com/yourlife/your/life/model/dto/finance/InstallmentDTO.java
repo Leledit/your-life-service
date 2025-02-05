@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude
 public class InstallmentDTO {
-    private String id;
     private String description;
     private String  firstInstallmentDate;
     private String current;

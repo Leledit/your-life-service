@@ -11,6 +11,5 @@ public interface MonthService {
     Month findByMonth(Integer month, Integer year,String userId);
     List<Month> findAll(String userId);
     Month findById(String id);
-
     Month addFixedAccount(String id, MonthAddFixedAccountDTO monthAddFixedAccountDTO);
 }
