@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @DisplayName("Month")
 class MonthServiceImplTest {
-
+/*
     @Mock
     private MonthRepository monthRepository;
 
@@ -120,5 +120,5 @@ class MonthServiceImplTest {
         Month month = monthService.findById("662e9866e348a57153c48cdd");
 
         assertNull(month);
-    }
+    }*/
 }

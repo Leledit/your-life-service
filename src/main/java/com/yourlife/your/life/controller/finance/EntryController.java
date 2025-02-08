@@ -4,6 +4,7 @@ import com.yourlife.your.life.model.dto.finance.entry.EntryPostDTO;
 import com.yourlife.your.life.model.dto.finance.entry.EntryPutDTO;
 import com.yourlife.your.life.model.entity.finance.Entry;
 import com.yourlife.your.life.service.finance.EntryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ public class EntryController {
 
     @PostMapping(value = "/entry", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Entry> saveEntry(@RequestBody EntryPostDTO entryPostDTO){
+    public ResponseEntity<Entry> saveEntry(@RequestBody @Valid EntryPostDTO entryPostDTO){
         Entry entry = entryService.save(entryPostDTO);
         return ResponseEntity.status(HttpStatus.OK).body(entry);
     }

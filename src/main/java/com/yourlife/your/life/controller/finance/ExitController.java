@@ -4,6 +4,7 @@ import com.yourlife.your.life.model.dto.finance.exit.ExitPostDTO;
 import com.yourlife.your.life.model.dto.finance.exit.ExitPutDTO;
 import com.yourlife.your.life.model.entity.finance.Exit;
 import com.yourlife.your.life.service.finance.ExitService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ public class ExitController {
 
     @PostMapping(value = "/exit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Exit> saveExit(@RequestBody ExitPostDTO exitPostDTO){
+    public ResponseEntity<Exit> saveExit(@RequestBody @Valid ExitPostDTO exitPostDTO){
         Exit exit = exitService.save(exitPostDTO);
         return ResponseEntity.status(HttpStatus.OK).body(exit);
     }

@@ -1,60 +1,49 @@
 package com.yourlife.your.life.controller.finance;
 
 import com.yourlife.your.life.model.dto.finance.benefitItem.BenefitItemPostDTO;
+import com.yourlife.your.life.model.dto.finance.benefitItem.BenefitItemPutDTO;
 import com.yourlife.your.life.model.entity.finance.BenefitItem;
 import com.yourlife.your.life.service.finance.BenefitItemService;
-import com.yourlife.your.life.service.finance.BenefitService;
-import org.modelmapper.ModelMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/service/api/v1")
 public class BenefitItemController {
 
     @Autowired
-    private BenefitService benefitService;
-
-    @Autowired
     private BenefitItemService benefitItemService;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    /*@PostMapping(value = "benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<BenefitItem> saveBenefitItem(@RequestBody BenefitItemPostDTO benefitItemPostDTO){
-        BenefitItem benefitItem = benefitService.save(benefitItemPostDTO)
+    public ResponseEntity<BenefitItem> saveBenefitItem(@RequestBody @Valid BenefitItemPostDTO benefitItemPostDTO){
+        BenefitItem benefitItem = benefitItemService.save(benefitItemPostDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(benefitItem);
     }
-*/
 
-   /* @PostMapping(value = "/benefit/{idBenefit}/item",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<BenefitItemDTO> saveBenefitItem(@PathVariable String idBenefit, @RequestBody @Valid BenefitItemPostVO benefitItemPostVO){
+    public ResponseEntity<List<BenefitItem>> getAllBenefitItem(){
+        List<BenefitItem> benefitItems = benefitItemService.findAllByUser();
+        return ResponseEntity.status(HttpStatus.OK).body(benefitItems);
+    }
 
-        Benefit benefit = benefitService.findById(idBenefit);
+    @PatchMapping(value = "/benefit-item/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<BenefitItem> updateBenefitItem(@RequestBody BenefitItemPutDTO benefitItemPutDTO, @PathVariable String id){
+        BenefitItem benefitItem = benefitItemService.update(benefitItemPutDTO,id);
+        return ResponseEntity.status(HttpStatus.OK).body(benefitItem);
+    }
 
-        if(benefit == null){
-            throw new RuntimeException(ExceptionMessages.BENEFIT_NOT_FOUND);
-        }
-
-        BenefitItem benefitItem  = benefitItemService.save(BenefitItem
-                .builder()
-                .name(benefitItemPostVO.getName())
-                .value(benefitItemPostVO.getValue())
-                .description(benefitItemPostVO.getDescription())
-                .createdAt(LocalDateTime.now())
-                .deleted(false)
-                .build());
-
-        List<BenefitItem> benefitItems = benefit.getItens();
-        benefitItems.add(benefitItem);
-
-        benefit.setItens(benefitItems);
-        benefitService.save(benefit);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(benefitItem,BenefitItemDTO.class));
-    }*/
+    @DeleteMapping(value = "/benefit-item/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deleteBenefitItem(@PathVariable String id){
+        benefitItemService.deleted(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

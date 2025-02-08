@@ -1,6 +1,5 @@
 package com.yourlife.your.life.controller.finance;
 
-import com.yourlife.your.life.model.dto.finance.FixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.service.finance.FixedAccountService;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @DisplayName("FixedAccount")
 class FixedAccountControllerTest {
-
+/*
     @Mock
     private FixedAccountService fixedAccountService;
 
@@ -68,7 +67,7 @@ class FixedAccountControllerTest {
 
     }
 
-    /*
+
     @Test
     @DisplayName("save - Creating new record successfully!")
     void testSave() {

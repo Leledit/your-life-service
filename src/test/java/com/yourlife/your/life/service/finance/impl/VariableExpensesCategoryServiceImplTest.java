@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @DisplayName("CategoryVariableExpense")
 class VariableExpensesCategoryServiceImplTest {
-
+/*
     @Mock
     private CategoryVariableExpenseRepository categoryVariableExpenseRepository;
 

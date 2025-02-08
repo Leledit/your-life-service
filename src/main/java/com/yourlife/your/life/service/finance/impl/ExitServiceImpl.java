@@ -35,7 +35,6 @@ public class ExitServiceImpl implements ExitService {
 
     @Override
     public Exit save(ExitPostDTO exitPostDTO) {
-
         CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseRepository.findById(exitPostDTO.getCategoryVariableExpense()).orElse(null);
 
         if(categoryVariableExpense == null){

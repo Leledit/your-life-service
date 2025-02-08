@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.user;
+package com.yourlife.your.life.model.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,9 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegistertVO {
-    @NotBlank
-    private String name;
+public class UserLoginDTO {
     @NotBlank
     @Email
     private String email;

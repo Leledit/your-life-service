@@ -29,14 +29,14 @@ public class InstallmentController {
 
     @GetMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<Installment>> findAllInstallment(){
+    public ResponseEntity<List<Installment>> getAllInstallment(){
         List<Installment> installmentList = installmentService.findAllByUser();
         return  ResponseEntity.status(HttpStatus.OK).body(installmentList);
     }
 
     @GetMapping(value = "/installment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Installment> findInstallmentById(@PathVariable String id){
+    public ResponseEntity<Installment> getInstallmentById(@PathVariable String id){
         Installment installment = installmentService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(installment);
     }

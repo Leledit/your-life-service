@@ -12,8 +12,6 @@ import com.yourlife.your.life.service.finance.MonthService;
 import com.yourlife.your.life.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -35,11 +33,15 @@ public class MonthServiceImpl implements MonthService {
     @Autowired
     private InstallmentRepository installmentRepository;
 
-    //TODO: Verificar SE O MES JA TA CADASTRO E VALIDAR
     @Override
     public Month save() {
-
         LocalDateTime currentDate = LocalDateTime.now();
+
+        Month monthFound = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId());
+
+        if(monthFound != null){
+            throw new RuntimeException(ExceptionMessages.MONT_ALREADY_REGISTERED);
+        }
 
         List<Installment> installmentList = installmentRepository.findByFirstInstallmentDateLessThanEqualAndLastInstallmentDateGreaterThanEqualAndDeleted(currentDate, currentDate,false);
 
@@ -59,13 +61,13 @@ public class MonthServiceImpl implements MonthService {
     }
 
     @Override
-    public Month findByMonth(Integer month, Integer year, String userId) {
-        return monthRepository.findByYearAndMonthAndUser_Id(year,month,userId);
+    public Month findByMonth(Integer month, Integer year) {
+        return monthRepository.findByYearAndMonthAndUser_Id(year,month,userContext.returnUserCorrespondingToTheRequest().getId());
     }
 
     @Override
-    public List<Month> findAll(String userId) {
-        return monthRepository.findAllByUser_Id(userId).orElse(null);
+    public List<Month> findAll() {
+        return monthRepository.findAllByUser_Id(userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
     }
 
     @Override
@@ -105,5 +107,4 @@ public class MonthServiceImpl implements MonthService {
 
         return month;
     }
-
 }

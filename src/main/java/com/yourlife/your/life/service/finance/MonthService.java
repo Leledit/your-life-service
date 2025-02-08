@@ -8,8 +8,8 @@ import java.util.List;
 @Service
 public interface MonthService {
     Month save();
-    Month findByMonth(Integer month, Integer year,String userId);
-    List<Month> findAll(String userId);
+    Month findByMonth(Integer month, Integer year);
+    List<Month> findAll();
     Month findById(String id);
     Month addFixedAccount(String id, MonthAddFixedAccountDTO monthAddFixedAccountDTO);
 }

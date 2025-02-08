@@ -6,7 +6,6 @@ import com.yourlife.your.life.model.entity.finance.Benefit;
 import com.yourlife.your.life.service.finance.BenefitService;
 import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,9 +23,6 @@ public class BenefitController {
     @Autowired
     private UserContext userContext;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @PostMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Benefit> saveBenefit(@Valid @RequestBody BenefitPostDTO benefitPostDTO){
@@ -42,7 +38,7 @@ public class BenefitController {
 
     @GetMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Benefit> getById(@PathVariable String id){
+    public ResponseEntity<Benefit> getBenefitById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(benefitService.findById(id));
     }
 

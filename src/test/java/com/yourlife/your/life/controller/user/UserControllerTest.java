@@ -3,24 +3,21 @@ package com.yourlife.your.life.controller.user;
 import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.user.UserDTO;
 import com.yourlife.your.life.model.entity.user.User;
-import com.yourlife.your.life.model.vo.user.UserLoginVO;
-import com.yourlife.your.life.model.vo.user.UserRegistertVO;
+import com.yourlife.your.life.model.dto.user.UserLoginDTO;
+import com.yourlife.your.life.model.dto.user.UserRegistertVO;
 import com.yourlife.your.life.service.user.UserService;
 import com.yourlife.your.life.utils.TokenUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -89,16 +86,16 @@ class UserControllerTest {
     @Test
     @DisplayName("login - logging into the application")
     void testLogin() {
-        UserLoginVO userLoginVO = new UserLoginVO();
-        userLoginVO.setEmail("test@teste.com.br");
-        userLoginVO.setPassword("1234");
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO.setEmail("test@teste.com.br");
+        userLoginDTO.setPassword("1234");
 
-        when(modelMapper.map(any(UserLoginVO.class),eq(User.class))).thenReturn(userMock);
+        when(modelMapper.map(any(UserLoginDTO.class),eq(User.class))).thenReturn(userMock);
         when(userService.loginUser(userMock)).thenReturn(userMock);
         when(modelMapper.map(any(User.class),eq(UserDTO.class))).thenReturn(userDTOMock);
         when(tokenUtils.generateToken(userDTOMock.getId())).thenReturn("testToken");
 
-        ResponseEntity<UserDTO> userDTOResponseEntity = userController.login(userLoginVO);
+        ResponseEntity<UserDTO> userDTOResponseEntity = userController.login(userLoginDTO);
 
         assertEquals(HttpStatus.OK, userDTOResponseEntity.getStatusCode());
         assertEquals(userDTOMock,userDTOResponseEntity.getBody());

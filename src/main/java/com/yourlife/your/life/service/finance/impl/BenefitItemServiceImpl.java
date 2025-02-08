@@ -11,7 +11,6 @@ import com.yourlife.your.life.repository.finance.BenefitRepository;
 import com.yourlife.your.life.repository.finance.MonthRepository;
 import com.yourlife.your.life.service.finance.BenefitItemService;
 import com.yourlife.your.life.utils.UserContext;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +22,6 @@ public class BenefitItemServiceImpl implements BenefitItemService {
 
     @Autowired
     private BenefitItemReposity benefitItemReposity;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     private MonthRepository monthRepository;
@@ -48,6 +44,7 @@ public class BenefitItemServiceImpl implements BenefitItemService {
                 .description(benefitItemPostDTO.getDescription())
                 .createdAt(currentDate)
                 .deleted(false)
+                .user(userContext.returnUserCorrespondingToTheRequest())
                 .benefit(benefit)
                 .build());
 

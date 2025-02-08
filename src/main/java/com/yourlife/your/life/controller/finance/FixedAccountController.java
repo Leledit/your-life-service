@@ -22,38 +22,35 @@ public class FixedAccountController {
     private FixedAccountService fixedAccountService;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     private UserContext userContext;
 
-    @PostMapping(value = "/accounts-fixed", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/fixed-account", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<FixedAccount> saveAccount(@RequestBody @Valid FixedAccountPostDTO fixedAccountPostDTO){
+    public ResponseEntity<FixedAccount> saveFixedAccount(@RequestBody @Valid FixedAccountPostDTO fixedAccountPostDTO){
         FixedAccount fixedAccount = fixedAccountService.save(fixedAccountPostDTO);
         return  ResponseEntity.status(HttpStatus.OK).body(fixedAccount);
     }
 
-    @GetMapping(value = "/accounts-fixed",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<FixedAccount>> getAllAccount(){
+    @GetMapping(value = "/fixed-account", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ArrayList<FixedAccount>> getAllFixedAccounts(){
         ArrayList<FixedAccount> fixedAccounts = fixedAccountService.findAllByUser(userContext.returnUserCorrespondingToTheRequest().getId());
         return ResponseEntity.status(HttpStatus.OK).body(fixedAccounts);
     }
 
-    @GetMapping(value = "/account-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FixedAccount> getAccountById(@PathVariable String id){
+    @GetMapping(value = "/fixed-account/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FixedAccount> getFixedAccountById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(fixedAccountService.findById(id));
     }
 
-    @PutMapping(value = "/accounts-fixed/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/fixed-account/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<FixedAccount> updatedFixedAccount(@RequestBody @Valid FixedAccountPutDTO fixedAccountPutDTO, @PathVariable String id){
         FixedAccount fixedAccount = fixedAccountService.update(id,fixedAccountPutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(fixedAccount);
     }
 
-    @PatchMapping(value = "/account-fixed/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deletedAccount(@PathVariable String id){
+    @PatchMapping(value = "/fixed-account/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deletedFixedAccount(@PathVariable String id){
         fixedAccountService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

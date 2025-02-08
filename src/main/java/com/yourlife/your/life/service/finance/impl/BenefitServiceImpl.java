@@ -4,7 +4,6 @@ import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.benefit.BenefitPostDTO;
 import com.yourlife.your.life.model.dto.finance.benefit.BenefitPutDTO;
 import com.yourlife.your.life.model.entity.finance.Benefit;
-import com.yourlife.your.life.model.entity.finance.BenefitItem;
 import com.yourlife.your.life.repository.finance.BenefitRepository;
 import com.yourlife.your.life.service.finance.BenefitService;
 import com.yourlife.your.life.utils.UserContext;
@@ -52,7 +51,6 @@ public class BenefitServiceImpl implements BenefitService {
 
     @Override
     public Benefit update(String id, BenefitPutDTO benefitPutDTO) {
-
         Benefit benefit = findByIdBenefit(id);
 
         benefit.setName(benefitPutDTO.getName()!=null?benefitPutDTO.getName():benefit.getName());
