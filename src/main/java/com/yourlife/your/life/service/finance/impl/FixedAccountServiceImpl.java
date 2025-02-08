@@ -37,7 +37,7 @@ public class FixedAccountServiceImpl implements FixedAccountService {
     }
 
     @Override
-    public ArrayList<FixedAccount> findAll(String userId) {
+    public ArrayList<FixedAccount> findAllByUser(String userId) {
         return fixedAccountRepository.findAllByUser_IdAndDeleted(userId,false).orElse(null);
     }
 

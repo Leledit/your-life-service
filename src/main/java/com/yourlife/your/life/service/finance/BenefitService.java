@@ -1,12 +1,13 @@
 package com.yourlife.your.life.service.finance;
 
+import com.yourlife.your.life.model.dto.finance.benefit.BenefitPostDTO;
 import com.yourlife.your.life.model.dto.finance.benefit.BenefitPutDTO;
 import com.yourlife.your.life.model.entity.finance.Benefit;
 
 import java.util.List;
 
 public interface BenefitService {
-    Benefit save(Benefit benefit);
+    Benefit save(BenefitPostDTO benefitPostDTO);
 
     Benefit findById (String id);
 

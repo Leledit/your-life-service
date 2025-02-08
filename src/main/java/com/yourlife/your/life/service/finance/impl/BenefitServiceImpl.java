@@ -1,11 +1,13 @@
 package com.yourlife.your.life.service.finance.impl;
 
 import com.yourlife.your.life.constants.ExceptionMessages;
+import com.yourlife.your.life.model.dto.finance.benefit.BenefitPostDTO;
 import com.yourlife.your.life.model.dto.finance.benefit.BenefitPutDTO;
 import com.yourlife.your.life.model.entity.finance.Benefit;
 import com.yourlife.your.life.model.entity.finance.BenefitItem;
 import com.yourlife.your.life.repository.finance.BenefitRepository;
 import com.yourlife.your.life.service.finance.BenefitService;
+import com.yourlife.your.life.utils.UserContext;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,20 @@ public class BenefitServiceImpl implements BenefitService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private UserContext userContext;
     @Override
-    public Benefit save(Benefit benefit) {
-        return benefitRepository.save(benefit);
+    public Benefit save(BenefitPostDTO benefitPostDTO) {
+        return benefitRepository.save(Benefit
+                .builder()
+                .name(benefitPostDTO.getName())
+                .valueReceived(benefitPostDTO.getValueReceived())
+                .type(benefitPostDTO.getType())
+                .description(benefitPostDTO.getDescription())
+                .createdAt(LocalDateTime.now())
+                .user(userContext.returnUserCorrespondingToTheRequest())
+                .deleted(false)
+                .build());
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -24,22 +25,22 @@ public class Month {
     private String name;
     private Integer year;
     private Integer month;
-    private LocalDate date;
+    private LocalDateTime date;
 
     @DBRef
     private List<FixedAccount> fixedAccounts; //Feito
 
     @DBRef
-    private List<Installment> installments;
+    private List<Installment> installments; //Feito
 
     @DBRef
-    private List<CategoryVariableExpenseMonth> categoryVariableExpenseMonth;
+    private List<Exit> exits; //Feito
 
     @DBRef
-    private List<Entry> entry;
+    private List<Entry> entry; //Feito
 
     @DBRef
-    private List<BenefitMonth> benefitsMonth;
+    private List<BenefitItem> benefitItems;
 
     @DBRef
     private User user;

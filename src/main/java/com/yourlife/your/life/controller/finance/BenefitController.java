@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -29,46 +27,33 @@ public class BenefitController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping(value = "/benefit",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Benefit> saveBenefit(@Valid @RequestBody BenefitPostDTO benefitPostDTO){
-
-        Benefit benefit = benefitService.save(Benefit
-                        .builder()
-                        .name(benefitPostDTO.getName())
-                        .valueReceived(benefitPostDTO.getValueReceived())
-                        .type(benefitPostDTO.getType())
-                        .description(benefitPostDTO.getDescription())
-                        .createdAt(LocalDateTime.now())
-                        .user(userContext.returnUserCorrespondingToTheRequest())
-                        .deleted(false)
-                        .build());
-
+        Benefit benefit = benefitService.save(benefitPostDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(benefit);
     }
 
-    @GetMapping(value = "/benefit",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<List<Benefit>> getAllBenefits(){
         return ResponseEntity.status(HttpStatus.OK).body(benefitService.findAllByUser(userContext.returnUserCorrespondingToTheRequest().getId()));
     }
 
-    @GetMapping(value = "/benefit/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Benefit> getById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(benefitService.findById(id));
     }
 
-    @PatchMapping(value = "/benefit/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Benefit> updateBenefit(@PathVariable String id, @RequestBody BenefitPutDTO benefitPutDTO){
-
         Benefit benefit = benefitService.update(id,benefitPutDTO);
-
         return ResponseEntity.status(HttpStatus.OK).body(benefit);
     }
 
-    @PatchMapping(value = "/benefit/{id}/deleted",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/benefit/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Void> deletedBenefit(@PathVariable String id){
         benefitService.deleted(id);

@@ -19,4 +19,6 @@ public class ExitPostDTO {
     private PaymentMethods paymentMethods;
     @NotNull
     private Number value;
+    @NotNull
+    private String categoryVariableExpense;
 }

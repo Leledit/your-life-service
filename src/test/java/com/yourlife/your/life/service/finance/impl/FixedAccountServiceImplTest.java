@@ -68,7 +68,7 @@ class FixedAccountServiceImplTest {
     void testGetAllReturning_Null() {
         when(fixedAccountRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.empty());
 
-        List<FixedAccount> fixedAccounts = fixedAccountService.findAll(userMock.getId());
+        List<FixedAccount> fixedAccounts = fixedAccountService.findAllByUser(userMock.getId());
 
         assertNull(fixedAccounts);
     }
@@ -82,7 +82,7 @@ class FixedAccountServiceImplTest {
 
         when(fixedAccountRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(fixedAccountsMock));
 
-        List<FixedAccount> fixedAccounts = fixedAccountService.findAll(userMock.getId());
+        List<FixedAccount> fixedAccounts = fixedAccountService.findAllByUser(userMock.getId());
 
         assertEquals(1, fixedAccounts.size());
     }

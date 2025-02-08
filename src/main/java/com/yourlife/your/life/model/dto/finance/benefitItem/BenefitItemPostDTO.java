@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.finance.installment;
+package com.yourlife.your.life.model.dto.finance.benefitItem;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -11,13 +11,13 @@ import org.springframework.format.annotation.NumberFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstallmentPostVO {
+public class BenefitItemPostDTO {
+    @NotBlank
+    private String name;
+    @NumberFormat
+    private Number value;
     @NotBlank
     private String description;
     @NotBlank
-    private String firstInstallmentDate;
-    @NumberFormat
-    private Number  value;
-    @NumberFormat
-    private Number qtd;
+    private String benefitId;
 }

@@ -1,4 +1,4 @@
-package com.yourlife.your.life.model.vo.finance.entry;
+package com.yourlife.your.life.model.dto.finance.benefitItem;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EntryPutVO {
+public class BenefitItemPutDTO {
     private String name;
     private Number value;
     private String description;

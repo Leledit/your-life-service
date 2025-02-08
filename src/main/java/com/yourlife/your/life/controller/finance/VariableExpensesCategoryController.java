@@ -61,18 +61,4 @@ public class VariableExpensesCategoryController {
         CategoryVariableExpense categoryVariableExpense = variableExpensesCategoryService.update(id,categoryVariableExpensePutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpense);
     }
-
-    /*@PostMapping(value = "/accounts-category-expense/{idCategory}/exit",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Exit> saveExit(@PathVariable String idCategory, @Valid @RequestBody ExitPostDTO exitPostDTO){
-        Exit exit = variableExpensesCategoryService.saveExit(idCategory,exitPostDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(exit);
-    }
-
-    @PatchMapping(value = "/accounts-category-expense/exit/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Exit> updateExit(@PathVariable String id, @RequestBody ExitPutDTO exitPutDTO){
-        Exit exit = variableExpensesCategoryService.updateExit(id,exitPutDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(exit);
-    }*/
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +35,11 @@ public class MonthServiceImpl implements MonthService {
     @Autowired
     private InstallmentRepository installmentRepository;
 
-    //TODO: Verificar
+    //TODO: Verificar SE O MES JA TA CADASTRO E VALIDAR
     @Override
     public Month save() {
 
-        LocalDate currentDate = LocalDate.now();
+        LocalDateTime currentDate = LocalDateTime.now();
 
         List<Installment> installmentList = installmentRepository.findByFirstInstallmentDateLessThanEqualAndLastInstallmentDateGreaterThanEqualAndDeleted(currentDate, currentDate,false);
 
@@ -49,10 +50,10 @@ public class MonthServiceImpl implements MonthService {
         month.setYear(currentDate.getYear());
         month.setUser(userContext.returnUserCorrespondingToTheRequest());
         month.setEntry(new ArrayList<>());
-        month.setBenefitsMonth(new ArrayList<>());
+        month.setBenefitItems(new ArrayList<>());
         month.setInstallments(installmentList);
         month.setFixedAccounts(new ArrayList<>());
-        month.setCategoryVariableExpenseMonth(new ArrayList<>());
+        month.setExits(new ArrayList<>());
 
         return monthRepository.save(month);
     }

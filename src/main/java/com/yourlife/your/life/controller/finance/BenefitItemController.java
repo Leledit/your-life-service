@@ -1,22 +1,14 @@
 package com.yourlife.your.life.controller.finance;
 
-import com.yourlife.your.life.constants.ExceptionMessages;
-import com.yourlife.your.life.model.dto.finance.BenefitItemDTO;
-import com.yourlife.your.life.model.entity.finance.Benefit;
+import com.yourlife.your.life.model.dto.finance.benefitItem.BenefitItemPostDTO;
 import com.yourlife.your.life.model.entity.finance.BenefitItem;
-import com.yourlife.your.life.model.vo.finance.benefitItem.BenefitItemPostVO;
 import com.yourlife.your.life.service.finance.BenefitItemService;
 import com.yourlife.your.life.service.finance.BenefitService;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/service/api/v1")
@@ -30,6 +22,13 @@ public class BenefitItemController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    /*@PostMapping(value = "benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<BenefitItem> saveBenefitItem(@RequestBody BenefitItemPostDTO benefitItemPostDTO){
+        BenefitItem benefitItem = benefitService.save(benefitItemPostDTO)
+    }
+*/
 
    /* @PostMapping(value = "/benefit/{idBenefit}/item",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

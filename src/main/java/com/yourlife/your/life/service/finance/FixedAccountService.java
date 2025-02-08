@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface FixedAccountService {
     FixedAccount save(FixedAccountPostDTO fixedAccountPostDTO);
-    ArrayList<FixedAccount> findAll(String userId);
+    ArrayList<FixedAccount> findAllByUser(String userId);
     FixedAccount findById(String id);
     FixedAccount update(String id, FixedAccountPutDTO fixedAccountPutDTO);
     void delete(String id);
