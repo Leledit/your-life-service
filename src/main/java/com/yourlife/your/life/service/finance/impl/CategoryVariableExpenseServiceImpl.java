@@ -5,7 +5,7 @@ import com.yourlife.your.life.model.dto.finance.categoryVariableExpense.Category
 import com.yourlife.your.life.model.dto.finance.categoryVariableExpense.CategoryVariableExpensePutDTO;
 import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
 import com.yourlife.your.life.repository.finance.CategoryVariableExpenseRepository;
-import com.yourlife.your.life.service.finance.VariableExpensesCategoryService;
+import com.yourlife.your.life.service.finance.CategoryVariableExpenseService;
 import com.yourlife.your.life.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Service
-public class VariableExpensesCategoryServiceImpl implements VariableExpensesCategoryService {
+public class CategoryVariableExpenseServiceImpl implements CategoryVariableExpenseService {
 
     @Autowired
     private CategoryVariableExpenseRepository categoryVariableExpenseRepository;

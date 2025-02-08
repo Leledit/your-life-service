@@ -24,7 +24,7 @@ public class ExitController {
     @ResponseBody
     public ResponseEntity<Exit> saveExit(@RequestBody @Valid ExitPostDTO exitPostDTO){
         Exit exit = exitService.save(exitPostDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(exit);
+        return ResponseEntity.status(HttpStatus.CREATED).body(exit);
     }
 
     @GetMapping(value = "/exit", produces = MediaType.APPLICATION_JSON_VALUE)

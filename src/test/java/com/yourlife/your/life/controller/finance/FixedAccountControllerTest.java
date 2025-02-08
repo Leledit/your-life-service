@@ -1,5 +1,7 @@
 package com.yourlife.your.life.controller.finance;
 
+import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPostDTO;
+import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPutDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.service.finance.FixedAccountService;
@@ -16,6 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -25,128 +30,94 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @DisplayName("FixedAccount")
 class FixedAccountControllerTest {
-/*
+
     @Mock
     private FixedAccountService fixedAccountService;
-
-    @Mock
-    private ModelMapper modelMapper;
-
-    @Mock
-    private UserContext userContext;
 
     @InjectMocks
     private FixedAccountController fixedAccountController;
 
-    private User userMock;
-
     private FixedAccount fixedAccountMock;
-
-    private FixedAccountDTO fixedAccountDTOMock;
 
     @BeforeEach
     public void setUp(){
-        userMock = new User();
-        userMock.setId("6621b1c02c3dbe50ac7d6319");
-        userMock.setEmail("test@teste.com.br");
-        userMock.setName("leandro");
-        userMock.setPassword("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS");
-
-        fixedAccountMock = new FixedAccount();
-        fixedAccountMock.setId("6626fbc8b030c6195d5aa007");
-        fixedAccountMock.setName("plano de celular");
-        fixedAccountMock.setValue(55);
-        fixedAccountMock.setDescription("plano usado no meu celular comercial");
-        fixedAccountMock.setDueDate(5);
-
-        fixedAccountDTOMock = new FixedAccountDTO();
-        fixedAccountDTOMock.setName("plano de celular");
-        fixedAccountDTOMock.setValue(55);
-        fixedAccountDTOMock.setDescription("plano usado no meu celular comercial");
-        fixedAccountDTOMock.setDueDate(5);
-
+        fixedAccountMock = FixedAccount
+                .builder()
+                .name("cell phone plan")
+                .value(55)
+                .description("plan used on my business cell phone")
+                .deleted(false)
+                .dueDate(5)
+                .build();
     }
-
 
     @Test
     @DisplayName("save - Creating new record successfully!")
-    void testSave() {
-        FixedAccountPostVO fixedAccountPostVOMock = new FixedAccountPostVO();
-        fixedAccountPostVOMock.setName("plano de celular");
-        fixedAccountPostVOMock.setValue(55);
-        fixedAccountPostVOMock.setDescription("plano usado no meu celular comercial");
-        fixedAccountPostVOMock.setDueDate(5);
+    void testSaveFixedAccount() {
+        FixedAccountPostDTO fixedAccountPostDTO =
+                FixedAccountPostDTO
+                        .builder()
+                        .name("cell phone plan")
+                        .value(55)
+                        .description("plan used on my business cell phone")
+                        .build();
 
-        when(modelMapper.map(any(FixedAccountPostVO.class),eq(FixedAccount.class))).thenReturn(fixedAccountMock);
-        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
-        when(fixedAccountService.save(fixedAccountMock)).thenReturn(fixedAccountMock);
-        when(modelMapper.map(any(FixedAccount.class),eq(FixedAccountDTO.class))).thenReturn(fixedAccountDTOMock);
+        when(fixedAccountService.save(fixedAccountPostDTO)).thenReturn(fixedAccountMock);
 
-        ResponseEntity<FixedAccountDTO> fixedAccountDTOResponseEntity = fixedAccountController.save(fixedAccountPostVOMock);
+        ResponseEntity<FixedAccount> responseEntity = fixedAccountController.saveFixedAccount(fixedAccountPostDTO);
 
-        assertEquals(HttpStatus.OK, fixedAccountDTOResponseEntity.getStatusCode());
-        assertEquals(fixedAccountDTOMock,fixedAccountDTOResponseEntity.getBody());
+        assertEquals(HttpStatus.CREATED,responseEntity.getStatusCode());
+        assertEquals(fixedAccountMock,responseEntity.getBody());
     }
 
     @Test
-    @DisplayName("getAll - Searching multiple records at once")
-    void testGetAll() {
-        ArrayList<FixedAccount> fixedAccounts = new ArrayList<>();
+    @DisplayName("GetAll - Searching multiple records at once")
+    void testGetAllFixedAccounts(){
+        List<FixedAccount> fixedAccounts = new ArrayList<>();
         fixedAccounts.add(new FixedAccount());
         fixedAccounts.add(new FixedAccount());
 
-        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
-        when(fixedAccountService.findAll(userMock.getId())).thenReturn(fixedAccounts);
-        when(modelMapper.map(any(FixedAccount.class),eq(FixedAccountDTO.class))).thenReturn(new FixedAccountDTO());
+        when(fixedAccountService.findAllByUser()).thenReturn(fixedAccounts);
 
-        ResponseEntity<ArrayList<FixedAccountDTO>> listResponseEntity = fixedAccountController.getAll();
+        ResponseEntity<List<FixedAccount>> responseEntity = fixedAccountController.getAllFixedAccounts();
 
-        assertEquals(HttpStatus.OK, listResponseEntity.getStatusCode());
-        assertEquals(2, listResponseEntity.getBody().size());
-
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+        assertEquals(2, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
     @Test
-    @DisplayName("getById - Searching for a single record")
-    void testGetById() {
+    @DisplayName("GetById - Searching for a single record")
+    void testGetFixedAccountById(){
+        when(fixedAccountService.findById("67a782cbf1c9cc32ec877f00")).thenReturn(fixedAccountMock);
+        ResponseEntity<FixedAccount> responseEntity = fixedAccountController.getFixedAccountById("67a782cbf1c9cc32ec877f00");
 
-        when(fixedAccountService.findById(fixedAccountDTOMock.getId())).thenReturn(fixedAccountMock);
-        when(modelMapper.map(any(FixedAccount.class),eq(FixedAccountDTO.class))).thenReturn(fixedAccountDTOMock);
-
-        ResponseEntity<FixedAccountDTO> fixedAccountDTOResponseEntity = fixedAccountController.getById(fixedAccountDTOMock.getId());
-
-        assertEquals(HttpStatus.OK, fixedAccountDTOResponseEntity.getStatusCode());
-        assertEquals(fixedAccountDTOMock,fixedAccountDTOResponseEntity.getBody());
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+        assertEquals(fixedAccountMock,responseEntity.getBody());
     }
 
     @Test
-    @DisplayName("deleted - Deleting a record")
-    void testDeleted() {
-        when(fixedAccountService.findById(fixedAccountMock.getId())).thenReturn(fixedAccountMock);
-        when(fixedAccountService.save(fixedAccountMock)).thenReturn(fixedAccountMock);
+    @DisplayName("Updated - Changing a record")
+    void testUpdatedFixedAccount(){
+        FixedAccountPutDTO fixedAccountPutDTO =
+                FixedAccountPutDTO
+                        .builder()
+                        .name("cell phone plan 2")
+                        .value(55)
+                        .description("plan used on my business cell phone 2")
+                        .build();
 
-        ResponseEntity<Void> responseEntity = fixedAccountController.deleted(fixedAccountMock.getId());
+        when(fixedAccountService.update("67a782cbf1c9cc32ec877f00", fixedAccountPutDTO)).thenReturn(fixedAccountMock);
 
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseEntity<FixedAccount> responseEntity = fixedAccountController.updatedFixedAccount(fixedAccountPutDTO,"67a782cbf1c9cc32ec877f00");
+
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+        assertEquals(fixedAccountMock,responseEntity.getBody());
     }
 
     @Test
-    @DisplayName("updated - Changing a record")
-    void testUpdated() {
-        FixedAccountPutVO fixedAccountPutVO = new FixedAccountPutVO();
-        fixedAccountPutVO.setName("plano de celular");
-        fixedAccountPutVO.setValue(55);
-        fixedAccountPutVO.setDescription("plano usado no meu celular comercial");
-        fixedAccountPutVO.setDueDate(5);
-
-        when(fixedAccountService.findById(fixedAccountMock.getId())).thenReturn(fixedAccountMock);
-        when(fixedAccountService.save(fixedAccountMock)).thenReturn(fixedAccountMock);
-        when(modelMapper.map(any(FixedAccount.class),eq(FixedAccountDTO.class))).thenReturn(new FixedAccountDTO());
-
-        ResponseEntity<FixedAccountDTO> responseEntity = fixedAccountController.updated(fixedAccountPutVO,fixedAccountMock.getId());
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());;
+    @DisplayName("Deleted - Deleting a record")
+    void testDeletedFixedAccount(){
+        ResponseEntity<Void> responseEntity = fixedAccountController.deletedFixedAccount("67a782cbf1c9cc32ec877f00");
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
     }
-
-     */
 }

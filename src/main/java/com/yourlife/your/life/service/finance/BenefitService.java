@@ -11,7 +11,7 @@ public interface BenefitService {
 
     Benefit findById (String id);
 
-    List<Benefit> findAllByUser(String userId);
+    List<Benefit> findAllByUser();
 
     Benefit update(String id, BenefitPutDTO benefitPutDTO);
 

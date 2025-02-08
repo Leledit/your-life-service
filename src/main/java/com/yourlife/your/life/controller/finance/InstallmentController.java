@@ -24,7 +24,7 @@ public class InstallmentController {
     @ResponseBody
     public ResponseEntity<Installment> saveInstallment(@RequestBody @Valid InstallmentPostDTO installmentPostDTO) {
         Installment installment = installmentService.save(installmentPostDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(installment);
+        return ResponseEntity.status(HttpStatus.CREATED).body(installment);
     }
 
     @GetMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)

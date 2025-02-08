@@ -24,7 +24,7 @@ public class EntryController {
     @ResponseBody
     public ResponseEntity<Entry> saveEntry(@RequestBody @Valid EntryPostDTO entryPostDTO){
         Entry entry = entryService.save(entryPostDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(entry);
+        return ResponseEntity.status(HttpStatus.CREATED).body(entry);
     }
 
     @GetMapping(value = "/entry", produces = MediaType.APPLICATION_JSON_VALUE)

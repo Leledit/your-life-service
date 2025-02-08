@@ -5,11 +5,12 @@ import com.yourlife.your.life.model.dto.finance.categoryVariableExpense.Category
 import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public interface VariableExpensesCategoryService {
+public interface CategoryVariableExpenseService {
 
     CategoryVariableExpense save(CategoryVariableExpensePostDTO categoryVariableExpensePostDTO);
-    ArrayList<CategoryVariableExpense> getAll();
+    List<CategoryVariableExpense> getAll();
     CategoryVariableExpense getById(String id);
     CategoryVariableExpense update(String id, CategoryVariableExpensePutDTO categoryVariableExpensePutDTO);
     void delete(String id);

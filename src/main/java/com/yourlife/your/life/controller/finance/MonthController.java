@@ -1,10 +1,8 @@
 package com.yourlife.your.life.controller.finance;
 
-import com.yourlife.your.life.model.dto.finance.Month.MonthAddFixedAccountDTO;
 import com.yourlife.your.life.model.entity.finance.*;
 import com.yourlife.your.life.service.finance.MonthService;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,32 +19,25 @@ public class MonthController {
 
     @PostMapping(value = "/month", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Month> save(){
+    public ResponseEntity<Month> saveMonth(){
         Month month = monthService.save();
-        return ResponseEntity.status(HttpStatus.OK).body(month);
+        return ResponseEntity.status(HttpStatus.CREATED).body(month);
     }
 
     @GetMapping(value = "/month", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Month>> getAll(){
+    public ResponseEntity<List<Month>> getAllMonth(){
         List<Month> months = monthService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(months);
     }
 
     @GetMapping(value = "/month/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Month> getById(@PathVariable String id){
+    public ResponseEntity<Month> getMonthById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(monthService.findById(id));
     }
 
     @GetMapping(value = "/month/data", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Month> getByMonthAndYear(@Parameter Integer monthNumber, @Parameter Integer yearNumber) {
-        Month month = monthService.findByMonth(monthNumber,yearNumber);
-        return ResponseEntity.status(HttpStatus.OK).body(month);
-    }
-
-    @PostMapping(value = "/month/{id}/fixed-account", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Month> saveMonth (@PathVariable String id, @RequestBody @Valid MonthAddFixedAccountDTO monthAddFixedAccountDTO){
-        Month month = monthService.addFixedAccount(id,monthAddFixedAccountDTO);
+        Month month = monthService.findByMonth(monthNumber, yearNumber);
         return ResponseEntity.status(HttpStatus.OK).body(month);
     }
 }

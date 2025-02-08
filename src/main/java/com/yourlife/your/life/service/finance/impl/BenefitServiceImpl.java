@@ -45,8 +45,8 @@ public class BenefitServiceImpl implements BenefitService {
     }
 
     @Override
-    public List<Benefit> findAllByUser(String userId) {
-        return benefitRepository.findAllByUser_IdAndDeleted(userId,false).orElse(null);
+    public List<Benefit> findAllByUser() {
+        return benefitRepository.findAllByUser_IdAndDeleted(userContext.returnUserCorrespondingToTheRequest().getId(),false).orElse(null);
     }
 
     @Override

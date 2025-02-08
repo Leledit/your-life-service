@@ -75,29 +75,6 @@ public class MonthServiceImpl implements MonthService {
         return findMonthById(id);
     }
 
-    @Override
-    public Month addFixedAccount(String id, MonthAddFixedAccountDTO monthAddFixedAccountDTO) {
-        Month month = findMonthById(id);
-
-        List<FixedAccount> fixedAccounts = fixedAccountRepository.findAllById(monthAddFixedAccountDTO.getFixedAccountList());
-
-        if(!fixedAccounts.isEmpty()){
-            List<FixedAccount> fixedAccountsMonth = month.getFixedAccounts();
-
-            if(!fixedAccountsMonth.isEmpty()){
-                List<FixedAccount> newFixedAccount = fixedAccounts.stream().filter((fixedAccount -> !fixedAccountsMonth.contains(fixedAccount))).toList();
-                fixedAccountsMonth.addAll(newFixedAccount);
-            }else{
-                fixedAccountsMonth.addAll(fixedAccounts);
-            }
-
-            month.setFixedAccounts(fixedAccountsMonth);
-            monthRepository.save(month);
-        }
-
-        return month;
-    }
-
     private Month findMonthById(String id){
         Month month = monthRepository.findById(id).orElse(null);
 

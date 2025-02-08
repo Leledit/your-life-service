@@ -4,7 +4,9 @@ import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPostDTO;
 import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPutDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
+import com.yourlife.your.life.model.entity.finance.Month;
 import com.yourlife.your.life.repository.finance.FixedAccountRepository;
+import com.yourlife.your.life.repository.finance.MonthRepository;
 import com.yourlife.your.life.service.finance.FixedAccountService;
 import com.yourlife.your.life.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FixedAccountServiceImpl implements FixedAccountService {
@@ -22,9 +25,14 @@ public class FixedAccountServiceImpl implements FixedAccountService {
     @Autowired
     private UserContext userContext;
 
+    @Autowired
+    private MonthRepository monthRepository;
+
     @Override
     public FixedAccount save(FixedAccountPostDTO fixedAccountPostDTO) {
-        return fixedAccountRepository.save(FixedAccount.builder()
+
+        LocalDateTime currentDate = LocalDateTime.now();
+        FixedAccount account =  fixedAccountRepository.save(FixedAccount.builder()
                         .name(fixedAccountPostDTO.getName())
                         .description(fixedAccountPostDTO.getDescription())
                         .value(fixedAccountPostDTO.getValue())
@@ -34,11 +42,22 @@ public class FixedAccountServiceImpl implements FixedAccountService {
                         .deleted(false)
                         .createdAt(LocalDateTime.now())
                         .build());
+
+        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId());
+        if(curretMonth != null) {
+            List<FixedAccount> fixedAccounts = curretMonth.getFixedAccounts();
+            fixedAccounts.add(account);
+            curretMonth.setFixedAccounts(fixedAccounts);
+
+            monthRepository.save(curretMonth);
+        }
+
+        return account;
     }
 
     @Override
-    public ArrayList<FixedAccount> findAllByUser(String userId) {
-        return fixedAccountRepository.findAllByUser_IdAndDeleted(userId,false).orElse(null);
+    public ArrayList<FixedAccount> findAllByUser() {
+        return fixedAccountRepository.findAllByUser_IdAndDeleted(userContext.returnUserCorrespondingToTheRequest().getId(),false).orElse(null);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class BenefitItemController {
     @ResponseBody
     public ResponseEntity<BenefitItem> saveBenefitItem(@RequestBody @Valid BenefitItemPostDTO benefitItemPostDTO){
         BenefitItem benefitItem = benefitItemService.save(benefitItemPostDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(benefitItem);
+        return ResponseEntity.status(HttpStatus.CREATED).body(benefitItem);
     }
 
     @GetMapping(value = "/benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)

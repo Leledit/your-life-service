@@ -20,9 +20,6 @@ public class BenefitController {
     @Autowired
     private BenefitService benefitService;
 
-    @Autowired
-    private UserContext userContext;
-
     @PostMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Benefit> saveBenefit(@Valid @RequestBody BenefitPostDTO benefitPostDTO){
@@ -33,7 +30,7 @@ public class BenefitController {
     @GetMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<List<Benefit>> getAllBenefits(){
-        return ResponseEntity.status(HttpStatus.OK).body(benefitService.findAllByUser(userContext.returnUserCorrespondingToTheRequest().getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(benefitService.findAllByUser());
     }
 
     @GetMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
