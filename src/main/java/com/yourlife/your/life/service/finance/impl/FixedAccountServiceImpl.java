@@ -43,7 +43,7 @@ public class FixedAccountServiceImpl implements FixedAccountService {
                         .createdAt(LocalDateTime.now())
                         .build());
 
-        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId());
+        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
         if(curretMonth != null) {
             List<FixedAccount> fixedAccounts = curretMonth.getFixedAccounts();
             fixedAccounts.add(account);
@@ -89,10 +89,10 @@ public class FixedAccountServiceImpl implements FixedAccountService {
     }
 
     private FixedAccount findByIdFixedAccount(String id){
-        FixedAccount fixedAccount = fixedAccountRepository.findById(id).orElse(null);
+        FixedAccount fixedAccount = fixedAccountRepository.findByIdAndDeleted(id,false).orElse(null);
 
         if(fixedAccount == null || fixedAccount.getDeleted()){
-            throw new RuntimeException(ExceptionMessages.NOT_FOUND);
+            throw new RuntimeException(ExceptionMessages.FIXED_ACCOUNT_NOT_FOUND);
         }
 
         return fixedAccount;

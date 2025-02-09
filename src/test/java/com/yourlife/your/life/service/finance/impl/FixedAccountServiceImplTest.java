@@ -1,9 +1,14 @@
 package com.yourlife.your.life.service.finance.impl;
 
 import com.yourlife.your.life.constants.ExceptionMessages;
+import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPostDTO;
+import com.yourlife.your.life.model.dto.finance.FixedAccount.FixedAccountPutDTO;
 import com.yourlife.your.life.model.entity.finance.FixedAccount;
+import com.yourlife.your.life.model.entity.finance.Month;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.repository.finance.FixedAccountRepository;
+import com.yourlife.your.life.repository.finance.MonthRepository;
+import com.yourlife.your.life.utils.UserContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,97 +18,138 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-@DisplayName("FixedAccount")
+@DisplayName("FixedAccountServiceImpl")
 class FixedAccountServiceImplTest {
-/*
+
     @Mock
     private FixedAccountRepository fixedAccountRepository;
+
+    @Mock
+    private UserContext userContext;
+
+    @Mock
+    private MonthRepository monthRepository;
 
     @InjectMocks
     private FixedAccountServiceImpl fixedAccountService;
 
-    private User userMock;
 
     private FixedAccount fixedAccountMock;
 
+    private Month monthMock;
+
+    private User userMock;
+
     @BeforeEach
     public void setUp(){
-        userMock = new User();
-        userMock.setId("6621b1c02c3dbe50ac7d6319");
-        userMock.setEmail("test@teste.com.br");
-        userMock.setName("leandro");
-        userMock.setPassword("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS");
+        fixedAccountMock = FixedAccount
+                .builder()
+                .name("cell phone plan")
+                .value(55)
+                .description("plan used on my business cell phone")
+                .deleted(false)
+                .dueDate(5)
+                .build();
 
-        fixedAccountMock = new FixedAccount();
-        fixedAccountMock.setName("plano de celular");
-        fixedAccountMock.setValue(55);
-        fixedAccountMock.setDescription("plano usado no meu celular comercial");
-        fixedAccountMock.setDueDate(5);
-        fixedAccountMock.setId("662707bea770e96a56b3d049");
-        fixedAccountMock.setDeleted(false);
+        monthMock = Month
+                .builder()
+                .id("67a782cbf1c9cc32ec877f022")
+                .name("February")
+                .year(2025)
+                .month(2)
+                .date(LocalDateTime.parse("2025-02-09T10:00:00"))
+                .fixedAccounts(new ArrayList<>())
+                .installments(new ArrayList<>())
+                .exits(new ArrayList<>())
+                .entry(new ArrayList<>())
+                .benefitItems(new ArrayList<>())
+                .build();
+
+        userMock = User
+                .builder()
+                .email("test@teste.com.br")
+                .id("67a782cbf1c9cc32ec877f00")
+                .name("leandro")
+                .password("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS")
+                .build();
     }
 
     @Test
-    @DisplayName("FixedAccount - Check success when registering a new fixedAccount")
-    void testSave() {
-        when(fixedAccountRepository.save(fixedAccountMock)).thenReturn(fixedAccountMock);
+    @DisplayName("save - Creating new record successfully!")
+    void testSaveFixedAccount() {
+        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
+        when(fixedAccountRepository.save(any(FixedAccount.class))).thenReturn(fixedAccountMock);
+        when(monthRepository.findByYearAndMonthAndUser_Id(2025,2,userMock.getId())).thenReturn(Optional.ofNullable(monthMock));
+        when(monthRepository.save(monthMock)).thenReturn(monthMock);
 
-        FixedAccount fixedAccount = fixedAccountService.save(fixedAccountMock);
+        FixedAccount account = fixedAccountService.save(FixedAccountPostDTO
+                .builder()
+                .name("cell phone plan")
+                .value(55)
+                .description("plan used on my business cell phone")
+                .build());
+
+        assertNotNull(account);
+    }
+
+    @Test
+    @DisplayName("GetAll - Searching multiple records at once")
+    void testGetAllFixedAccounts(){
+        ArrayList<FixedAccount> fixedAccounts = new ArrayList<>();
+        fixedAccounts.add(new FixedAccount());
+        fixedAccounts.add(new FixedAccount());
+
+        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
+        when(fixedAccountRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(fixedAccounts));
+
+        List<FixedAccount> fixedAccountList = fixedAccountService.findAllByUser();
+        assertEquals(2,fixedAccountList.size());
+    }
+
+    @Test
+    @DisplayName("GetById - Searching for a single record")
+    void testGetFixedAccountById(){
+        when(fixedAccountRepository.findByIdAndDeleted("67a782cbf1c9cc32ec877f00",false)).thenReturn(Optional.of(fixedAccountMock));
+
+        FixedAccount fixedAccount = fixedAccountService.findById("67a782cbf1c9cc32ec877f00");
 
         assertNotNull(fixedAccount);
     }
 
     @Test
-    @DisplayName("FixedAccount - Search for all fixed accounts and receive null as a return")
-    void testGetAllReturning_Null() {
-        when(fixedAccountRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.empty());
+    @DisplayName("Updated - Changing a record")
+    void testUpdatedFixedAccount(){
+        when(fixedAccountRepository.findByIdAndDeleted("67a782cbf1c9cc32ec877f00",false)).thenReturn(Optional.of(fixedAccountMock));
+        when(fixedAccountRepository.save(any(FixedAccount.class))).thenReturn(fixedAccountMock);
 
-        List<FixedAccount> fixedAccounts = fixedAccountService.findAllByUser(userMock.getId());
+        FixedAccount fixedAccount = fixedAccountService.update("67a782cbf1c9cc32ec877f00", FixedAccountPutDTO
+                .builder()
+                .name("cell phone plan 2")
+                .value(55)
+                .description("plan used on my business cell phone 2")
+                .build());
 
-        assertNull(fixedAccounts);
-    }
-
-
-    @Test
-    @DisplayName("FixedAccount - Search for all fixed accounts and receive a list in return")
-    void testGetAllReturning_List(){
-        ArrayList<FixedAccount> fixedAccountsMock = new ArrayList<>();
-        fixedAccountsMock.add(new FixedAccount());
-
-        when(fixedAccountRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(fixedAccountsMock));
-
-        List<FixedAccount> fixedAccounts = fixedAccountService.findAllByUser(userMock.getId());
-
-        assertEquals(1, fixedAccounts.size());
+        assertNotNull(fixedAccount);
     }
 
     @Test
-    @DisplayName("FixedAccount - looking for a single fixed account")
-    void testGetByIdReturning_FixedAccount() {
-        when(fixedAccountRepository.findById("662707bea770e96a56b3d049")).thenReturn(Optional.of(fixedAccountMock));
+    @DisplayName("Deleted - Deleting a record")
+    void testDeletedFixedAccount(){
+        when(fixedAccountRepository.findByIdAndDeleted("662707bea770e96a56b3d049", false)).thenReturn(Optional.empty());
 
-        FixedAccount account = fixedAccountService.findById("662707bea770e96a56b3d049");
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> fixedAccountService.delete("662707bea770e96a56b3d049"));
 
-        assertEquals("662707bea770e96a56b3d049",account.getId());
+        assertEquals(ExceptionMessages.FIXED_ACCOUNT_NOT_FOUND, thrown.getMessage());
     }
-
-    @Test
-    @DisplayName("FixedAccount - throwing an exception when trying to search for a deleted FixedAccount")
-    void testGetByIdReturning_Exception() {
-        fixedAccountMock.setDeleted(true);
-
-        when(fixedAccountRepository.findById("662707bea770e96a56b3d049")).thenReturn(Optional.of(fixedAccountMock));
-
-        assertThrows(RuntimeException.class, () -> fixedAccountService.findById("662707bea770e96a56b3d049"), ExceptionMessages.NOT_FOUND);
-    }*/
 }

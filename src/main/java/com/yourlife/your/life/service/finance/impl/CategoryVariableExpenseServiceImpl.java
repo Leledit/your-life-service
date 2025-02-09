@@ -70,7 +70,7 @@ public class CategoryVariableExpenseServiceImpl implements CategoryVariableExpen
         CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseRepository.findByIdAndDeleted(id,false).orElse(null);
 
         if(categoryVariableExpense == null || categoryVariableExpense.getDeleted()){
-            throw new RuntimeException(ExceptionMessages.NOT_FOUND);
+            throw new RuntimeException(ExceptionMessages.CATEGORY_VARIABLE_EXPENSE_NOT_FOUND);
         }
 
         return categoryVariableExpense;

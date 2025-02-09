@@ -1,9 +1,12 @@
 package com.yourlife.your.life.service.finance.impl;
 
 import com.yourlife.your.life.constants.ExceptionMessages;
+import com.yourlife.your.life.model.dto.finance.categoryVariableExpense.CategoryVariableExpensePostDTO;
+import com.yourlife.your.life.model.dto.finance.categoryVariableExpense.CategoryVariableExpensePutDTO;
 import com.yourlife.your.life.model.entity.finance.CategoryVariableExpense;
 import com.yourlife.your.life.model.entity.user.User;
 import com.yourlife.your.life.repository.finance.CategoryVariableExpenseRepository;
+import com.yourlife.your.life.utils.UserContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,111 +15,117 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-@DisplayName("CategoryVariableExpense")
+@DisplayName("CategoryVariableExpenseServiceImpl")
 class CategoryVariableExpenseServiceImplTest {
-/*
+
     @Mock
     private CategoryVariableExpenseRepository categoryVariableExpenseRepository;
 
+    @Mock
+    private UserContext userContext;
+
     @InjectMocks
-    private VariableExpensesCategoryServiceImpl categoryVariableExpenseService;
+    private CategoryVariableExpenseServiceImpl categoryVariableExpenseService;
 
     private User userMock;
 
-    private CategoryVariableExpense categoryVariableExpenseMock;
+    private CategoryVariableExpense  categoryVariableExpenseMock;
 
     @BeforeEach
-    public void setUp(){
-        userMock = new User();
-        userMock.setId("6621b1c02c3dbe50ac7d6319");
-        userMock.setEmail("test@teste.com.br");
-        userMock.setName("leandro");
-        userMock.setPassword("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS");
+    public void setUp() {
+        userMock = User
+                .builder()
+                .email("test@teste.com.br")
+                .id("67a782cbf1c9cc32ec877f00")
+                .name("leandro")
+                .password("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS")
+                .build();
 
-        categoryVariableExpenseMock = new CategoryVariableExpense();
-        categoryVariableExpenseMock.setName("Gastos pessoais");
-        categoryVariableExpenseMock.setDescription("Gastos com coisa supérfluos");
-        categoryVariableExpenseMock.setUser(userMock);
-        categoryVariableExpenseMock.setCreatedAt(LocalDateTime.now());
-        categoryVariableExpenseMock.setId("6626fbc8b030c6195d5aa007");
-        categoryVariableExpenseMock.setDeleted(false);
+        categoryVariableExpenseMock =
+                CategoryVariableExpense
+                        .builder()
+                        .name("Buy basics")
+                        .description("Buy not very frequently")
+                        .deleted(false)
+                        .build();
     }
-/*
-    @Test
-    @DisplayName("CategoryVariableExpense - Check success in creating a new varied category")
-    void testSave() {
-        when(categoryVariableExpenseRepository.save(categoryVariableExpenseMock)).thenReturn(categoryVariableExpenseMock);
 
-        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.save(categoryVariableExpenseMock);
+    @Test
+    @DisplayName("Save - Creating new record successfully!")
+    void testSaveAccountsCategoryExpense(){
+        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
+        when(categoryVariableExpenseRepository.save(any(CategoryVariableExpense.class))).thenReturn(categoryVariableExpenseMock);
+
+        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.save(
+                CategoryVariableExpensePostDTO
+                .builder()
+                .name("Buy basics")
+                .description("Buy not very frequently")
+                .build());
 
         assertNotNull(categoryVariableExpense);
     }
 
     @Test
-    @DisplayName("CategoryVariableExpense - Searching for all variable account categories - returning null ")
-    void testGetAllReturning_Null() {
-        when(categoryVariableExpenseRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.empty());
+    @DisplayName("GetAll - Searching multiple records at once")
+    void testGetAllAccountsCategoryExpense(){
+        ArrayList<CategoryVariableExpense> categoryVariableExpenses = new ArrayList<>(
+                Arrays.asList(
+                        new CategoryVariableExpense(),
+                        new CategoryVariableExpense()
+                )
+        );
+        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
+        when(categoryVariableExpenseRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(categoryVariableExpenses));
 
-        List<CategoryVariableExpense> categoryVariableExpenses = categoryVariableExpenseService.getAll(userMock.getId());
+        ArrayList<CategoryVariableExpense> categoryVariableExpenseArrayList = categoryVariableExpenseService.getAll();
 
-        assertNull(categoryVariableExpenses);
+        assertEquals(2, Objects.requireNonNull(categoryVariableExpenseArrayList.size()));
     }
 
     @Test
-    @DisplayName("CategoryVariableExpense - Searching for all variable account categories - returning a list of data ")
-    void testGetAllReturning_List() {
-        ArrayList<CategoryVariableExpense> categoryVariableExpensesMock = new ArrayList<>();
-        categoryVariableExpensesMock.add(new CategoryVariableExpense());
+    @DisplayName("GetById - Searching for a single record")
+    void testGetByIdAccountsCategoryExpense(){
+        when(categoryVariableExpenseRepository.findByIdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(categoryVariableExpenseMock));
 
-        when(categoryVariableExpenseRepository.findAllByUser_IdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(categoryVariableExpensesMock));
+        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById("67a782cbf1c9cc32ec877f00");
 
-        List<CategoryVariableExpense> categoryVariableExpenses = categoryVariableExpenseService.getAll(userMock.getId());
-
-        assertEquals(1, categoryVariableExpenses.size());
+        assertNotNull(categoryVariableExpense);
     }
 
     @Test
-    @DisplayName("CategoryVariableExpense - Buscando uma unica categorias, por id ")
-    void testGetByIdReturning_CategoryVariableExpense() {
-        when(categoryVariableExpenseRepository.findById("6626fbc8b030c6195d5aa007")).thenReturn(Optional.of(categoryVariableExpenseMock));
+    @DisplayName("Updated - Changing a record")
+    void testUpdatedAccountsCategoryExpense(){
+        CategoryVariableExpensePutDTO categoryVariableExpensePutDTO =
+                CategoryVariableExpensePutDTO
+                        .builder()
+                        .name("Buy basics 2")
+                        .description("Buy not very frequently 2")
+                        .build();
 
-        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById("6626fbc8b030c6195d5aa007");
+        when(categoryVariableExpenseRepository.findByIdAndDeleted(userMock.getId(),false)).thenReturn(Optional.of(categoryVariableExpenseMock));
+        when(categoryVariableExpenseRepository.save(any(CategoryVariableExpense.class))).thenReturn(categoryVariableExpenseMock);
 
-        assertEquals("6626fbc8b030c6195d5aa007",categoryVariableExpense.getId());
-    }
-    @Test
-    @DisplayName("CategoryVariableExpense - Expecting an exception, as the category belonging to the id is excluded ")
-    void testGetByIdReturning_Exception() {
-        categoryVariableExpenseMock.setDeleted(true);
+        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.update("67a782cbf1c9cc32ec877f00" ,categoryVariableExpensePutDTO);
 
-        when(categoryVariableExpenseRepository.findById("6626fbc8b030c6195d5aa007")).thenReturn(Optional.of(categoryVariableExpenseMock));
-
-        assertThrows(RuntimeException.class, () -> categoryVariableExpenseService.getById("6626fbc8b030c6195d5aa007"), ExceptionMessages.NOT_FOUND);
-
+        assertNotNull(categoryVariableExpense);
     }
 
     @Test
-    @DisplayName("CategoryVariableExpense - Success in carrying out batch registration of several different categories ")
-    void createdSeveral() {
-        ArrayList<CategoryVariableExpense> categoryVariableExpensesMock = new ArrayList<>();
-        categoryVariableExpensesMock.add(new CategoryVariableExpense());
-        categoryVariableExpensesMock.add(new CategoryVariableExpense());
+    @DisplayName("Deleted - Deleting a record")
+    void testDeletedAccountsCategoryExpense(){
+        when(categoryVariableExpenseRepository.findByIdAndDeleted(userMock.getId(),false)).thenReturn(Optional.empty());
 
-        when(categoryVariableExpenseRepository.saveAll(categoryVariableExpensesMock)).thenReturn(categoryVariableExpensesMock);
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> categoryVariableExpenseService.delete("67a782cbf1c9cc32ec877f00"));
 
-        List<CategoryVariableExpense> categoryVariableExpenses = categoryVariableExpenseService.createdSeveral(categoryVariableExpensesMock);
-
-        assertEquals(2, categoryVariableExpenses.size());
-    }*/
+        assertEquals(ExceptionMessages.CATEGORY_VARIABLE_EXPENSE_NOT_FOUND, thrown.getMessage());
+    }
 }

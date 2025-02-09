@@ -1,8 +1,11 @@
 package com.yourlife.your.life.service.finance.impl;
 
+import com.yourlife.your.life.model.entity.finance.Installment;
 import com.yourlife.your.life.model.entity.finance.Month;
 import com.yourlife.your.life.model.entity.user.User;
+import com.yourlife.your.life.repository.finance.InstallmentRepository;
 import com.yourlife.your.life.repository.finance.MonthRepository;
+import com.yourlife.your.life.utils.UserContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,112 +16,124 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-@DisplayName("Month")
+@DisplayName("MonthServiceImpl")
 class MonthServiceImplTest {
-/*
+
     @Mock
     private MonthRepository monthRepository;
+
+    @Mock
+    private UserContext userContext;
+
+    @Mock
+    private InstallmentRepository installmentRepository;
 
     @InjectMocks
     private MonthServiceImpl monthService;
 
-    private User userMock;
-
     private Month monthMock;
 
-    @BeforeEach
-    public void setUp(){
-        userMock = new User();
-        userMock.setId("6621b1c02c3dbe50ac7d6319");
-        userMock.setEmail("test@teste.com.br");
-        userMock.setName("leandro");
-        userMock.setPassword("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS");
+    private User userMock;
 
-        monthMock = new Month();
-        monthMock.setName("maio");
-        monthMock.setId("662e9866e348a57153c48cdd");
-        monthMock.setDate(LocalDate.parse("2025-04-28", DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        monthMock.setMonth(5);
-        monthMock.setYear(2014);
-        monthMock.setUser(userMock);
-        monthMock.setEntry(new ArrayList<>());
-        monthMock.setCategoryVariableExpens(new ArrayList<>());
-        monthMock.setInstallments(new ArrayList<>());
-        monthMock.setFixedAccounts(new ArrayList<>());
+    private Installment installmentMock;
+
+    @BeforeEach
+    public void setUp() {
+        userMock = User
+                .builder()
+                .email("test@teste.com.br")
+                .id("67a782cbf1c9cc32ec877f00")
+                .name("leandro")
+                .password("$2a$10$QTwffyaudYllyk9kD54Z3Oy.jbzDHPFCWl0pCswXBRUeWHmYzeQXS")
+                .build();
+
+        monthMock = Month
+                .builder()
+                .id("67a782cbf1c9cc32ec877f022")
+                .name("February")
+                .year(2025)
+                .month(2)
+                .date(LocalDateTime.parse("2025-02-09T10:00:00"))
+                .fixedAccounts(new ArrayList<>())
+                .installments(new ArrayList<>())
+                .exits(new ArrayList<>())
+                .entry(new ArrayList<>())
+                .benefitItems(new ArrayList<>())
+                .build();
+
+        LocalDate localDateMock = LocalDate.now();
+        installmentMock = Installment
+                .builder()
+                .description("Buying a refrigerator")
+                .firstInstallmentDate(localDateMock)
+                .firstInstallmentDate(localDateMock.plusMonths(2))
+                .value(30)
+                .qtd(2)
+                .deleted(false)
+                .build();
     }
 
     @Test
-    @DisplayName("Month - Check success when registering a new month")
-    void testSave() {
-        when(monthRepository.save(monthMock)).thenReturn(monthMock);
+    @DisplayName("Save - Creating new record successfully!")
+    void testSaveMonth() {
+        ArrayList<Installment> installmentList = new ArrayList<>();
+        installmentList.add(new Installment());
+        installmentList.add(new Installment());
 
-        Month month = monthService.save(monthMock);
+        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
+        when(installmentRepository.findByFirstInstallmentDateLessThanEqualAndLastInstallmentDateGreaterThanEqualAndDeleted(
+                any(LocalDateTime.class), any(LocalDateTime.class), eq(false)))
+                .thenReturn(installmentList);
+        when(monthRepository.findByYearAndMonthAndUser_Id(2025,2,userMock.getId())).thenReturn(Optional.empty());
+        when(monthRepository.save(any(Month.class))).thenReturn(monthMock);
 
+        Month month = monthService.save();
         assertNotNull(month);
     }
 
     @Test
-    @DisplayName("Month - Looking for a single month")
-    void testFindByMonth() {
-        when(monthRepository.findByYearAndMonthAndUser_Id(monthMock.getYear(),monthMock.getMonth(),userMock.getId())).thenReturn(monthMock);
+    @DisplayName("GetAll - Searching multiple records at once")
+    void testGetAllMonth(){
+        ArrayList<Month> months = new ArrayList<>();
+        months.add(new Month());
+        months.add(new Month());
 
-        Month month = monthService.findByMonth(monthMock.getMonth(),monthMock.getYear(),userMock.getId());
+        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
+        when(monthRepository.findAllByUser_Id(userMock.getId())).thenReturn(Optional.of(months));
 
-        assertEquals("662e9866e348a57153c48cdd",month.getId());
+        List<Month> monthList = monthService.findAll();
+
+        assertEquals(2,monthList.size());
     }
 
     @Test
-    @DisplayName("Month - Fetching all months, returning a list of months")
-    void testGetAllReturning_List() {
-        ArrayList<Month> monthMock = new ArrayList<>();
-        monthMock.add(new Month());
-        monthMock.add(new Month());
+    @DisplayName("GetById - Searching for a single record")
+    void testGetMonthById(){
+        when(monthRepository.findByIdAndDelete("67a782cbf1c9cc32ec877f00",false)).thenReturn(Optional.ofNullable(monthMock));
 
-        when(monthRepository.findAllByUser_Id(userMock.getId())).thenReturn(Optional.of(monthMock));
-
-        List<Month> months = monthService.findAll(userMock.getId());
-
-        assertEquals(2,months.size());
+        Month month = monthService.findById("67a782cbf1c9cc32ec877f00");
+        assertNotNull(month);
     }
 
     @Test
-    @DisplayName("Month - Fetching all months, returning a list of months")
-    void testGetAllReturning_Null() {
-        when(monthRepository.findAllByUser_Id(userMock.getId())).thenReturn(Optional.empty());
-
-        List<Month> months = monthService.findAll(userMock.getId());
-
-        assertNull(months);
+    @DisplayName("GetByMonthAndYear - Searching for a single record")
+    void testFindByMonth(){
+        when(userContext.returnUserCorrespondingToTheRequest()).thenReturn(userMock);
+        when(monthRepository.findByYearAndMonthAndUser_Id(2025,2,"67a782cbf1c9cc32ec877f00")).thenReturn(Optional.ofNullable(monthMock));
+        Month month = monthService.findByMonth(2,2025);
+        assertNotNull(month);
     }
-
-    @Test
-    @DisplayName("Month - Searching for a month by id, and returning a record")
-    void findByIdReturning_Month() {
-        when(monthRepository.findById("662e9866e348a57153c48cdd")).thenReturn(Optional.of(monthMock));
-
-        Month month = monthService.findById("662e9866e348a57153c48cdd");
-
-        assertEquals("662e9866e348a57153c48cdd",month.getId());
-    }
-
-    @Test
-    @DisplayName("Month - Searching for a month by id, and returning null")
-    void findByIdReturning_Null() {
-        when(monthRepository.findById("662e9866e348a57153c48cdd")).thenReturn(Optional.empty());
-
-        Month month = monthService.findById("662e9866e348a57153c48cdd");
-
-        assertNull(month);
-    }*/
 }

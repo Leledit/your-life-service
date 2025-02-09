@@ -48,7 +48,7 @@ public class BenefitItemServiceImpl implements BenefitItemService {
                 .benefit(benefit)
                 .build());
 
-        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId());
+        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
         if(curretMonth != null) {
             List<BenefitItem> benefitItems = curretMonth.getBenefitItems();
             benefitItems.add(benefitItem);
@@ -96,7 +96,7 @@ public class BenefitItemServiceImpl implements BenefitItemService {
     }
 
     private BenefitItem getBenefitItemById(String id){
-        BenefitItem benefitItem = benefitItemReposity.findByIdAndDeleted(id,false);
+        BenefitItem benefitItem = benefitItemReposity.findByIdAndDeleted(id,false).orElse(null);
 
         if(benefitItem == null){
             throw new RuntimeException(ExceptionMessages.BENEFIT_ITEM_NOT_FOUND);

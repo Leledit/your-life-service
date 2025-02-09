@@ -8,7 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface MonthRepository extends MongoRepository<Month,String> {
-    Month findByYearAndMonthAndUser_Id(Integer year, Integer month,String id);
+   Optional<Month> findByYearAndMonthAndUser_Id(Integer year, Integer month,String id);
 
     Optional<ArrayList<Month>> findAllByUser_Id(String id);
+
+    Optional<Month> findByIdAndDelete(String id,Boolean delete);
 }

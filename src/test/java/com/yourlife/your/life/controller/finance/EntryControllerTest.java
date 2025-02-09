@@ -99,7 +99,7 @@ public class EntryControllerTest {
 
     @Test
     @DisplayName("Deleted - Deleting a record")
-    void testeDeleteEntry(){
+    void testDeleteEntry(){
         ResponseEntity<Void> responseEntity = entryController.deleteEntry("67a782cbf1c9cc32ec877f00");
         assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
     }

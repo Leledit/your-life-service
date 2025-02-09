@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface EntryRepository extends MongoRepository<Entry,String> {
     Optional<List<Entry>> findAllByUser_IdAndDeleted(String id, Boolean deleted);
 
-    Entry findByIdAndDeleted(String id, Boolean deleted);
+    Optional<Entry> findByIdAndDeleted(String id, Boolean deleted);
 }

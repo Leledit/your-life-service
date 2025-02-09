@@ -7,7 +7,6 @@ import com.yourlife.your.life.model.entity.finance.Benefit;
 import com.yourlife.your.life.repository.finance.BenefitRepository;
 import com.yourlife.your.life.service.finance.BenefitService;
 import com.yourlife.your.life.utils.UserContext;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +18,6 @@ public class BenefitServiceImpl implements BenefitService {
 
     @Autowired
     private BenefitRepository benefitRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     private UserContext userContext;

@@ -31,7 +31,7 @@ public class EntryServiceImpl implements EntryService {
     public Entry save(EntryPostDTO entryPostDTO) {
 
         LocalDateTime currentDate = LocalDateTime.now();
-        Entry entry = Entry
+        Entry entry = entryRepository.save(Entry
                         .builder()
                         .name(entryPostDTO.getName())
                         .value(entryPostDTO.getValue())
@@ -39,11 +39,9 @@ public class EntryServiceImpl implements EntryService {
                         .createdAt(currentDate)
                         .deleted(false)
                         .user(userContext.returnUserCorrespondingToTheRequest())
-                        .build();
+                        .build());
 
-        entryRepository.save(entry);
-
-        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId());
+        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
         if(curretMonth != null){
             List<Entry> entries = curretMonth.getEntry();
             entries.add(entry);
@@ -82,7 +80,7 @@ public class EntryServiceImpl implements EntryService {
     }
 
     private Entry getEntryById(String id){
-        Entry entry = entryRepository.findByIdAndDeleted(id,false);
+        Entry entry = entryRepository.findByIdAndDeleted(id,false).orElse(null);
 
         if(entry == null){
             throw new RuntimeException(ExceptionMessages.ENTRY_NOT_FOUND);

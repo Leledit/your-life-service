@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -33,9 +32,6 @@ class UserServiceImplTest {
 
     @MockBean
     private ModelMapper modelMapper;
-
-    @Mock
-    private TokenUtils tokenUtils;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -118,5 +114,4 @@ class UserServiceImplTest {
 
         assertThrows(RuntimeException.class, () -> userService.createUser(userMockRequest),ExceptionMessages.EMAIL_ALREADY_REGISTERED);
     }
-
 }

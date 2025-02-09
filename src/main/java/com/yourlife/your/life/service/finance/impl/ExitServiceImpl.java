@@ -52,7 +52,7 @@ public class ExitServiceImpl implements ExitService {
                         .user(userContext.returnUserCorrespondingToTheRequest())
                         .build());
 
-        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId());
+        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
         if(curretMonth != null){
             List<Exit> exits = curretMonth.getExits();
             exits.add(exit);
@@ -91,7 +91,7 @@ public class ExitServiceImpl implements ExitService {
     }
 
     private Exit findExitById(String id){
-        Exit exit = exitRepository.findByIdAndDeleted(id,false);
+        Exit exit = exitRepository.findByIdAndDeleted(id,false).orElse(null);
 
         if(exit == null){
             throw  new RuntimeException(ExceptionMessages.EXIT_NOT_FOUND);

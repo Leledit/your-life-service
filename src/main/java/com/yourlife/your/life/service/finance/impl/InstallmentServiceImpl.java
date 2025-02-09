@@ -44,7 +44,7 @@ public class InstallmentServiceImpl implements InstallmentService {
                                         .description(installmentPostDTO.getDescription())
                                         .build());
 
-        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId());
+        Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
         if(curretMonth != null){
             List<Installment> installmentList = curretMonth.getInstallments();
             installmentList.add(installment);
@@ -63,7 +63,7 @@ public class InstallmentServiceImpl implements InstallmentService {
 
     @Override
     public Installment findById(String id) {
-        return installmentRepository.findByIdAndDeleted(id,false).orElse(null);
+        return findInstallmentById(id);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class InstallmentServiceImpl implements InstallmentService {
     }
 
     private Installment findInstallmentById(String id){
-        Installment installment = installmentRepository.findById(id).orElse(null);
+        Installment installment = installmentRepository.findByIdAndDeleted(id,false).orElse(null);
 
         if(installment == null){
             throw new RuntimeException(ExceptionMessages.INSTALLMENT_NOT_FOUND);

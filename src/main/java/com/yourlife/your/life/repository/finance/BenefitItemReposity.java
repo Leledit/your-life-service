@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface BenefitItemReposity extends MongoRepository<BenefitItem,String> {
     Optional<List<BenefitItem>> findAllByUser_IdAndDeleted(String id, Boolean deleted);
 
-    BenefitItem findByIdAndDeleted(String id, Boolean deleted);
+    Optional<BenefitItem> findByIdAndDeleted(String id, Boolean deleted);
 }
