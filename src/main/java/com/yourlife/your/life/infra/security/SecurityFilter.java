@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.swing.text.Style;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -35,7 +36,9 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var tokenJWT = recuperarToken(request);
 
-        if(tokenJWT != null){
+        System.out.println(tokenJWT);
+
+        if(tokenJWT != null && !tokenJWT.isBlank()){
             var subject = tokenUtils.getSubjects((tokenJWT));
 
             Optional<User> user =  userRepository.findById(subject);

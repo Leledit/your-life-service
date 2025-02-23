@@ -122,7 +122,7 @@ class MonthServiceImplTest {
     @Test
     @DisplayName("GetById - Searching for a single record")
     void testGetMonthById(){
-        when(monthRepository.findByIdAndDelete("67a782cbf1c9cc32ec877f00",false)).thenReturn(Optional.ofNullable(monthMock));
+        when(monthRepository.findById("67a782cbf1c9cc32ec877f00")).thenReturn(Optional.ofNullable(monthMock));
 
         Month month = monthService.findById("67a782cbf1c9cc32ec877f00");
         assertNotNull(month);

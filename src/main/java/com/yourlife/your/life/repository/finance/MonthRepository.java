@@ -12,5 +12,4 @@ public interface MonthRepository extends MongoRepository<Month,String> {
 
     Optional<ArrayList<Month>> findAllByUser_Id(String id);
 
-    Optional<Month> findByIdAndDelete(String id,Boolean delete);
 }

@@ -56,7 +56,13 @@ public class MonthServiceImpl implements MonthService {
 
     @Override
     public Month findByMonth(Integer month, Integer year) {
-        return monthRepository.findByYearAndMonthAndUser_Id(year,month,userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
+        Month monthData = monthRepository.findByYearAndMonthAndUser_Id(year,month,userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
+
+        if(monthData == null){
+            throw new RuntimeException(ExceptionMessages.MONTH_NOT_FOUND);
+        }
+
+        return monthData;
     }
 
     @Override
@@ -70,7 +76,7 @@ public class MonthServiceImpl implements MonthService {
     }
 
     private Month findMonthById(String id){
-        Month month = monthRepository.findByIdAndDelete(id,false).orElse(null);
+        Month month = monthRepository.findById(id).orElse(null);
 
         if(month==null){
             throw new RuntimeException(ExceptionMessages.MONTH_NOT_FOUND);

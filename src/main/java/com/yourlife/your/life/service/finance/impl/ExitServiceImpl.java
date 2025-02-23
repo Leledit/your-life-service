@@ -50,6 +50,7 @@ public class ExitServiceImpl implements ExitService {
                         .deleted(false)
                         .createdAt(LocalDateTime.now())
                         .user(userContext.returnUserCorrespondingToTheRequest())
+                        .categoryVariableExpense(categoryVariableExpense)
                         .build());
 
         Month curretMonth = monthRepository.findByYearAndMonthAndUser_Id(currentDate.getYear(),currentDate.getMonthValue(),userContext.returnUserCorrespondingToTheRequest().getId()).orElse(null);
