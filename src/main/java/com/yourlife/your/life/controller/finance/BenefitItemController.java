@@ -34,7 +34,7 @@ public class BenefitItemController {
         return ResponseEntity.status(HttpStatus.OK).body(benefitItems);
     }
 
-    @PatchMapping(value = "/benefit-item/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/benefit-item/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<BenefitItem> updateBenefitItem(@RequestBody BenefitItemPutDTO benefitItemPutDTO, @PathVariable String id){
         BenefitItem benefitItem = benefitItemService.update(benefitItemPutDTO,id);

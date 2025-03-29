@@ -39,14 +39,14 @@ public class BenefitController {
         return ResponseEntity.status(HttpStatus.OK).body(benefitService.findById(id));
     }
 
-    @PatchMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Benefit> updateBenefit(@PathVariable String id, @RequestBody BenefitPutDTO benefitPutDTO){
         Benefit benefit = benefitService.update(id,benefitPutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(benefit);
     }
 
-    @PatchMapping(value = "/benefit/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/benefit/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Void> deletedBenefit(@PathVariable String id){
         benefitService.deleted(id);

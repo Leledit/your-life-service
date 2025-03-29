@@ -1,5 +1,6 @@
 package com.yourlife.your.life.service.finance.impl;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import com.yourlife.your.life.constants.ExceptionMessages;
 import com.yourlife.your.life.model.dto.finance.benefit.BenefitPostDTO;
 import com.yourlife.your.life.model.dto.finance.benefit.BenefitPutDTO;
@@ -7,6 +8,7 @@ import com.yourlife.your.life.model.entity.finance.Benefit;
 import com.yourlife.your.life.repository.finance.BenefitRepository;
 import com.yourlife.your.life.service.finance.BenefitService;
 import com.yourlife.your.life.utils.UserContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BenefitServiceImpl implements BenefitService {
 
     @Autowired
@@ -49,10 +52,12 @@ public class BenefitServiceImpl implements BenefitService {
     public Benefit update(String id, BenefitPutDTO benefitPutDTO) {
         Benefit benefit = findByIdBenefit(id);
 
+        log.info(benefitPutDTO.toString());
+
         benefit.setName(benefitPutDTO.getName()!=null?benefitPutDTO.getName():benefit.getName());
         benefit.setValueReceived(benefitPutDTO.getValueReceived()!=null?benefitPutDTO.getValueReceived(): benefit.getValueReceived());
-        benefit.setType(benefitPutDTO.getType()!=null? benefitPutDTO.getType():benefit.getType());
-        benefit.setDescription(benefit.getDescription()!=null?benefitPutDTO.getDescription():benefit.getDescription());
+        benefit.setType(benefitPutDTO.getType() != null ? benefitPutDTO.getType() :benefit.getType());
+        benefit.setDescription(benefitPutDTO.getDescription()!=null?benefitPutDTO.getDescription():benefit.getDescription());
         benefit.setUpdatedAt(LocalDateTime.now());
 
         benefitRepository.save(benefit);

@@ -35,11 +35,7 @@ public class ExitServiceImpl implements ExitService {
 
     @Override
     public Exit save(ExitPostDTO exitPostDTO) {
-        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseRepository.findById(exitPostDTO.getCategoryVariableExpense()).orElse(null);
-
-        if(categoryVariableExpense == null){
-            throw new RuntimeException(ExceptionMessages.CATEGORY_VARIABLE_EXPENSE_NOT_FOUND);
-        }
+        CategoryVariableExpense categoryVariableExpense = getCategoryVariableExpense(exitPostDTO.getCategoryVariableExpense());
 
         LocalDate currentDate = LocalDate.now();
         Exit exit = exitRepository.save(Exit
@@ -76,6 +72,7 @@ public class ExitServiceImpl implements ExitService {
         exit.setName(exitPutDTO.getName() != null ? exitPutDTO.getName() : exit.getName());
         exit.setPaymentMethods(exitPutDTO.getPaymentMethods() != null?exitPutDTO.getPaymentMethods() : exit.getPaymentMethods());
         exit.setValue(exitPutDTO.getValue() != null ? exitPutDTO.getValue() : exit.getValue());
+        exit.setCategoryVariableExpense(exitPutDTO.getCategoryVariableExpense() != null ? getCategoryVariableExpense(exitPutDTO.getCategoryVariableExpense()) : exit.getCategoryVariableExpense() );
         exit.setUpdatedAt(LocalDateTime.now());
 
         return exitRepository.save(exit);
@@ -99,5 +96,15 @@ public class ExitServiceImpl implements ExitService {
         }
 
         return exit;
+    }
+
+    private CategoryVariableExpense getCategoryVariableExpense(String idCategoryVariableExpense){
+        CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseRepository.findById(idCategoryVariableExpense).orElse(null);
+
+        if(categoryVariableExpense == null){
+            throw new RuntimeException(ExceptionMessages.CATEGORY_VARIABLE_EXPENSE_NOT_FOUND);
+        }
+
+        return  categoryVariableExpense;
     }
 }

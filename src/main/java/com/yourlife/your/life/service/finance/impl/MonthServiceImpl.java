@@ -39,6 +39,8 @@ public class MonthServiceImpl implements MonthService {
 
         List<Installment> installmentList = installmentRepository.findByFirstInstallmentDateLessThanEqualAndLastInstallmentDateGreaterThanEqualAndDeleted(currentDate, currentDate,false);
 
+        //TODO:: buscas contas fixas e adicioanr na criação do mes(error)
+
         Month month = new Month();
         month.setName(currentDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")));
         month.setDate(currentDate);

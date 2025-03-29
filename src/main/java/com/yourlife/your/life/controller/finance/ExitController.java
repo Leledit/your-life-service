@@ -34,7 +34,7 @@ public class ExitController {
         return ResponseEntity.status(HttpStatus.OK).body(exitList);
     }
 
-    @PatchMapping(value = "/exit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/exit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Exit> updateExit(@PathVariable String id, @RequestBody ExitPutDTO exitPutDTO){
         Exit exit = exitService.update(id,exitPutDTO);

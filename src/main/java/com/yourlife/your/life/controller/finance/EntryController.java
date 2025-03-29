@@ -34,14 +34,14 @@ public class EntryController {
         return ResponseEntity.status(HttpStatus.OK).body(entries);
     }
 
-    @PatchMapping(value = "/entry/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/entry/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Entry> updateEntry(@RequestBody EntryPutDTO entryPutDTO, @PathVariable String id){
         Entry entry = entryService.update(id,entryPutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(entry);
     }
 
-    @DeleteMapping(value = "/entry/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/entry/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteEntry(@PathVariable String id){
         entryService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
