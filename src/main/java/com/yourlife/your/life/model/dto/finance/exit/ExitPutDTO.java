@@ -1,7 +1,6 @@
 package com.yourlife.your.life.model.dto.finance.exit;
 
 import com.yourlife.your.life.model.types.finance.PaymentMethods;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

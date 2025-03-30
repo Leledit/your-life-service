@@ -20,38 +20,40 @@ public class InstallmentController {
     @Autowired
     private InstallmentService installmentService;
 
-    @PostMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Installment> saveInstallment(@RequestBody @Valid InstallmentPostDTO installmentPostDTO) {
         Installment installment = installmentService.save(installmentPostDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(installment);
     }
 
-    @GetMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @GetMapping(value = "/installment", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Installment>> getAllInstallment(){
         List<Installment> installmentList = installmentService.findAllByUser();
         return  ResponseEntity.status(HttpStatus.OK).body(installmentList);
     }
 
-    @GetMapping(value = "/installment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @GetMapping(value = "/installment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Installment> getInstallmentById(@PathVariable String id){
         Installment installment = installmentService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(installment);
     }
 
-    @PatchMapping(value = "/installment/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PatchMapping(value = "/installment/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deletedInstallment(@PathVariable String id){
         installmentService.deleted(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-   @PutMapping(value = "/installment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-   @ResponseBody
-    public ResponseEntity<Installment> updateInstallment(@PathVariable String id, @RequestBody InstallmentPutDTO installmentPutDTO){
+    @ResponseBody
+    @PutMapping(value = "/installment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Installment> updateInstallment(@PathVariable String id,
+                                                         @RequestBody InstallmentPutDTO installmentPutDTO){
+
         Installment installment = installmentService.update(id,installmentPutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(installment);
-   }
+    }
 }

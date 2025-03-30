@@ -20,23 +20,25 @@ public class BenefitItemController {
     @Autowired
     private BenefitItemService benefitItemService;
 
-    @PostMapping(value = "/benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value = "/benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BenefitItem> saveBenefitItem(@RequestBody @Valid BenefitItemPostDTO benefitItemPostDTO){
         BenefitItem benefitItem = benefitItemService.save(benefitItemPostDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(benefitItem);
     }
 
-    @GetMapping(value = "/benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @GetMapping(value = "/benefit-item", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BenefitItem>> getAllBenefitItem(){
         List<BenefitItem> benefitItems = benefitItemService.findAllByUser();
         return ResponseEntity.status(HttpStatus.OK).body(benefitItems);
     }
 
-    @PutMapping(value = "/benefit-item/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<BenefitItem> updateBenefitItem(@RequestBody BenefitItemPutDTO benefitItemPutDTO, @PathVariable String id){
+    @PutMapping(value = "/benefit-item/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BenefitItem> updateBenefitItem(@RequestBody BenefitItemPutDTO benefitItemPutDTO,
+                                                         @PathVariable String id){
+
         BenefitItem benefitItem = benefitItemService.update(benefitItemPutDTO,id);
         return ResponseEntity.status(HttpStatus.OK).body(benefitItem);
     }

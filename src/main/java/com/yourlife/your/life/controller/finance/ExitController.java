@@ -20,23 +20,25 @@ public class ExitController {
     @Autowired
     private ExitService exitService;
 
-    @PostMapping(value = "/exit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value = "/exit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Exit> saveExit(@RequestBody @Valid ExitPostDTO exitPostDTO){
         Exit exit = exitService.save(exitPostDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(exit);
     }
 
-    @GetMapping(value = "/exit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @GetMapping(value = "/exit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Exit>> getAllExit(){
         List<Exit> exitList = exitService.findAllByUser();
         return ResponseEntity.status(HttpStatus.OK).body(exitList);
     }
 
-    @PutMapping(value = "/exit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Exit> updateExit(@PathVariable String id, @RequestBody ExitPutDTO exitPutDTO){
+    @PutMapping(value = "/exit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Exit> updateExit(@PathVariable String id,
+                                           @RequestBody ExitPutDTO exitPutDTO){
+
         Exit exit = exitService.update(id,exitPutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(exit);
     }

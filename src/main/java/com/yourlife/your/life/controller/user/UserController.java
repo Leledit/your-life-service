@@ -28,8 +28,8 @@ public class UserController {
     @Autowired
     TokenUtils tokenUtils;
 
-    @PostMapping(value = "/user/register", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value = "/user/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createAnAccount(@RequestBody @Valid UserRegistertVO userPostRequestVO){
         if(userPostRequestVO.getName() == null || userPostRequestVO.getEmail() == null || userPostRequestVO.getPassword() == null){
              throw new RuntimeException(ExceptionMessages.INVALID_REQUEST_COMPONENT);
@@ -43,8 +43,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dataUser);
     }
 
-    @PostMapping(value = "/user/login",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value = "/user/login",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> login(@RequestBody @Valid UserLoginDTO userLoginDTO){
         User user = modelMapper.map(userLoginDTO,User.class);
 

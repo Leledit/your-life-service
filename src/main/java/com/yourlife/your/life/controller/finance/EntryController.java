@@ -20,23 +20,25 @@ public class EntryController {
     @Autowired
     private EntryService entryService;
 
-    @PostMapping(value = "/entry", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value = "/entry", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Entry> saveEntry(@RequestBody @Valid EntryPostDTO entryPostDTO){
         Entry entry = entryService.save(entryPostDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(entry);
     }
 
-    @GetMapping(value = "/entry", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @GetMapping(value = "/entry", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Entry>> getAllEntryByUser(){
         List<Entry> entries = entryService.findAllByUser();
         return ResponseEntity.status(HttpStatus.OK).body(entries);
     }
 
-    @PutMapping(value = "/entry/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Entry> updateEntry(@RequestBody EntryPutDTO entryPutDTO, @PathVariable String id){
+    @PutMapping(value = "/entry/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Entry> updateEntry(@RequestBody EntryPutDTO entryPutDTO,
+                                             @PathVariable String id){
+
         Entry entry = entryService.update(id,entryPutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(entry);
     }

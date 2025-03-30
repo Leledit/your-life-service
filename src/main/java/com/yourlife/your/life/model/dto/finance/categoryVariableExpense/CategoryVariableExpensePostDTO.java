@@ -1,6 +1,5 @@
 package com.yourlife.your.life.model.dto.finance.categoryVariableExpense;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

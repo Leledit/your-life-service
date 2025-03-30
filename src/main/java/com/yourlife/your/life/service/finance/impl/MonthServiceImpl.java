@@ -1,8 +1,10 @@
 package com.yourlife.your.life.service.finance.impl;
 
 import com.yourlife.your.life.constants.ExceptionMessages;
+import com.yourlife.your.life.model.entity.finance.FixedAccount;
 import com.yourlife.your.life.model.entity.finance.Installment;
 import com.yourlife.your.life.model.entity.finance.Month;
+import com.yourlife.your.life.repository.finance.FixedAccountRepository;
 import com.yourlife.your.life.repository.finance.InstallmentRepository;
 import com.yourlife.your.life.repository.finance.MonthRepository;
 import com.yourlife.your.life.service.finance.MonthService;
@@ -27,6 +29,9 @@ public class MonthServiceImpl implements MonthService {
     @Autowired
     private InstallmentRepository installmentRepository;
 
+    @Autowired
+    private FixedAccountRepository fixedAccountRepository;
+
     @Override
     public Month save() {
         LocalDateTime currentDate = LocalDateTime.now();
@@ -39,7 +44,7 @@ public class MonthServiceImpl implements MonthService {
 
         List<Installment> installmentList = installmentRepository.findByFirstInstallmentDateLessThanEqualAndLastInstallmentDateGreaterThanEqualAndDeleted(currentDate, currentDate,false);
 
-        //TODO:: buscas contas fixas e adicioanr na criação do mes(error)
+        List<FixedAccount> fixedAccounts = fixedAccountRepository.findAllByUser_IdAndDeleted(userContext.returnUserCorrespondingToTheRequest().getId(),false).orElse(new ArrayList<>());
 
         Month month = new Month();
         month.setName(currentDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")));
@@ -50,7 +55,7 @@ public class MonthServiceImpl implements MonthService {
         month.setEntry(new ArrayList<>());
         month.setBenefitItems(new ArrayList<>());
         month.setInstallments(installmentList);
-        month.setFixedAccounts(new ArrayList<>());
+        month.setFixedAccounts(fixedAccounts);
         month.setExits(new ArrayList<>());
 
         return monthRepository.save(month);

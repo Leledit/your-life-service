@@ -4,7 +4,6 @@ import com.yourlife.your.life.model.dto.finance.benefit.BenefitPostDTO;
 import com.yourlife.your.life.model.dto.finance.benefit.BenefitPutDTO;
 import com.yourlife.your.life.model.entity.finance.Benefit;
 import com.yourlife.your.life.service.finance.BenefitService;
-import com.yourlife.your.life.utils.UserContext;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,34 +19,36 @@ public class BenefitController {
     @Autowired
     private BenefitService benefitService;
 
-    @PostMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Benefit> saveBenefit(@Valid @RequestBody BenefitPostDTO benefitPostDTO){
         Benefit benefit = benefitService.save(benefitPostDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(benefit);
     }
 
-    @GetMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @GetMapping(value = "/benefit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Benefit>> getAllBenefits(){
         return ResponseEntity.status(HttpStatus.OK).body(benefitService.findAllByUser());
     }
 
-    @GetMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @GetMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Benefit> getBenefitById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(benefitService.findById(id));
     }
 
-    @PutMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Benefit> updateBenefit(@PathVariable String id, @RequestBody BenefitPutDTO benefitPutDTO){
+    @PutMapping(value = "/benefit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Benefit> updateBenefit(@PathVariable String id,
+                                                 @RequestBody BenefitPutDTO benefitPutDTO){
+
         Benefit benefit = benefitService.update(id,benefitPutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(benefit);
     }
 
-    @DeleteMapping(value = "/benefit/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @DeleteMapping(value = "/benefit/{id}/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deletedBenefit(@PathVariable String id){
         benefitService.deleted(id);
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,24 +18,26 @@ import java.util.List;
 public class CategoryVariableExpenseController {
 
     @Autowired
-    private CategoryVariableExpenseService categoryVariableExpenseService;
-
-    @Autowired
     private UserContext userContext;
 
-    @PostMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
+    @Autowired
+    private CategoryVariableExpenseService categoryVariableExpenseService;
+
     @ResponseBody
+    @PostMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryVariableExpense> saveAccountsCategoryExpense(@RequestBody @Valid CategoryVariableExpensePostDTO categoryVariableExpensePostDTO){
         CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.save(categoryVariableExpensePostDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryVariableExpense);
     }
 
+    @ResponseBody
     @GetMapping(value = "/accounts-category-expense",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CategoryVariableExpense>> getAllAccountsCategoryExpense(){
         List<CategoryVariableExpense> categoryVariableExpenses = categoryVariableExpenseService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpenses);
     }
 
+    @ResponseBody
     @GetMapping(value = "/accounts-category-expense/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryVariableExpense> getByIdAccountsCategoryExpense(@PathVariable String id){
         CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.getById(id);
@@ -49,10 +50,11 @@ public class CategoryVariableExpenseController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping(value = "/accounts-category-expense/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PutMapping(value = "/accounts-category-expense/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryVariableExpense> updatedAccountsCategoryExpense(@RequestBody @Valid CategoryVariableExpensePutDTO categoryVariableExpensePutDTO,
                                                                                   @PathVariable String id){
+
         CategoryVariableExpense categoryVariableExpense = categoryVariableExpenseService.update(id,categoryVariableExpensePutDTO);
         return ResponseEntity.status(HttpStatus.OK).body(categoryVariableExpense);
     }
